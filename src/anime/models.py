@@ -29,8 +29,14 @@ class Anime(models.Model):
     id_anime = models.IntegerField('ID animevost', unique=True)
     title = models.CharField('Названия', max_length=255)
     link = models.CharField('Ссылка animevost', max_length=255)
-    screen_image = models.ManyToManyField(Series, related_name='screen_images')
-    genre = models.ManyToManyField(Genre, related_name='genres')
+    screen_image = models.ManyToManyField(
+        ScreenImages,
+        related_name='screen_images'
+    )
+    genre = models.ManyToManyField(
+        Genre,
+        related_name='genres'
+    )
     rating = models.IntegerField('Рейтинг')
     votes = models.IntegerField('Голоса')
     description = models.TextField('Описания')
@@ -39,7 +45,7 @@ class Anime(models.Model):
     year = models.CharField('Год выпуска', max_length=20)
     timer = models.IntegerField('Время выхода серии', default=0)
     type = models.CharField('Тип', max_length=10)
-    day_week = models.CharField('День недели', max_length=20, default=None)
+    day_week = models.CharField('День недели', max_length=20, default='')
     anons = models.BooleanField('Анонс', default=False)
 
     class Meta:
