@@ -1,4 +1,5 @@
 from rest_framework.test import APITestCase
+from unittest import mock
 
 from src.anime.service.write_db import WriteDB
 from src.anime.models import Genre, ScreenImages, Anime
@@ -72,3 +73,34 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime.day_week, '')
         self.assertTrue(anime.anons)
 
+    @mock.patch('src.anime.service.write_db.WriteDB._write_screen_images')
+    @mock.patch('src.anime.service.write_db.WriteDB._write_anime')
+    def test_write_anime(
+            self,
+            mock_write_anime,
+            mock_write_screen_images
+    ):
+        mock_write_anime.return_value = Anime.objects.create(
+            id_anime=1,
+            title='anime_data.title',
+            link='anime_data.link',
+            rating=1,
+            votes=1,
+            description='anime_data.description',
+            director='anime_data.director',
+            url_image_preview='anime_data.url_image_preview',
+            year='anime_data.year',
+            type='an'
+        )
+        mock_write_screen_images.return_value = ScreenImages.objects.create(
+            images='https://animevost.org.jpg'
+        )
+        anime = Anime.objects.filter(id_anime=1)[0]
+        self.assertEqual(anime.screen_image.count(), 0)
+        self.assertEqual(anime.genre.count(), 0)
+
+        self.writer.write_anime(config_data.write_anime_shem)
+
+        anime = Anime.objects.filter(id_anime=1)[0]
+        self.assertEqual(anime.screen_image.count(), 1)
+        self.assertEqual(anime.genre.count(), 2)

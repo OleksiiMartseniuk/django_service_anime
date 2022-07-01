@@ -40,18 +40,25 @@ class WriteDB:
         )
         return anime
 
-    def write_anime_all(self, anime_data: dict[str: List[schemas.AnimeFull]]):
+    def write_anime(
+            self, anime_data: schemas.AnimeData, day: str = ''
+    ) -> None:
+        """Запись дынных аниме"""
+        anime_db = self._write_anime(anime_data, day)
+
+        if anime_data.screen_image:
+            for screen in anime_data.screen_image:
+                screen_db = self._write_screen_images(screen)
+                anime_db.screen_image.add(screen_db)
+
+        if anime_data.genre:
+            for genre in anime_data.genre.split(', '):
+                genre_db = self._write_genre(genre)
+                anime_db.genre.add(genre_db)
+
+    def write_anime_schedule(self, anime_data: dict[str: List[schemas.AnimeFull]]):
         """Запись дынных аниме расписание"""
         for key, value in anime_data.items():
             for anime in value:
-                anime_db = self._write_anime(anime, key)
+                self.write_anime(anime, key)
 
-                if anime.screen_image:
-                    for screen in anime.screen_image:
-                        screen_db = self._write_screen_images(screen)
-                        anime_db.screen_image.add(screen_db)
-
-                if anime.genre:
-                    for genre in anime.genre.split(' '):
-                        genre_db = self._write_genre(genre)
-                        anime_db.genre.add(genre_db)
