@@ -1,3 +1,50 @@
 from django.db import models
 
-# Create your models here.
+
+class Genre(models.Model):
+    """Жанры"""
+    title = models.CharField('Названия', max_length=30)
+
+    def __str__(self):
+        return self.title
+
+
+class ScreenImages(models.Model):
+    """Набор кадров"""
+    images = models.CharField('Скрин')
+
+
+class Series(models.Model):
+    """Серии"""
+    name = models.CharField('Номер серии', max_length=50)
+    std = models.CharField('sd качество')
+    hd = models.CharField('hd качество')
+
+    def __str__(self):
+        return self.name
+
+
+class Anime(models.Model):
+    """Аниме"""
+    id_anime = models.IntegerField('ID animevost', unique=True)
+    title = models.CharField('Названия')
+    link = models.CharField('Ссылка animevost')
+    screen_image = models.ManyToManyField(Series, related_name='screen_images')
+    genre = models.ManyToManyField(Genre, related_name='genres')
+    rating = models.IntegerField('Рейтинг')
+    votes = models.IntegerField('Голоса')
+    description = models.TextField('Описания')
+    director = models.CharField('Режиссёр', max_length=100)
+    url_image_preview = models.CharField('Preview изображения')
+    year = models.CharField('Год выпуска')
+    timer = models.IntegerField('Время выхода серии', default=0)
+    type = models.CharField('Тип', max_length=10)
+    day_week = models.CharField('День недели', max_length=20, default=None)
+    anons = models.BooleanField('Анонс', default=False)
+
+    class Meta:
+        # add index id_anime
+        pass
+
+    def __str__(self):
+        return self.title
