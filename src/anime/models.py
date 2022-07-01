@@ -3,7 +3,7 @@ from django.db import models
 
 class Genre(models.Model):
     """Жанры"""
-    title = models.CharField('Названия', max_length=30)
+    title = models.CharField('Названия', unique=True, max_length=30)
 
     def __str__(self):
         return self.title
