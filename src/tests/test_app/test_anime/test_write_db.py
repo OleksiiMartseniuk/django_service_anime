@@ -99,8 +99,7 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime.screen_image.count(), 0)
         self.assertEqual(anime.genre.count(), 0)
 
-        self.writer.write_anime(config_data.write_anime_shem)
+        anime = self.writer.write_anime(config_data.write_anime_shem)
 
-        anime = Anime.objects.filter(id_anime=1)[0]
         self.assertEqual(anime.screen_image.count(), 1)
         self.assertEqual(anime.genre.count(), 2)

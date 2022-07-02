@@ -19,7 +19,9 @@ class WriteDB:
         return models.ScreenImages.objects.create(images=screen_images)
 
     def _write_anime(
-            self, anime_data: schemas.AnimeData, day: str = ''
+            self,
+            anime_data: schemas.AnimeData,
+            day: str = ''
     ) -> models.Anime:
         """Запись в таблицу Anime"""
         anons = True if re.search(r'Анонс', anime_data.title) else False
@@ -41,8 +43,10 @@ class WriteDB:
         return anime
 
     def write_anime(
-            self, anime_data: schemas.AnimeData, day: str = ''
-    ) -> None:
+            self,
+            anime_data: schemas.AnimeData,
+            day: str = ''
+    ) -> models.Anime:
         """Запись дынных аниме"""
         anime_db = self._write_anime(anime_data, day)
 
@@ -56,9 +60,22 @@ class WriteDB:
                 genre_db = self._write_genre(genre)
                 anime_db.genre.add(genre_db)
 
-    def write_anime_schedule(self, anime_data: dict[str: List[schemas.AnimeFull]]):
+        return anime_db
+
+    def write_anime_schedule(
+            self,
+            anime_data: dict[str: List[schemas.AnimeFull]]
+    ) -> None:
         """Запись дынных аниме расписание"""
         for key, value in anime_data.items():
             for anime in value:
-                self.write_anime(anime, key)
+                anime = self.write_anime(anime, key)
 
+                if value.anime_composed:
+                    for anime_schemas in value.anime_composed:
+                        anime_composed = self.write_anime(anime_schemas)
+                        anime.anime_composed.add(anime_composed)
+
+    def write_anime_anons(self, anime_data: List[schemas.AnimeFull]):
+        """Запись дынных аниме анонс"""
+        pass
