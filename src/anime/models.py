@@ -31,11 +31,17 @@ class Anime(models.Model):
     link = models.CharField('Ссылка animevost', max_length=255)
     screen_image = models.ManyToManyField(
         ScreenImages,
-        related_name='screen_images'
+        related_name='screen_images',
+        blank=True,
     )
     genre = models.ManyToManyField(
         Genre,
         related_name='genres'
+    )
+    anime_composed = models.ManyToManyField(
+        'Anime',
+        related_name='anime_composeds',
+        blank=True,
     )
     rating = models.IntegerField('Рейтинг')
     votes = models.IntegerField('Голоса')
