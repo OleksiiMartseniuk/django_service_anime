@@ -3,10 +3,17 @@ def cash_memory(func):
     data = {}
 
     def wrapper(*args, **kwargs):
-        if data.get(f'{args[1].title}'):
-            return data.get(f'{args[1].title}')
+        if data.get(f'{args[1]}'):
+            return data.get(f'{args[1]}')
         else:
             result = func(*args, **kwargs)
-            data[f'{args[1].title}'] = result
+            data[f'{args[1]}'] = result
             return result
+
+    def cache_clear():
+        # Очистка кеша
+        nonlocal data
+        data = {}
+
+    wrapper.cache_clear = cache_clear
     return wrapper
