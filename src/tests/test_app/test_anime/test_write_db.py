@@ -103,3 +103,59 @@ class TestWriteDB(APITestCase):
 
         self.assertEqual(anime.screen_image.count(), 1)
         self.assertEqual(anime.genre.count(), 2)
+
+    @mock.patch('src.anime.service.write_db.WriteDB._write_anime')
+    def test_write_anime_composed(self, mock_write_anime):
+        mock_write_anime.return_value = Anime.objects.create(
+            id_anime=1,
+            title='anime_data.title',
+            link='anime_data.link',
+            rating=1,
+            votes=1,
+            description='anime_data.description',
+            director='anime_data.director',
+            url_image_preview='anime_data.url_image_preview',
+            year='anime_data.year',
+            type='an'
+        )
+        anime = Anime.objects.create(
+            id_anime=2,
+            title='test.title',
+            link='test.link',
+            rating=2,
+            votes=2,
+            description='test.description',
+            director='test.director',
+            url_image_preview='test.url_image_preview',
+            year='test.year',
+            type='as'
+        )
+
+        self.assertEqual(anime.anime_composed.count(), 0)
+
+        self.writer._write_anime_composed(
+            anime,
+            config_data.write_anime_composed
+        )
+
+        self.assertEqual(anime.anime_composed.count(), 1)
+
+    def test_write_anime_composed_empty(self):
+        anime = Anime.objects.create(
+            id_anime=2,
+            title='test.title',
+            link='test.link',
+            rating=2,
+            votes=2,
+            description='test.description',
+            director='test.director',
+            url_image_preview='test.url_image_preview',
+            year='test.year',
+            type='as'
+        )
+
+        self.assertEqual(anime.anime_composed.count(), 0)
+
+        self.writer._write_anime_composed(anime, [])
+
+        self.assertEqual(anime.anime_composed.count(), 0)

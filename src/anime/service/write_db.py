@@ -42,6 +42,17 @@ class WriteDB:
         )
         return anime
 
+    def _write_anime_composed(
+            self,
+            base_anime: models.Anime,
+            anime_composed_list: List[schemas.AnimeData]
+    ) -> None:
+        """Запись в поле Anime.anime_composed"""
+        if anime_composed_list:
+            for anime_schemas in anime_composed_list:
+                anime_composed = self.write_anime(anime_schemas)
+                base_anime.anime_composed.add(anime_composed)
+
     def write_anime(
             self,
             anime_data: schemas.AnimeData,
@@ -70,11 +81,6 @@ class WriteDB:
         for key, value in anime_data.items():
             for anime in value:
                 anime = self.write_anime(anime, key)
-
-                if value.anime_composed:
-                    for anime_schemas in value.anime_composed:
-                        anime_composed = self.write_anime(anime_schemas)
-                        anime.anime_composed.add(anime_composed)
 
     def write_anime_anons(self, anime_data: List[schemas.AnimeFull]):
         """Запись дынных аниме анонс"""
