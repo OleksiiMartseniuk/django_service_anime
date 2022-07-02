@@ -14,6 +14,7 @@ class TestWriteDB(APITestCase):
     def test_write_genre(self):
         self.assertEqual(0, Genre.objects.count())
 
+        self.writer._write_genre.cache_clear()
         result = self.writer._write_genre('приключения')
         self.assertEqual(1, Genre.objects.count())
 
@@ -22,15 +23,13 @@ class TestWriteDB(APITestCase):
         self.assertEqual(result.id, genre.id)
 
     def test_write_genre_decorator(self):
-        Genre.objects.create(title='приключения')
-        self.assertEqual(1, Genre.objects.count())
+        self.assertEqual(0, Genre.objects.count())
 
-        result = self.writer._write_genre('приключения')
+        self.writer._write_genre.cache_clear()
+        result1 = self.writer._write_genre('приключения')
+        result2 = self.writer._write_genre('приключения')
+        result3 = self.writer._write_genre('приключения')
         self.assertEqual(1, Genre.objects.count())
-
-        genre = Genre.objects.filter(title='приключения')[0]
-        self.assertEqual(result.title, genre.title)
-        self.assertEqual(result.id, genre.id)
 
     def test_write_screen_images(self):
         self.assertEqual(0, ScreenImages.objects.count())
