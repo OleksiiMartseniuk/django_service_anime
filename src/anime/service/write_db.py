@@ -79,8 +79,9 @@ class WriteDB:
     ) -> None:
         """Запись дынных аниме расписание"""
         for key, value in anime_data.items():
-            for anime in value:
-                anime = self.write_anime(anime, key)
+            for anime_schemas in value:
+                anime = self.write_anime(anime_schemas, key)
+                self._write_anime_composed(anime, anime_schemas.anime_composed)
 
     def write_anime_anons(self, anime_data: List[schemas.AnimeFull]):
         """Запись дынных аниме анонс"""
