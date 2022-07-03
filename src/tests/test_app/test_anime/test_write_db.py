@@ -225,3 +225,57 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime_composed.screen_image.count(), 1)
         self.assertEqual(anime_composed.day_week, '')
         self.assertFalse(anime_composed.anons)
+
+    def test_write_anime_full_not(self):
+        anons_data = config_data.write_anime_schedule_data['monday'][0]
+
+        Anime.objects.create(
+            id_anime=2696,
+            title='test.title',
+            link='test.link',
+            rating=2,
+            votes=2,
+            description='test.description',
+            director='test.director',
+            url_image_preview='test.url_image_preview',
+            year='test.year',
+            type='as'
+        )
+
+        self.assertEqual(Anime.objects.count(), 1)
+        self.writer.write_anime_full(anons_data)
+        self.assertEqual(Anime.objects.count(), 1)
+
+    def test_write_anime_full(self):
+        anons_data = config_data.write_anime_schedule_data['monday'][0]
+
+        self.assertEqual(Anime.objects.count(), 0)
+        self.assertEqual(Genre.objects.count(), 0)
+        self.assertEqual(ScreenImages.objects.count(), 0)
+
+        self.writer._write_genre.cache_clear()
+        self.writer.write_anime_full(anons_data)
+
+        self.assertEqual(Genre.objects.count(), 3)
+        self.assertEqual(ScreenImages.objects.count(), 4)
+        self.assertEqual(Anime.objects.count(), 2)
+
+        base_anime = Anime.objects.filter(
+            id_anime=anons_data.id
+        )[0]
+
+        self.assertEqual(base_anime.anime_composed.count(), 1)
+        self.assertEqual(base_anime.genre.count(), 2)
+        self.assertEqual(base_anime.screen_image.count(), 3)
+        self.assertEqual(base_anime.day_week, '')
+        self.assertFalse(base_anime.anons)
+
+        anime_composed = Anime.objects.filter(
+            id_anime=anons_data.anime_composed[0].id
+        )[0]
+
+        self.assertEqual(anime_composed.anime_composed.count(), 0)
+        self.assertEqual(anime_composed.genre.count(), 3)
+        self.assertEqual(anime_composed.screen_image.count(), 1)
+        self.assertEqual(anime_composed.day_week, '')
+        self.assertFalse(anime_composed.anons)
