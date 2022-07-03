@@ -85,4 +85,6 @@ class WriteDB:
 
     def write_anime_anons(self, anime_data: List[schemas.AnimeFull]):
         """Запись дынных аниме анонс"""
-        pass
+        for anime_schemas in anime_data:
+            anime = self.write_anime(anime_schemas)
+            self._write_anime_composed(anime, anime_schemas.anime_composed)
