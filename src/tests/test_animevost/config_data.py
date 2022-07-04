@@ -232,6 +232,12 @@ anime_composed_data = [
     AnimeComposed(id_anime=2801, link='https://animevost.org/tip/tv/2801-kingdom-4.html')
 ]
 
+anime_composed_data_id = [
+    AnimeComposed(id_anime=108, link='https://animevost.org/tip/tv/108-kingdom.html'),
+    AnimeComposed(id_anime=2436, link='https://animevost.org/tip/tv/2436-kingdom-3.html'),
+    AnimeComposed(id_anime=2801, link='https://animevost.org/tip/tv/2801-kingdom-4.html')
+]
+
 count_page_html = """
 <td class="block_4"><span>1</span> <a href="https://animevost.org/preview/page/2/">2</a> </td>
 """

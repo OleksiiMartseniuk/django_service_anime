@@ -23,7 +23,7 @@ class ParserClient:
         else:
             raise ParserClientStatusCodeError
 
-    def get_composed(self, link: str) -> List[AnimeComposed]:
+    def get_composed(self, link: str, id: str) -> List[AnimeComposed]:
         """ Аниме состоит из """
         text_page = self._get(link)
 
@@ -32,14 +32,17 @@ class ParserClient:
             anime_composed = []
             list_li = soup.find('div', class_='text_spoiler').find_all('li')
             for li in list_li:
-                anime_composed.append(
-                    AnimeComposed(
-                        id_anime=re.search(
-                            r'[/]\d+[-]', li.a.get('href')
-                        ).group()[1:-1],
-                        link=self.url + li.a.get('href')
+                id_anime = re.search(
+                    r'[/]\d+[-]',
+                    li.a.get('href')
+                ).group()[1:-1]
+                if id_anime != id:
+                    anime_composed.append(
+                        AnimeComposed(
+                            id_anime=id_anime,
+                            link=self.url + li.a.get('href')
+                        )
                     )
-                )
         except AttributeError:
             anime_composed = []
 
@@ -72,7 +75,8 @@ class ParserClient:
 
                 if full:
                     anime_composed = self.get_composed(
-                        self.url + link.get('href')
+                        self.url + link.get('href'),
+                        id_anime
                     )
                 else:
                     anime_composed = None
@@ -116,7 +120,10 @@ class ParserClient:
                         div.a.get('href')
                     ).group()[1:-1]
                     if full:
-                        anime_composed = self.get_composed(div.a.get('href'))
+                        anime_composed = self.get_composed(
+                            div.a.get('href'),
+                            id_anime
+                        )
                     else:
                         anime_composed = None
                     list_anime.append(

@@ -58,15 +58,23 @@ class TestParseClient:
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = config_data.anime_composed_html
 
-        result = client_parser.get_composed('https://test')
+        result = client_parser.get_composed('https://test', 1)
         assert result == config_data.anime_composed_data
+
+    @mock.patch('src.base.animevost.parser.requests.get')
+    def test_get_composed_id(self, mock_get, client_parser):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = config_data.anime_composed_html
+
+        result = client_parser.get_composed('https://test', '109')
+        assert result == config_data.anime_composed_data_id
 
     @mock.patch('src.base.animevost.parser.requests.get')
     def test_get_composed_error(self, mock_get, client_parser):
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = '<html></html>'
 
-        result = client_parser.get_composed('https://test')
+        result = client_parser.get_composed('https://test', 1)
         assert result == []
 
     @mock.patch('src.base.animevost.parser.requests.get')
