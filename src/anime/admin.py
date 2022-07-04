@@ -8,6 +8,7 @@ class AnimeAdmin(admin.ModelAdmin):
         'title', 'id_anime', 'rating', 'votes', 'day_week', 'anons'
     )
     list_filter = ('day_week', 'anons', 'rating', 'votes')
+    search_fields = ('title', 'id_anime')
 
 
 @admin.register(Genre)
@@ -24,3 +25,4 @@ class SeriesAdmin(admin.ModelAdmin):
 @admin.register(ScreenImages)
 class ScreenImagesAdmin(admin.ModelAdmin):
     list_display = ('images',)
+    search_fields = ('images',)
