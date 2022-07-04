@@ -14,6 +14,10 @@ class WriteDB:
         """Запись жанров"""
         return models.Genre.objects.create(title=genre_sting)
 
+    def clear_cash_memory(self):
+        """Очистка кеша-жанров"""
+        self._write_genre.cache_clear()
+
     def _write_screen_images(self, screen_images: str) -> models.ScreenImages:
         """Запись в таблицу ScreenImages"""
         return models.ScreenImages.objects.create(images=screen_images)
@@ -85,9 +89,12 @@ class WriteDB:
 
     def write_anime_anons(self, anime_data: List[schemas.AnimeFull]):
         """Запись дынных аниме анонс"""
+        anons_list = models.Anime.objects.filter(anons=True).\
+            values_list('id_anime', flat=True)
         for anime_schemas in anime_data:
-            anime = self.write_anime(anime_schemas)
-            self._write_anime_composed(anime, anime_schemas.anime_composed)
+            if anime_schemas.id not in anons_list:
+                anime = self.write_anime(anime_schemas)
+                self._write_anime_composed(anime, anime_schemas.anime_composed)
 
     def write_anime_full(self, anime_data: schemas.AnimeFull):
         """Запись аниме с Anime.anime_composed"""
