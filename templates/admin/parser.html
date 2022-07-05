@@ -1,0 +1,12 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+<div>
+    <h1>Parser</h1>
+    <form action="." method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Выполнить">
+    </form>
+</div>
+{% endblock %}
