@@ -4,6 +4,7 @@ from django.urls import path
 
 from .models import Anime, Genre, Series, ScreenImages
 from .forms import ParserForm
+from .service.admin.service import ParserControl
 
 
 @admin.register(Anime)
@@ -27,7 +28,8 @@ class AnimeAdmin(admin.ModelAdmin):
         if request.method == 'POST':
             form = ParserForm(request.POST)
             if form.is_valid():
-                pass
+                status = ParserControl().control(form.data['action'])
+                self.message_user(request, status.message, level=status.level)
 
         context = dict(
             self.admin_site.each_context(request),
