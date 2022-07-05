@@ -30,4 +30,4 @@ class ParserForm(forms.Form):
 
     def delete_valid(self):
         if not Anime.objects.count():
-            raise forms.ValidationError('Данные для удаления нет!')
+            raise forms.ValidationError('Данных для удаления нет!')
