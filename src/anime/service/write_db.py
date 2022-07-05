@@ -100,7 +100,8 @@ class WriteDB:
         anons_list = models.Anime.objects.filter(anons=True).\
             values_list('id_anime', flat=True)
         for anime_schemas in anime_data:
-            if anime_schemas.id not in anons_list:
+            if anime_schemas.id not in anons_list and \
+                    re.search(r'Анонс', anime_schemas.title):
                 anime = self.write_anime(anime_schemas)
                 self._write_anime_composed(anime, anime_schemas.anime_composed)
 

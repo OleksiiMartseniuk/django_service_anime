@@ -210,7 +210,7 @@ class TestWriteDB(APITestCase):
         self.assertEqual(Anime.objects.count(), 1)
 
     def test_write_anime_anons(self):
-        anons_list = config_data.write_anime_schedule_data['monday']
+        anons_list = config_data.write_anime_anons_data
 
         self.assertEqual(Anime.objects.count(), 0)
         self.assertEqual(Genre.objects.count(), 0)
@@ -231,7 +231,7 @@ class TestWriteDB(APITestCase):
         self.assertEqual(base_anime.genre.count(), 2)
         self.assertEqual(base_anime.screen_image.count(), 3)
         self.assertEqual(base_anime.day_week, '')
-        self.assertFalse(base_anime.anons)
+        self.assertTrue(base_anime.anons)
 
         anime_composed = Anime.objects.filter(
             id_anime=anons_list[0].anime_composed[0].id
@@ -242,6 +242,20 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime_composed.screen_image.count(), 1)
         self.assertEqual(anime_composed.day_week, '')
         self.assertFalse(anime_composed.anons)
+
+    def test_write_anime_anons_not(self):
+        anons_list = config_data.write_anime_schedule_data['monday']
+
+        self.assertEqual(Anime.objects.count(), 0)
+        self.assertEqual(Genre.objects.count(), 0)
+        self.assertEqual(ScreenImages.objects.count(), 0)
+
+        self.writer._write_genre.cache_clear()
+        self.writer.write_anime_anons(anons_list)
+
+        self.assertEqual(Anime.objects.count(), 0)
+        self.assertEqual(Genre.objects.count(), 0)
+        self.assertEqual(ScreenImages.objects.count(), 0)
 
     def test_write_anime_full_not(self):
         anons_data = config_data.write_anime_schedule_data['monday'][0]
