@@ -2,6 +2,8 @@ import re
 
 from typing import List
 
+from django.db.models import Q
+
 from src.base.animevost import schemas
 from src.base.utils import cash_memory
 from src.anime import models
@@ -82,10 +84,16 @@ class WriteDB:
             anime_data: dict[str: List[schemas.AnimeFull]]
     ) -> None:
         """Запись дынных аниме расписание"""
+        anons_list = models.Anime.objects.filter(~Q(day_week=None)).\
+            values_list('id_anime', flat=True)
         for key, value in anime_data.items():
             for anime_schemas in value:
-                anime = self.write_anime(anime_schemas, key)
-                self._write_anime_composed(anime, anime_schemas.anime_composed)
+                if anime_schemas.id not in anons_list:
+                    anime = self.write_anime(anime_schemas, key)
+                    self._write_anime_composed(
+                        anime,
+                        anime_schemas.anime_composed
+                    )
 
     def write_anime_anons(self, anime_data: List[schemas.AnimeFull]):
         """Запись дынных аниме анонс"""

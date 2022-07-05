@@ -192,6 +192,23 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime_composed.day_week, '')
         self.assertFalse(anime_composed.anons)
 
+    def test_write_anime_schedule_exists(self):
+        Anime.objects.create(
+            id_anime=2696,
+            title='test.title',
+            link='test.link',
+            rating=2,
+            votes=2,
+            description='test.description',
+            director='test.director',
+            url_image_preview='test.url_image_preview',
+            year='test.year',
+            type='as'
+        )
+        self.assertEqual(Anime.objects.count(), 1)
+        self.writer.write_anime_schedule(config_data.write_anime_schedule_data)
+        self.assertEqual(Anime.objects.count(), 1)
+
     def test_write_anime_anons(self):
         anons_list = config_data.write_anime_schedule_data['monday']
 
