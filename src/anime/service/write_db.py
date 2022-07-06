@@ -105,8 +105,12 @@ class WriteDB:
                 anime = self.write_anime(anime_schemas)
                 self._write_anime_composed(anime, anime_schemas.anime_composed)
 
-    def write_anime_full(self, anime_data: schemas.AnimeFull) -> None:
+    def write_anime_full(
+            self,
+            anime_data: schemas.AnimeFull,
+            day: str = ''
+    ) -> None:
         """Запись аниме с Anime.anime_composed"""
         if not models.Anime.objects.filter(id_anime=anime_data.id).exists():
-            anime = self.write_anime(anime_data)
+            anime = self.write_anime(anime_data, day)
             self._write_anime_composed(anime, anime_data.anime_composed)
