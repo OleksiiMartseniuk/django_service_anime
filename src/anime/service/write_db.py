@@ -95,7 +95,7 @@ class WriteDB:
                         anime_schemas.anime_composed
                     )
 
-    def write_anime_anons(self, anime_data: List[schemas.AnimeFull]):
+    def write_anime_anons(self, anime_data: List[schemas.AnimeFull]) -> None:
         """Запись дынных аниме анонс"""
         anons_list = models.Anime.objects.filter(anons=True).\
             values_list('id_anime', flat=True)
@@ -105,7 +105,7 @@ class WriteDB:
                 anime = self.write_anime(anime_schemas)
                 self._write_anime_composed(anime, anime_schemas.anime_composed)
 
-    def write_anime_full(self, anime_data: schemas.AnimeFull):
+    def write_anime_full(self, anime_data: schemas.AnimeFull) -> None:
         """Запись аниме с Anime.anime_composed"""
         if not models.Anime.objects.filter(id_anime=anime_data.id).exists():
             anime = self.write_anime(anime_data)
