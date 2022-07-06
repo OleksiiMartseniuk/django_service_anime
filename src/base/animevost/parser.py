@@ -78,7 +78,8 @@ class ParserClient:
                         link.get('href')
                     ).group()[1:-1]
                 except AttributeError:
-                    logger.warning('Не найдено id_anime в ссылке')
+                    logger.warning(f'Не найдено id_anime в '
+                                   f'ссылке-[{link.text}] день-{day.name} ')
                     id_anime = None
 
                 if full and id_anime:
