@@ -54,6 +54,16 @@ class TestParseClient:
         assert result == config_data.schedule_data_false
 
     @mock.patch('src.base.animevost.parser.requests.get')
+    def test_get_schedule_full_not_id(self, mock_get,
+                                      client_parser):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = config_data.schedule_html_not_id
+
+        result = client_parser.get_schedule()
+
+        assert len(result['wednesday']) == 5
+
+    @mock.patch('src.base.animevost.parser.requests.get')
     def test_get_composed(self, mock_get, client_parser):
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = config_data.anime_composed_html
