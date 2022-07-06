@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from django.contrib import messages
 
@@ -7,11 +8,14 @@ from ..service import ServiceAnime
 from . import messages as ex_massages
 
 
+logger = logging.getLogger(__name__)
+
+
 @dataclass
 class Status:
     """Сообщения"""
     message: str
-    level: messages = messages.INFO
+    level: int = messages.INFO
 
 
 class ParserControl:
@@ -58,5 +62,5 @@ class ParserControl:
                 message=ex_massages.ERROR,
                 level=messages.ERROR
             )
-
+            logger.error(str(ex))
         return status

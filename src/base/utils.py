@@ -7,7 +7,7 @@ def cash_memory(func):
             return data.get(f'{args[1]}')
         else:
             result = func(*args, **kwargs)
-            data[f'{args[1]}'] = result
+            data[result.title] = result
             return result
 
     def cache_clear():
