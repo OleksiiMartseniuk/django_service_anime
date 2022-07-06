@@ -4,17 +4,17 @@ from src.anime import models
 
 
 class ServiceAnime:
-    def anime_schedule(self):
+    def anime_schedule(self) -> None:
         """Запись аниме расписания"""
         data_anime_parser = ServiceAnimeVost().get_data_anime_all(full=True)
         WriteDB().write_anime_schedule(data_anime_parser)
 
-    def anime_anons(self):
+    def anime_anons(self) -> None:
         """Запись аниме Анонс"""
         data_anime = ServiceAnimeVost().get_data_anime_anons_all(full=True)
         WriteDB().write_anime_anons(data_anime)
 
-    def delete_table(self):
+    def delete_table(self) -> None:
         """Очистка данных таблиц и кеша-жанров"""
         WriteDB().clear_cash_memory()
         models.Anime.objects.all().delete()
