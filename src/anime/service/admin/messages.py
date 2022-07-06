@@ -8,3 +8,4 @@ ERROR_STATUS_CODE_API = 'ApiAnimeVostClientStatusCodeError\n' \
                         'Неверный статус код ответа'
 ERROR_DATA_API = 'ApiAnimeVostClientAttributeError\n' \
                  'Пришедшие дынные с api animevost не верны'
+ERROR_NOT_DATA = 'NotDataError\nНет данных'
