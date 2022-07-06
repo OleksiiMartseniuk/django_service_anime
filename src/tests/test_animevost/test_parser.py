@@ -2,7 +2,10 @@ import pytest
 from unittest import mock
 
 from . import config_data
-from src.base.animevost.exception import ParserClientStatusCodeError
+from src.base.animevost.exception import (
+    ParserClientStatusCodeError,
+    NotDataError
+)
 
 
 class TestParseClient:
@@ -41,8 +44,8 @@ class TestParseClient:
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = data
 
-        result = client_parser.get_schedule(full=True)
-        assert result is None
+        with pytest.raises(NotDataError):
+            client_parser.get_anons(full=True)
 
     @mock.patch('src.base.animevost.parser.requests.get')
     def test_get_schedule_full_false(self, mock_get,
@@ -131,9 +134,8 @@ class TestParseClient:
         _get_count_page.return_value = None
         get_composed.return_value = []
 
-        result = client_parser.get_anons(full=True)
-
-        assert result is None
+        with pytest.raises(NotDataError):
+            client_parser.get_anons(full=True)
 
     @mock.patch('src.base.animevost.parser.ParserClient.get_composed')
     @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
@@ -153,8 +155,8 @@ class TestParseClient:
         mock_get.return_value.status_code = 200
         _get_count_page.return_value = 0
 
-        result = client_parser.get_anons(full=True)
-        assert result is None
+        with pytest.raises(NotDataError):
+            client_parser.get_anons(full=True)
 
     @mock.patch('src.base.animevost.parser.ParserClient.get_composed')
     @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
@@ -167,8 +169,8 @@ class TestParseClient:
         _get_count_page.return_value = 1
         get_composed.return_value = []
 
-        result = client_parser.get_anons(full=True)
-        assert result is None
+        with pytest.raises(NotDataError):
+            client_parser.get_anons(full=True)
 
     @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
     @mock.patch('src.base.animevost.parser.requests.get')

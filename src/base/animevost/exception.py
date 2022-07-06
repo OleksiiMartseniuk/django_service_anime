@@ -11,3 +11,7 @@ class ApiAnimeVostClientStatusCodeError(HTTPError):
 
 class ApiAnimeVostClientAttributeError(AttributeError):
     """Пришедшие дынные с api animevost не верны"""
+
+
+class NotDataError(Exception):
+    """Нет данных"""

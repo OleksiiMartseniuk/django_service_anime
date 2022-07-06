@@ -7,7 +7,7 @@ from typing import List
 
 from .setting import HEADERS
 from .schemas import Week, AnimeMin, AnimeComposed
-from .exception import ParserClientStatusCodeError
+from .exception import ParserClientStatusCodeError, NotDataError
 
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ class ParserClient:
 
     def get_schedule(
             self, full: bool = False
-    ) -> dict[str: List[AnimeMin]] | None:
+    ) -> dict[str: List[AnimeMin]]:
         """ Получения расписания """
         text_page = self._get(self.url)
         soup = BeautifulSoup(text_page, 'lxml')
@@ -67,7 +67,7 @@ class ParserClient:
                 link_list = soup.find(id=day.value).find_all('a')
             except AttributeError:
                 logger.error('Не найдены ссылки на аниме')
-                return None
+                raise NotDataError
 
             list_anime = []
 
@@ -119,7 +119,7 @@ class ParserClient:
         """ Получения аниме анонс """
         if not self._get_count_page():
             logger.warning('Значения count_page = None')
-            return None
+            raise NotDataError
         list_anime = []
         for page in range(1, self._get_count_page() + 1):
             page_html = self._get(self.url + '/preview/' + f'page/{page}/')
@@ -146,5 +146,5 @@ class ParserClient:
                     )
             except AttributeError:
                 logger.warning('Значения не найдено')
-                return None
+                raise NotDataError
         return list_anime
