@@ -98,6 +98,7 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime.screen_image.count(), 0)
         self.assertEqual(anime.genre.count(), 0)
 
+        self.writer.clear_cash_memory()
         anime = self.writer.write_anime(config_data.write_anime_shem)
 
         self.assertEqual(anime.screen_image.count(), 1)
