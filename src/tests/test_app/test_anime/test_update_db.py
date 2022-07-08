@@ -42,6 +42,10 @@ class TestUpdateDataParser(APITestCase):
         self.assertEqual(anime.day_week, 'test')
         self.assertFalse(anime.anons)
 
+    def test_create_schemas(self):
+        result = UpdateDataParser()._create_schemas(1, 'https://test')
+        assert result == config_data.create_schemas
+
     @mock.patch('src.anime.service.update_db.UpdateDataParser._update_anime')
     def test_update_anime_schedule(self, mock_update_anime):
         mock_update_anime.return_value = 1
@@ -64,17 +68,20 @@ class TestUpdateDataParser(APITestCase):
 
         self.assertEqual(Anime.objects.count(), 1)
 
-    @mock.patch('src.anime.service.update_db.WriteDB.write_anime_full')
+    @mock.patch('src.anime.service.update_db.UpdateDataParser._create_schemas')
     @mock.patch('src.anime.service.update_db.UpdateDataParser._update_anime')
-    def test_update_anime_schedule_write(
+    def test_update_anime_schedule_schemas(
             self,
             mock_update_anime,
-            mock_write_anime_full
+            mock_create_schemas
     ):
         mock_update_anime.return_value = 0
+        mock_create_schemas.return_value = config_data.create_schemas
+
         data = config_data.update_anime_schedule_data
-        UpdateDataParser().update_anime_schedule(data)
-        mock_write_anime_full.assert_called_once()
+        result = UpdateDataParser().update_anime_schedule(data)
+        mock_update_anime.assert_called_once()
+        self.assertEqual(result, [config_data.create_schemas])
 
     @mock.patch('src.anime.service.update_db.UpdateDataParser._update_anime')
     def test_update_anime_anons(self, mock_update_anime):
@@ -84,16 +91,18 @@ class TestUpdateDataParser(APITestCase):
         UpdateDataParser().update_anime_anons(data)
         mock_update_anime.assert_called_once()
 
-    @mock.patch('src.anime.service.update_db.WriteDB.write_anime_full')
+    @mock.patch('src.anime.service.update_db.UpdateDataParser._create_schemas')
     @mock.patch('src.anime.service.update_db.UpdateDataParser._update_anime')
     def test_update_anime_anons_write(
             self,
             mock_update_anime,
-            mock_write_anime_full
+            mock_create_schemas
     ):
         mock_update_anime.return_value = 0
+        mock_create_schemas.return_value = config_data.create_schemas
 
         data = config_data.update_anime_schedule_data['monday']
-        UpdateDataParser().update_anime_anons(data)
+        result = UpdateDataParser().update_anime_anons(data)
+
         mock_update_anime.assert_called_once()
-        mock_write_anime_full.assert_called_once()
+        self.assertEqual(result, [config_data.create_schemas])
