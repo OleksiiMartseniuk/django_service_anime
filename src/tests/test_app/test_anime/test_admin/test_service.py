@@ -33,3 +33,21 @@ class TestParserControl(APITestCase):
         message = ParserControl().control('test')
 
         self.assertEqual(message, Status(messages.ERROR, dj_messages.ERROR))
+
+    @mock.patch(
+        'src.anime.service.admin.service.ServiceAnime.anime_schedule_update'
+    )
+    def test_control_schedule_update(self, mock_anime_schedule_update):
+        message = ParserControl().control('schedule_update')
+        mock_anime_schedule_update.assert_called_once()
+
+        self.assertEqual(message, Status(messages.SCHEDULE_UPDATE))
+
+    @mock.patch(
+        'src.anime.service.admin.service.ServiceAnime.anime_anons_update'
+    )
+    def test_control_anons_update(self, mock_anime_anons_update):
+        message = ParserControl().control('anons_update')
+        mock_anime_anons_update.assert_called_once()
+
+        self.assertEqual(message, Status(messages.ANONS_UPDATE))
