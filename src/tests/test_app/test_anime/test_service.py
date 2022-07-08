@@ -83,3 +83,39 @@ class TestServiceAnime(APITestCase):
         ServiceAnime()._write_anime([config_data.create_schemas])
         mock_get_anime_data.assert_called_once()
         mock_write_anime_full.assert_called_once()
+
+    @mock.patch(
+        'src.anime.service.service.ServiceAnimeVost.get_data_anime_all'
+    )
+    @mock.patch(
+        'src.anime.service.service.UpdateDataParser.update_anime_schedule'
+    )
+    @mock.patch('src.anime.service.service.ServiceAnime._write_anime')
+    def test_anime_schedule_update(
+            self,
+            mock_write_anime,
+            mock_update_anime_schedule,
+            mock_get_data_anime_all
+    ):
+        ServiceAnime().anime_schedule_update()
+        mock_write_anime.assert_called_once()
+        mock_update_anime_schedule.assert_called_once()
+        mock_get_data_anime_all.assert_called_once()
+
+    @mock.patch(
+        'src.anime.service.service.ServiceAnimeVost.get_data_anime_anons_all'
+    )
+    @mock.patch(
+        'src.anime.service.service.UpdateDataParser.update_anime_schedule'
+    )
+    @mock.patch('src.anime.service.service.ServiceAnime._write_anime')
+    def test_anime_anons_update(
+            self,
+            mock_write_anime,
+            mock_update_anime_schedule,
+            mock_get_data_anime_anons_all
+    ):
+        ServiceAnime().anime_anons_update()
+        mock_write_anime.assert_called_once()
+        mock_update_anime_schedule.assert_called_once()
+        mock_get_data_anime_anons_all.assert_called_once()
