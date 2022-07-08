@@ -1,5 +1,7 @@
 SCHEDULE = 'Parser запущен идет сбор данных...'
+SCHEDULE_UPDATE = 'Обновления расписания запущено...'
 ANONS = 'Parser запущен идет сбор данных...'
+ANONS_UPDATE = 'Обновления анонсов запущено...'
 DElETE = 'Данные удалены'
 ERROR = 'Сбой в роботе!'
 ERROR_STATUS_CODE_PARSE = 'ParserClientStatusCodeError\n' \
