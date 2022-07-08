@@ -183,3 +183,16 @@ class TestParseClient:
         result = client_parser.get_anons()
 
         assert result == config_data.anons_data_false
+
+    @mock.patch('src.base.animevost.parser.requests.get')
+    def test_get_anime_one(self, mock_get, client_parser):
+        data_result = config_data.anime_one_data
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = config_data.anime_composed_html
+
+        result = client_parser.get_anime_one(
+            data_result.id_anime,
+            'https://test'
+        )
+
+        assert result == data_result

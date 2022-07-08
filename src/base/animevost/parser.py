@@ -149,3 +149,8 @@ class ParserClient:
                 logger.warning('Значения не найдено')
                 raise NotDataError
         return list_anime
+
+    def get_anime_one(self, id: int, link: str) -> AnimeMin:
+        """Получения одгого аниме"""
+        anime_composed = self.get_composed(link, str(id))
+        return AnimeMin(id_anime=id, link=link, anime_composed=anime_composed)

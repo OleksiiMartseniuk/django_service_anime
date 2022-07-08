@@ -741,3 +741,13 @@ create_anime_full_list_composed_data = [AnimeFull(
                 link='https://animevost.org/tip/tv/2696-kyoukai-senki.html',
             )]
 )]
+
+anime_one_data = AnimeMin(
+    id_anime=108,
+    link='https://test',
+    anime_composed=[
+        AnimeComposed(id_anime=109, link='https://animevost.org/109-kingdom-2.html'),
+        AnimeComposed(id_anime=2436, link='https://animevost.org/tip/tv/2436-kingdom-3.html'),
+        AnimeComposed(id_anime=2801, link='https://animevost.org/tip/tv/2801-kingdom-4.html')
+    ]
+)
