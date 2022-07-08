@@ -4,6 +4,8 @@ from unittest import mock
 from src.anime.service.service import ServiceAnime
 from src.anime.models import Anime, ScreenImages, Genre
 
+from . import config_data
+
 
 class TestServiceAnime(APITestCase):
     @mock.patch(
@@ -60,3 +62,24 @@ class TestServiceAnime(APITestCase):
         self.assertEqual(Genre.objects.count(), 0)
         self.assertEqual(ScreenImages.objects.count(), 0)
 
+    @mock.patch('src.anime.service.service.ServiceAnimeVost.get_anime_data')
+    @mock.patch('src.anime.service.service.WriteDB.write_anime_full')
+    def test_write_anime_none(
+            self,
+            mock_get_anime_data,
+            mock_write_anime_full
+    ):
+        ServiceAnime()._write_anime([])
+        self.assertFalse(mock_get_anime_data.called)
+        self.assertFalse(mock_write_anime_full.called)
+
+    @mock.patch('src.anime.service.service.ServiceAnimeVost.get_anime_data')
+    @mock.patch('src.anime.service.service.WriteDB.write_anime_full')
+    def test_write_anime(
+            self,
+            mock_get_anime_data,
+            mock_write_anime_full
+    ):
+        ServiceAnime()._write_anime([config_data.create_schemas])
+        mock_get_anime_data.assert_called_once()
+        mock_write_anime_full.assert_called_once()

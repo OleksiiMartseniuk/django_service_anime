@@ -9,6 +9,7 @@ from src.anime.models import Anime
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class AnimeMini:
     """Мини описания аниме"""
