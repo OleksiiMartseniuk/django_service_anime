@@ -1,4 +1,5 @@
-from src.base.animevost.schemas import AnimeData, AnimeFull, AnimeComposed
+from src.base.animevost.schemas import AnimeData, AnimeFull
+from src.anime.service.update_db import AnimeMini
 
 write_anime_shem = AnimeData(
     id=2696,
@@ -171,4 +172,4 @@ update_anime_schedule_data = {
         )]
 }
 
-create_schemas = AnimeComposed(id_anime=1, link='https://test')
+create_schemas = AnimeMini(id=1, link='https://test')

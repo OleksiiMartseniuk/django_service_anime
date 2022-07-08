@@ -44,7 +44,7 @@ class TestUpdateDataParser(APITestCase):
 
     def test_create_schemas(self):
         result = UpdateDataParser()._create_schemas(1, 'https://test')
-        assert result == config_data.create_schemas
+        self.assertEqual(result, config_data.create_schemas)
 
     @mock.patch('src.anime.service.update_db.UpdateDataParser._update_anime')
     def test_update_anime_schedule(self, mock_update_anime):
