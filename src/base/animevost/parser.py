@@ -103,24 +103,20 @@ class ParserClient:
     def _get_count_page(self) -> int | None:
         """ Получения количество страниц """
         data = self._get(self.url + '/preview/')
-
         soup = BeautifulSoup(data, 'lxml')
         try:
             count_page = soup.find(class_='block_4').find_all('a')[-1].text
             count_page = int(count_page)
         except ValueError:
             logger.warning(f'Не преобразован в int count_page')
-            count_page = None
+            count_page = 1
         except AttributeError:
             logger.warning('count_page не найден атрибут')
-            count_page = None
+            count_page = 1
         return count_page
 
     def get_anons(self, full: bool = False) -> List[AnimeMin] | None:
         """ Получения аниме анонс """
-        if not self._get_count_page():
-            logger.warning('Значения count_page = None')
-            raise NotDataError
         list_anime = []
         for page in range(1, self._get_count_page() + 1):
             page_html = self._get(self.url + '/preview/' + f'page/{page}/')

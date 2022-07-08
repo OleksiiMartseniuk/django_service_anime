@@ -37,16 +37,6 @@ class TestParseClient:
         result = client_parser.get_schedule(full=True)
         assert result == config_data.schedule_data
 
-    @pytest.mark.parametrize('data', [config_data.schedule_html_error_day,
-                                      config_data.schedule_html_error_id])
-    @mock.patch('src.base.animevost.parser.requests.get')
-    def test_get_schedule_full_error_data(self, mock_get, data, client_parser):
-        mock_get.return_value.status_code = 200
-        mock_get.return_value.text = data
-
-        with pytest.raises(NotDataError):
-            client_parser.get_anons(full=True)
-
     @mock.patch('src.base.animevost.parser.requests.get')
     def test_get_schedule_full_false(self, mock_get,
                                      client_parser):
@@ -106,7 +96,7 @@ class TestParseClient:
         mock_get.return_value.text = data
 
         result = client_parser._get_count_page()
-        assert result is None
+        assert result == 1
 
     @mock.patch('src.base.animevost.parser.ParserClient.get_composed')
     @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
@@ -122,41 +112,6 @@ class TestParseClient:
         result = client_parser.get_anons(full=True)
 
         assert result == config_data.anons_data
-
-    @mock.patch('src.base.animevost.parser.ParserClient.get_composed')
-    @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
-    @mock.patch('src.base.animevost.parser.requests.get')
-    def test_get_anons_error_count(self, mock_get, _get_count_page,
-                       get_composed, client_parser):
-        mock_get.return_value.status_code = 200
-        mock_get.return_value.text = config_data.anons_html
-
-        _get_count_page.return_value = None
-        get_composed.return_value = []
-
-        with pytest.raises(NotDataError):
-            client_parser.get_anons(full=True)
-
-    @mock.patch('src.base.animevost.parser.ParserClient.get_composed')
-    @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
-    @mock.patch('src.base.animevost.parser.requests.get')
-    def test_get_anons_error_count(self, mock_get, _get_count_page,
-                                   get_composed, client_parser):
-        mock_get.return_value.status_code = 200
-        mock_get.return_value.text = '<html></html>'
-
-        _get_count_page.return_value = 1
-        get_composed.return_value = []
-
-        result = client_parser.get_anons(full=True)
-
-        assert result == []
-
-        mock_get.return_value.status_code = 200
-        _get_count_page.return_value = 0
-
-        with pytest.raises(NotDataError):
-            client_parser.get_anons(full=True)
 
     @mock.patch('src.base.animevost.parser.ParserClient.get_composed')
     @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
