@@ -93,3 +93,10 @@ class TestServiceAnimeVost:
         )
 
         assert result == config_data.create_anime_full_list_composed_data[0]
+
+    @mock.patch('src.base.animevost.service.ParserClient.get_anime_one')
+    @mock.patch('src.base.animevost.service.ServiceAnimeVost.get_anime')
+    def test_get_anime_data(self,  mock_get_anons, mock_get_anime_one):
+        ServiceAnimeVost().get_anime_data(1, 'test')
+        mock_get_anime_one.assert_called_once()
+        mock_get_anons.assert_called_once()
