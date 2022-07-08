@@ -38,7 +38,7 @@ class ServiceAnime:
     def anime_anons_update(self) -> None:
         """Обновления аниме Анонс"""
         data_anime_parser = ServiceAnimeVost().get_data_anime_anons_all()
-        anime_list = UpdateDataParser().update_anime_schedule(
+        anime_list = UpdateDataParser().update_anime_anons(
             data_anime_parser
         )
         self._write_anime(anime_list)
