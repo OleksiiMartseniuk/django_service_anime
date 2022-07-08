@@ -106,16 +106,16 @@ class TestServiceAnime(APITestCase):
         'src.anime.service.service.ServiceAnimeVost.get_data_anime_anons_all'
     )
     @mock.patch(
-        'src.anime.service.service.UpdateDataParser.update_anime_schedule'
+        'src.anime.service.service.UpdateDataParser.update_anime_anons'
     )
     @mock.patch('src.anime.service.service.ServiceAnime._write_anime')
     def test_anime_anons_update(
             self,
             mock_write_anime,
-            mock_update_anime_schedule,
+            mock_update_anime_anons,
             mock_get_data_anime_anons_all
     ):
         ServiceAnime().anime_anons_update()
         mock_write_anime.assert_called_once()
-        mock_update_anime_schedule.assert_called_once()
+        mock_update_anime_anons.assert_called_once()
         mock_get_data_anime_anons_all.assert_called_once()

@@ -32,6 +32,12 @@ class ParserControl:
                 case 'delete':
                     ServiceAnime().delete_table()
                     status = Status(message=ex_massages.DElETE)
+                case 'schedule_update':
+                    ServiceAnime().anime_schedule_update()
+                    status = Status(message=ex_massages.SCHEDULE_UPDATE)
+                case 'anons_update':
+                    ServiceAnime().anime_anons_update()
+                    status = Status(message=ex_massages.ANONS_UPDATE)
                 case _:
                     status = Status(
                         message=ex_massages.ERROR,
