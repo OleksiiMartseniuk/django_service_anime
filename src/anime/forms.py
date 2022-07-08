@@ -6,7 +6,9 @@ class ParserForm(forms.Form):
     action = forms.ChoiceField(label='', widget=forms.Select, choices=[
         ('schedule', 'Запись аниме расписания'),
         ('anons', 'Запись аниме анонсов'),
-        ('delete', 'Удаления всех записей и кеша')
+        ('delete', 'Удаления всех записей и кеша'),
+        ('schedule_update', 'Обновить аниме расписания'),
+        ('anons_update', 'Обновить аниме анонсов'),
     ])
 
     def clean_action(self):
