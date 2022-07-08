@@ -68,3 +68,8 @@ class ServiceAnimeVost:
         """
         data_parser = ParserClient().get_anons(full)
         return self._create_anime_full_list(data_parser)
+
+    def get_anime_data(self, id: int, link: str) -> AnimeFull:
+        """Создания схему AnimeFull через аргументы"""
+        data = ParserClient().get_anime_one(id, link)
+        return self.get_anime(data)
