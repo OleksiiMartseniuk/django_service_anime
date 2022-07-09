@@ -8,7 +8,7 @@ from ..service import ServiceAnime
 from . import messages as ex_massages
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('main')
 
 
 @dataclass

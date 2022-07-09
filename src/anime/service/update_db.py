@@ -7,7 +7,7 @@ from src.base.animevost import schemas
 from src.anime.models import Anime
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('main')
 
 
 @dataclass

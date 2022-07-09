@@ -10,7 +10,7 @@ from .schemas import Week, AnimeMin, AnimeComposed
 from .exception import ParserClientStatusCodeError, NotDataError
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('main')
 
 
 class ParserClient:
@@ -49,7 +49,7 @@ class ParserClient:
                         )
                     )
         except AttributeError:
-            logger.info('Данных нет')
+            logger.info(f'Данных нет id[{id}] link-"{link}"')
             anime_composed = []
 
         return anime_composed

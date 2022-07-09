@@ -1,5 +1,6 @@
 import re
 import requests
+import logging
 
 from typing import List
 
@@ -9,6 +10,9 @@ from .exception import (
     ApiAnimeVostClientStatusCodeError,
     ApiAnimeVostClientAttributeError
 )
+
+
+logger = logging.getLogger('main')
 
 
 class ApiAnimeVostClient:
@@ -24,6 +28,8 @@ class ApiAnimeVostClient:
         response = requests.get(url=url, params=params, headers=HEADERS)
         if response.status_code == 200:
             if not response.json().get('data'):
+                logger.error(f'Неверный статус код {response.status_code} '
+                             f'и нет данных на запрос "{url}"')
                 raise ApiAnimeVostClientAttributeError
             return response.json()
         else:
@@ -42,6 +48,8 @@ class ApiAnimeVostClient:
             if response.json().get('error'):
                 return response.json()
             else:
+                logger.error(f'Неверный статус код {response.status_code} '
+                             f'и нет данных на запрос "{url}"')
                 raise ApiAnimeVostClientStatusCodeError
         else:
             raise ApiAnimeVostClientStatusCodeError
