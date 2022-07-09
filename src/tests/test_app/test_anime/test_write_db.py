@@ -14,7 +14,6 @@ class TestWriteDB(APITestCase):
     def test_write_genre(self):
         self.assertEqual(0, Genre.objects.count())
 
-        self.writer._write_genre.cache_clear()
         result = self.writer._write_genre('приключения')
         self.assertEqual(1, Genre.objects.count())
 
@@ -25,7 +24,6 @@ class TestWriteDB(APITestCase):
     def test_write_genre_decorator(self):
         self.assertEqual(0, Genre.objects.count())
 
-        self.writer._write_genre.cache_clear()
         result1 = self.writer._write_genre('приключения')
         result2 = self.writer._write_genre('приключения')
         result3 = self.writer._write_genre('приключения')
@@ -98,7 +96,6 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime.screen_image.count(), 0)
         self.assertEqual(anime.genre.count(), 0)
 
-        self.writer.clear_cash_memory()
         anime = self.writer.write_anime(config_data.write_anime_shem)
 
         self.assertEqual(anime.screen_image.count(), 1)
@@ -165,7 +162,6 @@ class TestWriteDB(APITestCase):
         self.assertEqual(Genre.objects.count(), 0)
         self.assertEqual(ScreenImages.objects.count(), 0)
 
-        self.writer._write_genre.cache_clear()
         self.writer.write_anime_schedule(config_data.write_anime_schedule_data)
 
         self.assertEqual(Genre.objects.count(), 3)
@@ -217,7 +213,6 @@ class TestWriteDB(APITestCase):
         self.assertEqual(Genre.objects.count(), 0)
         self.assertEqual(ScreenImages.objects.count(), 0)
 
-        self.writer._write_genre.cache_clear()
         self.writer.write_anime_anons(anons_list)
 
         self.assertEqual(Genre.objects.count(), 3)
@@ -251,7 +246,6 @@ class TestWriteDB(APITestCase):
         self.assertEqual(Genre.objects.count(), 0)
         self.assertEqual(ScreenImages.objects.count(), 0)
 
-        self.writer._write_genre.cache_clear()
         self.writer.write_anime_anons(anons_list)
 
         self.assertEqual(Anime.objects.count(), 0)
@@ -285,7 +279,6 @@ class TestWriteDB(APITestCase):
         self.assertEqual(Genre.objects.count(), 0)
         self.assertEqual(ScreenImages.objects.count(), 0)
 
-        self.writer._write_genre.cache_clear()
         self.writer.write_anime_full(anons_data)
 
         self.assertEqual(Genre.objects.count(), 3)

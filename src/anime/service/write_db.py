@@ -5,20 +5,15 @@ from typing import List
 from django.db.models import Q
 
 from src.base.animevost import schemas
-from src.base.utils import cash_memory
 from src.anime import models
 
 
 class WriteDB:
     """Запись в БД"""
-    @cash_memory
     def _write_genre(self, genre_sting: str) -> models.Genre:
         """Запись жанров"""
-        return models.Genre.objects.create(title=genre_sting)
-
-    def clear_cash_memory(self):
-        """Очистка кеша-жанров"""
-        self._write_genre.cache_clear()
+        genre, _ = models.Genre.objects.get_or_create(title=genre_sting)
+        return genre
 
     def _write_screen_images(self, screen_images: str) -> models.ScreenImages:
         """Запись в таблицу ScreenImages"""

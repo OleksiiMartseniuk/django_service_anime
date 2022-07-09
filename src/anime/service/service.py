@@ -45,7 +45,6 @@ class ServiceAnime:
 
     def delete_table(self) -> None:
         """Очистка данных таблиц и кеша-жанров"""
-        WriteDB().clear_cash_memory()
         models.Anime.objects.all().delete()
         models.ScreenImages.objects.all().delete()
         models.Genre.objects.all().delete()

@@ -32,8 +32,7 @@ class TestServiceAnime(APITestCase):
         mock_get_data_anime_anons_all.assert_called_once()
         mock_write_anime_anons.assert_called_once()
 
-    @mock.patch('src.anime.service.service.WriteDB.clear_cash_memory')
-    def test_delete_table(self, mock_clear_cash_memory):
+    def test_delete_table(self):
         genre = Genre.objects.create(title='genre')
         image = ScreenImages.objects.create(images='img')
         anime = Anime.objects.create(
@@ -56,7 +55,6 @@ class TestServiceAnime(APITestCase):
         self.assertEqual(ScreenImages.objects.count(), 1)
 
         ServiceAnime().delete_table()
-        mock_clear_cash_memory.assert_called_once()
 
         self.assertEqual(Anime.objects.count(), 0)
         self.assertEqual(Genre.objects.count(), 0)
