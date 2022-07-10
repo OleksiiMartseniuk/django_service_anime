@@ -20,6 +20,10 @@ class ParserForm(forms.Form):
                 self.anons_valid()
             case 'delete':
                 self.delete_valid()
+            case 'schedule_update':
+                self.schedule_update_valid()
+            case 'anons_update':
+                self.anons_update_valid()
         return action
 
     def schedule_valid(self):
@@ -33,3 +37,11 @@ class ParserForm(forms.Form):
     def delete_valid(self):
         if not Anime.objects.count():
             raise forms.ValidationError('Данных для удаления нет!')
+
+    def schedule_update_valid(self):
+        if not Anime.objects.count():
+            raise forms.ValidationError('Нет Данных для обновления!')
+
+    def anons_update_valid(self):
+        if not Anime.objects.filter(anons=True).count():
+            raise forms.ValidationError('Нет Данных для обновления!')
