@@ -28,11 +28,12 @@ class ApiAnimeVostClient:
         response = requests.get(url=url, params=params, headers=HEADERS)
         if response.status_code == 200:
             if not response.json().get('data'):
-                logger.error(f'Неверный статус код {response.status_code} '
-                             f'и нет данных на запрос "{url}"')
+                logger.error(f'Нет данных на запрос "{url}"')
                 raise ApiAnimeVostClientAttributeError
             return response.json()
         else:
+            logger.error(f'Неверный статус код {response.status_code} '
+                         f'url-"{url}"')
             raise ApiAnimeVostClientStatusCodeError
 
     def _post(self, url: str, params: dict = {},
