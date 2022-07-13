@@ -31,5 +31,5 @@ urlpatterns = [
         name='schema-redoc'
     ),
     # app anime
-    path('v1/anime/', include('src.anime.urls')),
+    path('v1/', include('src.anime.urls')),
 ]
