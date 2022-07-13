@@ -4,7 +4,7 @@ from django.urls import path
 
 from .models import Anime, Genre, Series, ScreenImages
 from .forms import ParserForm
-from .service.admin.service import ParserControl
+from .service.admin.parser_control import ParserControl
 
 
 @admin.register(Anime)
