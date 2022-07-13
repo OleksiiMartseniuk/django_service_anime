@@ -1,7 +1,7 @@
 from rest_framework.test import APITestCase
 from unittest import mock
 
-from src.anime.service.service import ServiceAnime
+from src.anime.service.service_vost import ServiceAnime
 from src.anime.models import Anime, ScreenImages, Genre
 
 from . import config_data
@@ -9,8 +9,8 @@ from . import config_data
 
 class TestServiceAnime(APITestCase):
     @mock.patch(
-        'src.anime.service.service.ServiceAnimeVost.get_data_anime_all')
-    @mock.patch('src.anime.service.service.WriteDB.write_anime_schedule')
+        'src.anime.service.service_vost.ServiceAnimeVost.get_data_anime_all')
+    @mock.patch('src.anime.service.service_vost.WriteDB.write_anime_schedule')
     def test_anime_schedule(
             self,
             mock_write_anime_schedule,
@@ -21,8 +21,9 @@ class TestServiceAnime(APITestCase):
         mock_get_data_anime_all.assert_called_once()
 
     @mock.patch(
-        'src.anime.service.service.ServiceAnimeVost.get_data_anime_anons_all')
-    @mock.patch('src.anime.service.service.WriteDB.write_anime_anons')
+        'src.anime.service.service_vost.ServiceAnimeVost.get_data_anime_anons_all'
+    )
+    @mock.patch('src.anime.service.service_vost.WriteDB.write_anime_anons')
     def test_anime_anons(
             self,
             mock_write_anime_anons,
@@ -60,8 +61,10 @@ class TestServiceAnime(APITestCase):
         self.assertEqual(Genre.objects.count(), 0)
         self.assertEqual(ScreenImages.objects.count(), 0)
 
-    @mock.patch('src.anime.service.service.ServiceAnimeVost.get_anime_data')
-    @mock.patch('src.anime.service.service.WriteDB.write_anime_full')
+    @mock.patch(
+        'src.anime.service.service_vost.ServiceAnimeVost.get_anime_data'
+    )
+    @mock.patch('src.anime.service.service_vost.WriteDB.write_anime_full')
     def test_write_anime_none(
             self,
             mock_get_anime_data,
@@ -71,8 +74,10 @@ class TestServiceAnime(APITestCase):
         self.assertFalse(mock_get_anime_data.called)
         self.assertFalse(mock_write_anime_full.called)
 
-    @mock.patch('src.anime.service.service.ServiceAnimeVost.get_anime_data')
-    @mock.patch('src.anime.service.service.WriteDB.write_anime_full')
+    @mock.patch(
+        'src.anime.service.service_vost.ServiceAnimeVost.get_anime_data'
+    )
+    @mock.patch('src.anime.service.service_vost.WriteDB.write_anime_full')
     def test_write_anime(
             self,
             mock_get_anime_data,
@@ -83,12 +88,12 @@ class TestServiceAnime(APITestCase):
         mock_write_anime_full.assert_called_once()
 
     @mock.patch(
-        'src.anime.service.service.ServiceAnimeVost.get_data_anime_all'
+        'src.anime.service.service_vost.ServiceAnimeVost.get_data_anime_all'
     )
     @mock.patch(
-        'src.anime.service.service.UpdateDataParser.update_anime_schedule'
+        'src.anime.service.service_vost.UpdateDataParser.update_anime_schedule'
     )
-    @mock.patch('src.anime.service.service.ServiceAnime._write_anime')
+    @mock.patch('src.anime.service.service_vost.ServiceAnime._write_anime')
     def test_anime_schedule_update(
             self,
             mock_write_anime,
@@ -101,12 +106,12 @@ class TestServiceAnime(APITestCase):
         mock_get_data_anime_all.assert_called_once()
 
     @mock.patch(
-        'src.anime.service.service.ServiceAnimeVost.get_data_anime_anons_all'
+        'src.anime.service.service_vost.ServiceAnimeVost.get_data_anime_anons_all'
     )
     @mock.patch(
-        'src.anime.service.service.UpdateDataParser.update_anime_anons'
+        'src.anime.service.service_vost.UpdateDataParser.update_anime_anons'
     )
-    @mock.patch('src.anime.service.service.ServiceAnime._write_anime')
+    @mock.patch('src.anime.service.service_vost.ServiceAnime._write_anime')
     def test_anime_anons_update(
             self,
             mock_write_anime,

@@ -1,6 +1,6 @@
 from config.celery import app
 
-from .service.service import ServiceAnime
+from .service.service_vost import ServiceAnime
 
 
 @app.task
