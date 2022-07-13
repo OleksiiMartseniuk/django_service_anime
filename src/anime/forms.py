@@ -27,7 +27,7 @@ class ParserForm(forms.Form):
         return action
 
     def schedule_valid(self):
-        if Anime.objects.count() >= 1:
+        if Anime.objects.filter(anons=False).count() >= 1:
             raise forms.ValidationError('Данные уже записаны!')
 
     def anons_valid(self):
