@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_yasg',
+    'debug_toolbar',
 
     'src.anime',
 ]
@@ -41,6 +42,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # django-debug-toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -149,3 +152,8 @@ LOGGING = {
 # Celery Configuration Options
 CELERY_BROKER_URL = os.getenv('REDIS_CLOUD_URL')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_CLOUD_URL')
+
+# django-debug-toolbar
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

@@ -30,6 +30,8 @@ urlpatterns = [
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc'
     ),
+    # django-debug-toolbar’s
+    path('__debug__/', include('debug_toolbar.urls')),
     # app anime
     path('v1/', include('src.anime.urls')),
 ]
