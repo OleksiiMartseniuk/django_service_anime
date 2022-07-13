@@ -40,3 +40,15 @@ class AnimeMinAnonsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Anime
         fields = ['id', 'title', 'url_image_preview']
+
+
+class DaySerializers(serializers.Serializer):
+    """День недели"""
+    day = serializers.CharField(max_length=20)
+
+
+class AnimeMinSerializers(serializers.ModelSerializer):
+    """Вывод короткого описания аниме"""
+    class Meta:
+        model = Anime
+        fields = ['id', 'title', 'url_image_preview']
