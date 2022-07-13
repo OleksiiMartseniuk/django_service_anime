@@ -2,6 +2,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, status
 
+from drf_yasg.utils import swagger_auto_schema
+
 from .models import Anime
 from .service import service
 from .serializers import (
@@ -27,6 +29,8 @@ class AnimeDetailView(generics.RetrieveAPIView):
 
 class AnimeScheduleDayView(APIView):
     """Вывод расписания по дню"""
+    @swagger_auto_schema(request_body=DaySerializers,
+                         responses={200: AnimeMinSerializers(many=True)})
     def post(self, request):
         serializer_day = DaySerializers(data=request.data)
         if serializer_day.is_valid():
