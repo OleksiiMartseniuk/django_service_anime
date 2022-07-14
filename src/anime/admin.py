@@ -45,7 +45,7 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Series)
 class SeriesAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'id_anime')
     list_filter = ('id_anime',)
     search_fields = ('id_anime',)
 
