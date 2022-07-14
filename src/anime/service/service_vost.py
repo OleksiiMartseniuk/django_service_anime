@@ -55,11 +55,16 @@ class ServiceAnime:
         logger.info('Обновления аниме Анонс')
 
     def delete_table(self) -> None:
-        """Очистка данных таблиц и кеша-жанров"""
+        """Очистка данных таблиц Anime, ScreenImages, Genre"""
         models.Anime.objects.all().delete()
         models.ScreenImages.objects.all().delete()
         models.Genre.objects.all().delete()
-        logger.info('Очистка данных таблиц и кеша-жанров')
+        logger.info('Очистка данных таблиц Anime, ScreenImages, Genre')
+
+    def delete_series(self):
+        """Очистка данных таблицы Series"""
+        models.Series.objects.all().delete()
+        logger.info('Очистка данных таблицы Series')
 
     def series(self) -> None:
         """Запись серий"""

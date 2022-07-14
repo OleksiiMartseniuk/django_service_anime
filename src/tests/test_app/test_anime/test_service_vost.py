@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from unittest import mock
 
 from src.anime.service.service_vost import ServiceAnime
-from src.anime.models import Anime, ScreenImages, Genre
+from src.anime.models import Anime, ScreenImages, Genre, Series
 
 from . import config_data
 
@@ -144,3 +144,9 @@ class TestServiceAnime(APITestCase):
         ServiceAnime().series_update()
         mock_get_play_list.assert_called_once()
         mock_update_series.assert_called_once()
+
+    def test_delete_series(self):
+        Series.objects.create(id_anime=1, name='name', std='std', hd='hd')
+        self.assertEqual(Series.objects.count(), 1)
+        ServiceAnime().delete_series()
+        self.assertEqual(Series.objects.count(), 0)
