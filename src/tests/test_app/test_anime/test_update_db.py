@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from unittest import mock
 
 from src.anime.service.update_db import UpdateDataParser
-from src.anime.models import Anime
+from src.anime.models import Anime, Series
 
 from . import config_data
 
@@ -106,3 +106,17 @@ class TestUpdateDataParser(APITestCase):
 
         mock_update_anime.assert_called_once()
         self.assertEqual(result, [config_data.create_schemas])
+
+    def test_update_series(self):
+        Series.objects.create(
+            id_anime=1,
+            name='350 серия',
+            std='http://video.animetop.info/1703961250.mp4',
+            hd='http://video.animetop.info/720/1703961250.mp4'
+        )
+        self.assertEqual(Series.objects.count(), 1)
+        UpdateDataParser().update_series(1, config_data.write_series_data)
+        self.assertEqual(Series.objects.count(), 2)
+        series_list = Series.objects.filter(id_anime=1)
+        self.assertEqual(series_list[0].name, '350 серия')
+        self.assertEqual(series_list[1].name, '937 серия')

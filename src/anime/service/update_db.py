@@ -4,7 +4,7 @@ import logging
 from typing import List
 
 from src.base.animevost import schemas
-from src.anime.models import Anime
+from src.anime.models import Anime, Series
 
 
 logger = logging.getLogger('main')
@@ -80,3 +80,16 @@ class UpdateDataParser:
                 logger.info(f'Аниме(anons) id={anime_schemas.id} записано')
         if write_list:
             return write_list
+
+    def update_series(self, id: int, series_data: List[schemas.Series]) -> None:
+        """Обновления серий"""
+        list_name_series = Series.objects.filter(id_anime=id).\
+            values_list('name', flat=True)
+        for data in series_data:
+            if data.name not in list_name_series:
+                Series.objects.create(
+                    id_anime=id,
+                    name=data.name,
+                    std=data.std,
+                    hd=data.hd
+                )
