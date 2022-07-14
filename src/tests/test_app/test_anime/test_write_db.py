@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from unittest import mock
 
 from src.anime.service.write_db import WriteDB
-from src.anime.models import Genre, ScreenImages, Anime
+from src.anime.models import Genre, ScreenImages, Anime, Series
 
 from . import config_data
 
@@ -325,3 +325,10 @@ class TestWriteDB(APITestCase):
         self.assertEqual(Anime.objects.count(), 1)
         self.writer.write_anime_anons(anons_data)
         self.assertEqual(Anime.objects.count(), 1)
+
+    def test_write_series(self):
+        self.assertEqual(Series.objects.count(), 0)
+        WriteDB().write_series(1, config_data.write_series_data)
+        self.assertEqual(Series.objects.count(), 2)
+        self.assertEqual(Series.objects.filter(id_anime=1).count(), 2)
+

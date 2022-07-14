@@ -109,3 +109,9 @@ class WriteDB:
         if not models.Anime.objects.filter(id_anime=anime_data.id).exists():
             anime = self.write_anime(anime_data, day)
             self._write_anime_composed(anime, anime_data.anime_composed)
+
+    def write_series(self, id: int, series_data: List[schemas.Series]) -> None:
+        """Запись серий"""
+        models.Series.objects.bulk_create(
+            [models.Series(id_anime=id, **date.dict()) for date in series_data]
+        )

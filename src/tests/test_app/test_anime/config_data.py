@@ -1,4 +1,4 @@
-from src.base.animevost.schemas import AnimeData, AnimeFull
+from src.base.animevost.schemas import AnimeData, AnimeFull, Series
 from src.anime.service.update_db import AnimeMini
 from src.anime.models import Anime
 
@@ -207,3 +207,16 @@ def create_anime():
             day_week='monday'
         )
     ])
+
+write_series_data = [
+    Series(
+        name='350 серия',
+        std='http://video.animetop.info/1703961250.mp4',
+        hd='http://video.animetop.info/720/1703961250.mp4'
+    ),
+    Series(
+        name='937 серия',
+        std='http://video.animetop.info/2147416130.mp4',
+        hd='http://video.animetop.info/720/2147416130.mp4'
+    )
+]
