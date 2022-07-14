@@ -16,6 +16,7 @@ class ScreenImages(models.Model):
 
 class Series(models.Model):
     """Серии"""
+    id_anime = models.IntegerField('ID animevost', unique=True)
     name = models.CharField('Номер серии', max_length=50)
     std = models.CharField('sd качество', max_length=255)
     hd = models.CharField('hd качество', max_length=255)
