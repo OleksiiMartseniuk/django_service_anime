@@ -2,7 +2,7 @@ from typing import List
 
 from rest_framework.exceptions import ValidationError
 
-from src.anime.models import Anime, Series
+from src.anime.models import Anime
 
 
 WEEK = ['monday', 'tuesday', 'wednesday',
@@ -17,8 +17,3 @@ def get_anime_list_day(day: str) -> List[dict]:
         filter(day_week=day). \
         values('id', 'title', 'url_image_preview')
     return anime_list
-
-
-def get_series(id: int) -> List[Series]:
-    """Получения серий"""
-    pass
