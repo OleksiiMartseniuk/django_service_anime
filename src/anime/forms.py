@@ -28,7 +28,7 @@ class ParserForm(forms.Form):
             case 'anons_update':
                 self.anons_update_valid()
             case 'series':
-                self.schedule_valid()
+                self.series_valid()
             case 'series_update':
                 self.series_update_valid()
             case 'delete_series':
