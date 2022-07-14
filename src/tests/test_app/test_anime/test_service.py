@@ -4,8 +4,6 @@ from rest_framework.exceptions import ValidationError
 from src.anime.service import service
 from src.anime.models import Anime
 
-from . import config_data
-
 
 class TestService(APITestCase):
     def test_get_anime_list_day_raise_error(self):
