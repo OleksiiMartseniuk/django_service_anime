@@ -36,6 +36,15 @@ class ParserControl:
             case 'anons_update':
                 parser.delay('anons_update')
                 status = Status(message=ex_massages.ANONS_UPDATE)
+            case 'series':
+                parser.delay('series')
+                status = Status(message=ex_massages.SERIES)
+            case 'series_update':
+                parser.delay('series_update')
+                status = Status(message=ex_massages.SERIES_UPDATE)
+            case 'delete_series':
+                parser.delay('delete_series')
+                status = Status(message=ex_massages.DElETE)
             case _:
                 status = Status(
                     message=ex_massages.ERROR,
