@@ -53,8 +53,3 @@ class TestEndPoint(APITestCase):
         response = self.client.post(url, data={'day': 'monday'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()), 2)
-
-    def test_anime_schedule_day_view_error(self):
-        url = reverse('schedule-day')
-        response = self.client.post(url, data={'day': 'test'})
-        self.assertEqual(response.status_code, 400)
