@@ -122,3 +122,25 @@ class TestServiceAnime(APITestCase):
         mock_write_anime.assert_called_once()
         mock_update_anime_anons.assert_called_once()
         mock_get_data_anime_anons_all.assert_called_once()
+
+    @mock.patch('src.anime.service.service_vost.WriteDB.write_series')
+    @mock.patch(
+        'src.anime.service.service_vost.ApiAnimeVostClient.get_play_list'
+    )
+    def test_series(self, mock_get_play_list, mock_write_series):
+        config_data.create_anime_one()
+        ServiceAnime().series()
+        mock_get_play_list.assert_called_once()
+        mock_write_series.assert_called_once()
+
+    @mock.patch(
+        'src.anime.service.service_vost.UpdateDataParser.update_series'
+    )
+    @mock.patch(
+        'src.anime.service.service_vost.ApiAnimeVostClient.get_play_list'
+    )
+    def test_series_update(self, mock_get_play_list, mock_update_series):
+        config_data.create_anime_one()
+        ServiceAnime().series_update()
+        mock_get_play_list.assert_called_once()
+        mock_update_series.assert_called_once()

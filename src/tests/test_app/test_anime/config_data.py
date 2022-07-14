@@ -220,3 +220,20 @@ write_series_data = [
         hd='http://video.animetop.info/720/2147416130.mp4'
     )
 ]
+
+
+def create_anime_one():
+    Anime.objects.create(
+        id_anime=1,
+        title='title',
+        link='anime_data.link',
+        rating=1,
+        votes=1,
+        description='anime_data.description',
+        director='anime_data.director',
+        url_image_preview='url_image_preview',
+        year='anime_data.year',
+        type='an',
+        anons=True,
+        day_week='monday'
+    )
