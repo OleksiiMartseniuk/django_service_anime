@@ -16,3 +16,9 @@ def parser(action: str) -> None:
             ServiceAnime().anime_schedule_update()
         case 'anons_update':
             ServiceAnime().anime_anons_update()
+        case 'series':
+            ServiceAnime().series()
+        case 'series_update':
+            ServiceAnime().series_update()
+        case 'delete_series':
+            ServiceAnime().delete_series()
