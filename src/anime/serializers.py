@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Anime, ScreenImages, Genre
+from .models import Anime, ScreenImages, Genre, Series
 
 
 class ScreenImageSerializers(serializers.ModelSerializer):
@@ -52,3 +52,10 @@ class AnimeMinSerializers(serializers.ModelSerializer):
     class Meta:
         model = Anime
         fields = ['id', 'title', 'url_image_preview']
+
+
+class SeriesSerializers(serializers.ModelSerializer):
+    """Вывод серии"""
+    class Meta:
+        model = Series
+        fields = '__all__'
