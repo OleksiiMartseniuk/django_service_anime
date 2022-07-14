@@ -1,5 +1,6 @@
 from src.base.animevost.schemas import AnimeData, AnimeFull
 from src.anime.service.update_db import AnimeMini
+from src.anime.models import Anime
 
 write_anime_shem = AnimeData(
     id=2696,
@@ -173,3 +174,36 @@ update_anime_schedule_data = {
 }
 
 create_schemas = AnimeMini(id=1, link='https://test')
+
+
+def create_anime():
+    Anime.objects.bulk_create([
+        Anime(
+            id_anime=1,
+            title='title',
+            link='anime_data.link',
+            rating=1,
+            votes=1,
+            description='anime_data.description',
+            director='anime_data.director',
+            url_image_preview='url_image_preview',
+            year='anime_data.year',
+            type='an',
+            anons=True,
+            day_week='monday'
+        ),
+        Anime(
+            id_anime=2,
+            title='title1',
+            link='anime_data.link',
+            rating=1,
+            votes=1,
+            description='anime_data.description',
+            director='anime_data.director',
+            url_image_preview='url_image_preview1',
+            year='anime_data.year1',
+            type='an',
+            anons=True,
+            day_week='monday'
+        )
+    ])
