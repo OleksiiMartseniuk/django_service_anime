@@ -147,6 +147,6 @@ class ParserClient:
         return list_anime
 
     def get_anime_one(self, id: int, link: str) -> AnimeMin:
-        """Получения одгого аниме"""
+        """Получения одного аниме"""
         anime_composed = self.get_composed(link, str(id))
         return AnimeMin(id_anime=id, link=link, anime_composed=anime_composed)
