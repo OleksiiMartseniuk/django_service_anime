@@ -1,3 +1,4 @@
+import logging
 from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path
@@ -5,6 +6,9 @@ from django.urls import path
 from .models import Anime, Genre, Series, ScreenImages, Statistics
 from .forms import ParserForm
 from .service.admin.parser_control import ParserControl
+
+
+logger = logging.getLogger('main')
 
 
 @admin.register(Anime)
@@ -30,6 +34,14 @@ class AnimeAdmin(admin.ModelAdmin):
             if form.is_valid():
                 status = ParserControl().control(form.data['action'])
                 self.message_user(request, status.message, level=status.level)
+
+                # Добавления записи в статистику
+                Statistics.objects.create(
+                    author=request.user,
+                    message=form.data['action']
+                )
+                logger.info(f'Пользователь [{request.user.username}]-'
+                            f'[{form.data["action"]}]')
 
         context = dict(
             self.admin_site.each_context(request),
