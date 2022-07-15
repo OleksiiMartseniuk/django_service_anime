@@ -53,6 +53,8 @@ class ApiAnimeVostClient:
                              f'и нет данных на запрос "{url}"')
                 raise ApiAnimeVostClientStatusCodeError
         else:
+            logger.error(f'Неверный статус код {response.status_code} '
+                         f'url-"{url}"')
             raise ApiAnimeVostClientStatusCodeError
 
     def _create_anime_series(self, data: dict) -> Series:
