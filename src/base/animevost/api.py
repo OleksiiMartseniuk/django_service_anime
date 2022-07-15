@@ -57,16 +57,8 @@ class ApiAnimeVostClient:
 
     def _create_anime_series(self, data: dict) -> Series:
         """Создания Series схемы"""
-        if data.get('name'):
-            try:
-                list_str = data['name'].split(' ')
-                name = list_str[0] if list_str[1] == 'серия' else data['name']
-            except IndexError:
-                name = data['name']
-        else:
-            name = data.get('name')
         return Series(
-            name=name,
+            name=data.get('name'),
             std=data.get('std'),
             hd=data.get('hd')
         )
