@@ -58,4 +58,4 @@ class SeriesSerializers(serializers.ModelSerializer):
     """Вывод серии"""
     class Meta:
         model = Series
-        fields = '__all__'
+        exclude = ['id_anime', 'number']
