@@ -15,5 +15,5 @@ def get_anime_list_day(day: str) -> List[dict]:
         raise ValidationError(f'Неверное значения[{day}]-[{", ".join(WEEK)}]')
     anime_list = Anime.objects. \
         filter(day_week=day). \
-        values('id', 'title', 'url_image_preview')
+        values('id', 'title', 'url_image_preview', 'timer')
     return anime_list
