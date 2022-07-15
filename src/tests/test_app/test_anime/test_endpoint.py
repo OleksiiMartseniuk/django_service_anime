@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 
 from django.urls import reverse
 
-from src.anime.models import Anime
+from src.anime.models import Anime, Series
 from . import config_data
 
 
@@ -53,3 +53,18 @@ class TestEndPoint(APITestCase):
         response = self.client.post(url, data={'day': 'monday'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()), 2)
+
+    def test_anime_series_list_view(self):
+        objs = Series.objects.bulk_create([
+            Series(id_anime=1, name='12 t', std='test', hd='test', number=12),
+            Series(id_anime=1, name='5 t', std='test', hd='test', number=5),
+            Series(id_anime=1, name='OVA', std='test', hd='test', number=None),
+        ])
+        url = reverse('series', args=[1])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['count'], 3)
+        self.assertEqual(data['results'][0]['name'], objs[2].name)
+        self.assertEqual(data['results'][1]['name'], objs[1].name)
+        self.assertEqual(data['results'][2]['name'], objs[0].name)
