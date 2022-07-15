@@ -1,17 +1,18 @@
 from django import forms
 from .models import Anime, Series
+from .service.admin import messages
 
 
 class ParserForm(forms.Form):
     action = forms.ChoiceField(label='', widget=forms.Select, choices=[
-        ('schedule', 'Запись аниме расписания'),
-        ('anons', 'Запись аниме анонсов'),
-        ('delete', 'Удаления всех записей таблиц (Anime, ScreenImages, Genre)'),
-        ('schedule_update', 'Обновить аниме расписания'),
-        ('anons_update', 'Обновить аниме анонсов'),
-        ('series', 'Запись серий'),
-        ('series_update', 'Обновления серий'),
-        ('delete_series', 'Очистка данных таблицы Series'),
+        ('schedule', messages.SCHEDULE_FORM),
+        ('anons', messages.ANONS_FORM),
+        ('delete', messages.DElETE_SCHEDULE_FORM),
+        ('schedule_update', messages.SCHEDULE_UPDATE_FORM),
+        ('anons_update', messages.ANONS_UPDATE_FORM),
+        ('series', messages.SCHEDULE_FORM),
+        ('series_update', messages.SERIES_UPDATE_FORM),
+        ('delete_series', messages.DElETE_SERIES_FORM),
     ])
 
     def clean_action(self):
