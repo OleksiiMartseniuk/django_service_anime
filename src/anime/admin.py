@@ -45,7 +45,8 @@ class AnimeAdmin(admin.ModelAdmin):
 
         context = dict(
             self.admin_site.each_context(request),
-            form=form
+            form=form,
+            statistics=Statistics.objects.order_by('-created')[:10]
         )
         return TemplateResponse(request, 'admin/parser.html', context)
 
