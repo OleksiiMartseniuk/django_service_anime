@@ -13,3 +13,12 @@ ERROR_STATUS_CODE_API = 'ApiAnimeVostClientStatusCodeError\n' \
 ERROR_DATA_API = 'ApiAnimeVostClientAttributeError\n' \
                  'Пришедшие дынные с api animevost не верны'
 ERROR_NOT_DATA = 'NotDataError\nНет данных'
+SCHEDULE_FORM = 'Запись аниме расписания'
+ANONS_FORM = 'Запись аниме анонсов'
+DElETE_SCHEDULE_FORM = 'Удаления всех записей таблиц ' \
+                       '(Anime, ScreenImages, Genre)'
+SCHEDULE_UPDATE_FORM = 'Обновить аниме расписания'
+ANONS_UPDATE_FORM = 'Обновить аниме анонсов'
+SERIES_FORM = 'Запись серий'
+SERIES_UPDATE_FORM = 'Обновления серий'
+DElETE_SERIES_FORM = 'Очистка данных таблицы Series'
