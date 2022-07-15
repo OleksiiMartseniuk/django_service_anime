@@ -550,7 +550,7 @@ play_list_json = [
     {
         'std': 'http://video.animetop.info/2147394716.mp4',
         'preview': 'http://media.aniland.org/img/2147394716.jpg',
-        'name': '12 серия',
+        'name': 'Фильм',
         'hd': 'http://video.animetop.info/720/2147394716.mp4'
     },
     {
@@ -563,12 +563,12 @@ play_list_json = [
 
 play_list_data = [
     Series(
-        name='12 серия',
+        name='Фильм',
         std='http://video.animetop.info/2147394716.mp4',
         hd='http://video.animetop.info/720/2147394716.mp4'
     ),
     Series(
-        name='27 серия',
+        name='27',
         std='http://video.animetop.info/2147394728.mp4',
         hd='http://video.animetop.info/720/2147394728.mp4'
     )
