@@ -17,9 +17,10 @@ class ScreenImages(models.Model):
 class Series(models.Model):
     """Серии"""
     id_anime = models.IntegerField('ID animevost')
-    name = models.CharField('Номер серии', max_length=50)
+    name = models.CharField('Названия', max_length=50)
     std = models.CharField('sd качество', max_length=255)
     hd = models.CharField('hd качество', max_length=255)
+    number = models.IntegerField('Номер серии', blank=True, null=True)
 
     def __str__(self):
         return self.name
