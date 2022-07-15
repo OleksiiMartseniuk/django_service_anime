@@ -35,7 +35,7 @@ class AnimeAdmin(admin.ModelAdmin):
                 status = ParserControl().control(form.data['action'])
                 self.message_user(request, status.message, level=status.level)
 
-                # Добавления записи в статистику
+                # Добавления действия в статистику
                 Statistics.objects.create(
                     author=request.user,
                     message=form.data['action']
