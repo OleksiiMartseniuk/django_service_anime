@@ -4,6 +4,7 @@ from typing import List
 
 from django.db.models import Q
 
+from src.anime.service.utils import get_number
 from src.base.animevost import schemas
 from src.anime import models
 
@@ -112,6 +113,13 @@ class WriteDB:
 
     def write_series(self, id: int, series_data: List[schemas.Series]) -> None:
         """Запись серий"""
-        models.Series.objects.bulk_create(
-            [models.Series(id_anime=id, **date.dict()) for date in series_data]
-        )
+        objs = []
+        for date in series_data:
+            objs.append(
+                models.Series(
+                    id_anime=id,
+                    **date.dict(),
+                    number=get_number(date.name)
+                )
+            )
+        models.Series.objects.bulk_create(objs)

@@ -3,6 +3,7 @@ import re
 import logging
 from typing import List
 
+from src.anime.service.utils import get_number
 from src.base.animevost import schemas
 from src.anime.models import Anime, Series
 
@@ -81,7 +82,11 @@ class UpdateDataParser:
         if write_list:
             return write_list
 
-    def update_series(self, id: int, series_data: List[schemas.Series]) -> None:
+    def update_series(
+            self,
+            id: int,
+            series_data: List[schemas.Series]
+    ) -> None:
         """Обновления серий"""
         list_name_series = Series.objects.filter(id_anime=id).\
             values_list('name', flat=True)
@@ -91,5 +96,6 @@ class UpdateDataParser:
                     id_anime=id,
                     name=data.name,
                     std=data.std,
-                    hd=data.hd
+                    hd=data.hd,
+                    number=get_number(data.name)
                 )
