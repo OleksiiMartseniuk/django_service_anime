@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path
 
-from .models import Anime, Genre, Series, ScreenImages
+from .models import Anime, Genre, Series, ScreenImages, Statistics
 from .forms import ParserForm
 from .service.admin.parser_control import ParserControl
 
@@ -54,3 +54,9 @@ class SeriesAdmin(admin.ModelAdmin):
 class ScreenImagesAdmin(admin.ModelAdmin):
     list_display = ('images',)
     search_fields = ('images',)
+
+
+@admin.register(Statistics)
+class StatisticsAdmin(admin.ModelAdmin):
+    list_display = ('author', 'message', 'created')
+    list_filter = ('author', 'message', 'created')
