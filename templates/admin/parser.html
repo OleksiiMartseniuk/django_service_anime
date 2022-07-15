@@ -8,5 +8,29 @@
         {{ form }}
         <input type="submit" value="Выполнить">
     </form>
+
+    <br>
+
+    <h1>Statistics</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Автор</th>
+                <th>Действия</th>
+                <th>Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in statistics %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{record.author.username}}</td>
+                <td>{{record.get_message_display}}</td>
+                <td>{{record.created|date:"d-m-Y"}} {{record.created|time:"H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
