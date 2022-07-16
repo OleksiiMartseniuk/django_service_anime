@@ -57,9 +57,7 @@ class ServiceAnime:
     def delete_table(self) -> None:
         """Очистка данных таблиц Anime, ScreenImages, Genre"""
         models.Anime.objects.all().delete()
-        models.ScreenImages.objects.all().delete()
-        models.Genre.objects.all().delete()
-        logger.info('Очистка данных таблиц Anime, ScreenImages, Genre')
+        logger.info('Очистка данных таблиц Anime')
 
     def delete_series(self):
         """Очистка данных таблицы Series"""
