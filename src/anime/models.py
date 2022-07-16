@@ -15,6 +15,12 @@ class Genre(models.Model):
 class ScreenImages(models.Model):
     """Набор кадров"""
     images = models.CharField('Скрин', max_length=255)
+    images_s = models.ImageField(
+        'Скрин [сервер]',
+        upload_to='screen_images/',
+        blank=True,
+        null=True
+    )
 
 
 class Series(models.Model):
@@ -53,10 +59,21 @@ class Anime(models.Model):
     description = models.TextField('Описания')
     director = models.CharField('Режиссёр', max_length=100)
     url_image_preview = models.CharField('Preview изображения', max_length=255)
+    url_image_preview_s = models.ImageField(
+        'Preview изображения [сервер]',
+        upload_to='preview/',
+        blank=True,
+        null=True
+    )
     year = models.CharField('Год выпуска', max_length=20)
     timer = models.IntegerField('Время выхода серии', default=0)
-    type = models.CharField('Тип', max_length=10)
-    day_week = models.CharField('День недели', max_length=20, default='')
+    type = models.CharField('Тип', max_length=30)
+    day_week = models.CharField(
+        'День недели',
+        max_length=20,
+        default='',
+        blank=True
+    )
     anons = models.BooleanField('Анонс', default=False)
 
     class Meta:
