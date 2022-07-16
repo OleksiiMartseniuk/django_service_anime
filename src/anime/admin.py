@@ -1,7 +1,12 @@
 import logging
+import os
+
 from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path
+from django.conf import settings
+from django.http import HttpResponse
+from django.shortcuts import redirect
 
 from .models import Anime, Genre, Series, ScreenImages, Statistics
 from .forms import ParserForm
@@ -22,7 +27,10 @@ class AnimeAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            path('parser/', self.admin_site.admin_view(self.parser))
+            path('parser/', self.admin_site.admin_view(self.parser),
+                 name='parser'),
+            path('download/', self.admin_site.admin_view(self.download),
+                 name='download'),
         ]
         return my_urls + urls
 
@@ -49,6 +57,21 @@ class AnimeAdmin(admin.ModelAdmin):
             statistics=Statistics.objects.order_by('-created')[:10]
         )
         return TemplateResponse(request, 'admin/parser.html', context)
+
+    def download(self, request):
+        """Скачивание файла логов"""
+        file_path = settings.FILENAME_LOGGING
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as fh:
+                response = HttpResponse(fh.read(), content_type=None)
+                content = 'attachment; filename=' + os.path.basename(file_path)
+                response['Content-Disposition'] = content
+                logger.info(f'Пользователь [{request.user.username}] -'
+                            f' скачал файл логов')
+                return response
+        logger.error('Файла information.log не существует')
+        self.message_user(request, 'Что-то пошло не так', level=40)
+        return redirect('admin:parser')
 
 
 @admin.register(Genre)

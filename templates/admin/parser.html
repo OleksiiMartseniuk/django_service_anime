@@ -32,5 +32,16 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <br>
+
+    <h1>Logging</h1>
+    <a href="{% url 'admin:download' %}">
+        <input type="button" value='Download log file'>
+    </a>
+    <a href="#">
+        <input type="button" value='Open log file'>
+    </a>
+
 </div>
 {% endblock %}
