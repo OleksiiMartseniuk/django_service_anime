@@ -55,7 +55,7 @@ class ServiceAnime:
         logger.info('Обновления аниме Анонс')
 
     def delete_table(self) -> None:
-        """Очистка данных таблиц Anime, ScreenImages, Genre"""
+        """Очистка данных таблиц Anime"""
         models.Anime.objects.all().delete()
         logger.info('Очистка данных таблиц Anime')
 
