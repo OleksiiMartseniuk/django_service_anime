@@ -58,8 +58,6 @@ class TestServiceAnime(APITestCase):
         ServiceAnime().delete_table()
 
         self.assertEqual(Anime.objects.count(), 0)
-        self.assertEqual(Genre.objects.count(), 0)
-        self.assertEqual(ScreenImages.objects.count(), 0)
 
     @mock.patch(
         'src.anime.service.service_vost.ServiceAnimeVost.get_anime_data'
