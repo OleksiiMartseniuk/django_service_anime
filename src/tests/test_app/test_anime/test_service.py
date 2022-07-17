@@ -1,10 +1,8 @@
-import os
-from unittest import mock
 from rest_framework.test import APITestCase
 from rest_framework.exceptions import ValidationError
 
 from src.anime.service import service
-from src.anime.models import Anime, ScreenImages
+from src.anime.models import Anime
 
 
 class TestService(APITestCase):
@@ -46,19 +44,3 @@ class TestService(APITestCase):
         self.assertEqual(result[0]['url_image_preview'], 'url_image_preview')
         self.assertEqual(result[1]['title'], 'title1')
         self.assertEqual(result[1]['url_image_preview'], 'url_image_preview1')
-
-    @mock.patch('src.anime.service.service.requests.get')
-    def test_download_image(self, mock_get):
-        obj = ScreenImages.objects.create(images='http://test.gif')
-        self.assertFalse(obj.images_s)
-        mock_get.return_value.status_code = 200
-        mock_get.return_value.content = (
-            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x05\x04\
-            x04\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\
-            x44\x01\x00\x3b')
-        service.download_image(obj.images_s, obj.images)
-        self.assertTrue(obj.images_s)
-
-        file_path = 'media/screen_images/test.gif'
-        if os.path.isfile(file_path):
-            os.remove(file_path)
