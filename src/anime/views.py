@@ -49,7 +49,11 @@ class AnimeScheduleDayView(APIView):
         serializer_day = DaySerializers(data=request.data)
         if serializer_day.is_valid():
             anime_list = service.get_anime_list_day(serializer_day.data['day'])
-            serializer_anime = AnimeMinSerializers(anime_list, many=True)
+            serializer_anime = AnimeMinSerializers(
+                anime_list,
+                context={'request': request},
+                many=True
+            )
             return Response(
                 serializer_anime.data,
                 status=status.HTTP_200_OK
