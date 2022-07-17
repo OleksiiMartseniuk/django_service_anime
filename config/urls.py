@@ -34,6 +34,8 @@ urlpatterns = [
     ),
     # django-debug-toolbar’s
     path('__debug__/', include('debug_toolbar.urls')),
+    # django-silk
+    path('silk/', include('silk.urls', namespace='silk')),
     # app anime
     path('v1/', include('src.anime.urls')),
 ]
