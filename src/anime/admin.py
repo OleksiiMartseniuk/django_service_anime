@@ -31,6 +31,8 @@ class AnimeAdmin(admin.ModelAdmin):
                  name='parser'),
             path('download/', self.admin_site.admin_view(self.download),
                  name='download'),
+            path('views-log/', self.admin_site.admin_view(self.views_log),
+                 name='views-log')
         ]
         return my_urls + urls
 
@@ -72,6 +74,13 @@ class AnimeAdmin(admin.ModelAdmin):
         logger.error('Файла information.log не существует')
         self.message_user(request, 'Что-то пошло не так', level=40)
         return redirect('admin:parser')
+
+    def views_log(self, request):
+        """Просмотр файла логов"""
+        with open(settings.FILENAME_LOGGING, 'r') as fl:
+            file = fl.read()
+        file = file.split('\n')
+        return TemplateResponse(request, 'admin/log.html', {'file': file})
 
 
 @admin.register(Genre)
