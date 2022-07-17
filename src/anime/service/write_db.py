@@ -4,7 +4,7 @@ from typing import List
 
 from django.db.models import Q
 
-from src.anime.service.utils import get_number
+from src.anime.service.utils import get_number, download_image
 from src.base.animevost import schemas
 from src.anime import models
 
@@ -18,7 +18,10 @@ class WriteDB:
 
     def _write_screen_images(self, screen_images: str) -> models.ScreenImages:
         """Запись в таблицу ScreenImages"""
-        return models.ScreenImages.objects.create(images=screen_images)
+        obj = models.ScreenImages.objects.create(images=screen_images)
+        # Скачивания изображений
+        download_image(obj.images_s, screen_images)
+        return obj
 
     def _write_anime(
             self,

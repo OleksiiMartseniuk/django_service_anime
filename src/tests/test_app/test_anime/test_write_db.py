@@ -29,10 +29,12 @@ class TestWriteDB(APITestCase):
         result3 = self.writer._write_genre('приключения')
         self.assertEqual(1, Genre.objects.count())
 
-    def test_write_screen_images(self):
+    @mock.patch('src.anime.service.write_db.download_image')
+    def test_write_screen_images(self, mock_download_image):
         self.assertEqual(0, ScreenImages.objects.count())
 
         result = self.writer._write_screen_images('http://test')
+        mock_download_image.assert_called_once()
         self.assertEqual(1, ScreenImages.objects.count())
 
         screen = ScreenImages.objects.filter(images='http://test')[0]
@@ -101,8 +103,9 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime.screen_image.count(), 1)
         self.assertEqual(anime.genre.count(), 2)
 
+    @mock.patch('src.anime.service.write_db.download_image')
     @mock.patch('src.anime.service.write_db.WriteDB._write_anime')
-    def test_write_anime_composed(self, mock_write_anime):
+    def test_write_anime_composed(self, mock_write_anime, mock_download_image):
         mock_write_anime.return_value = Anime.objects.create(
             id_anime=1,
             title='anime_data.title',
@@ -137,7 +140,8 @@ class TestWriteDB(APITestCase):
 
         self.assertEqual(anime.anime_composed.count(), 1)
 
-    def test_write_anime_composed_empty(self):
+    @mock.patch('src.anime.service.write_db.download_image')
+    def test_write_anime_composed_empty(self, mock_download_image):
         anime = Anime.objects.create(
             id_anime=2,
             title='test.title',
@@ -157,7 +161,8 @@ class TestWriteDB(APITestCase):
 
         self.assertEqual(anime.anime_composed.count(), 0)
 
-    def test_write_anime_schedule(self):
+    @mock.patch('src.anime.service.write_db.download_image')
+    def test_write_anime_schedule(self, mock_download_image):
         self.assertEqual(Anime.objects.count(), 0)
         self.assertEqual(Genre.objects.count(), 0)
         self.assertEqual(ScreenImages.objects.count(), 0)
@@ -206,7 +211,8 @@ class TestWriteDB(APITestCase):
         self.writer.write_anime_schedule(config_data.write_anime_schedule_data)
         self.assertEqual(Anime.objects.count(), 1)
 
-    def test_write_anime_anons(self):
+    @mock.patch('src.anime.service.write_db.download_image')
+    def test_write_anime_anons(self, mock_download_image):
         anons_list = config_data.write_anime_anons_data
 
         self.assertEqual(Anime.objects.count(), 0)
@@ -272,7 +278,8 @@ class TestWriteDB(APITestCase):
         self.writer.write_anime_full(anons_data)
         self.assertEqual(Anime.objects.count(), 1)
 
-    def test_write_anime_full(self):
+    @mock.patch('src.anime.service.write_db.download_image')
+    def test_write_anime_full(self, mock_download_image):
         anons_data = config_data.write_anime_schedule_data['monday'][0]
 
         self.assertEqual(Anime.objects.count(), 0)
@@ -331,4 +338,3 @@ class TestWriteDB(APITestCase):
         WriteDB().write_series(1, config_data.write_series_data)
         self.assertEqual(Series.objects.count(), 2)
         self.assertEqual(Series.objects.filter(id_anime=1).count(), 2)
-
