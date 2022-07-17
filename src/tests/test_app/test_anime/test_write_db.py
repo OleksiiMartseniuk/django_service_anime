@@ -41,7 +41,8 @@ class TestWriteDB(APITestCase):
         self.assertEqual(result.images, screen.images)
         self.assertEqual(result.id, screen.id)
 
-    def test_write_anime_day_not_anons(self):
+    @mock.patch('src.anime.service.write_db.download_image')
+    def test_write_anime_day_not_anons(self, mock_download_image):
         self.assertEqual(0, Anime.objects.count())
         result = self.writer._write_anime(
             config_data.write_anime_shem, 'monday'
@@ -56,7 +57,8 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime.day_week, 'monday')
         self.assertFalse(anime.anons)
 
-    def test_write_anime_anons_not_day(self):
+    @mock.patch('src.anime.service.write_db.download_image')
+    def test_write_anime_anons_not_day(self, mock_download_image):
         self.assertEqual(0, Anime.objects.count())
 
         new_conf = config_data.write_anime_shem.copy()

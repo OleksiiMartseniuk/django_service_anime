@@ -19,7 +19,7 @@ class WriteDB:
     def _write_screen_images(self, screen_images: str) -> models.ScreenImages:
         """Запись в таблицу ScreenImages"""
         obj = models.ScreenImages.objects.create(images=screen_images)
-        # Скачивания изображений
+        # Скачивания изображения
         download_image(obj.images_s, screen_images)
         return obj
 
@@ -45,6 +45,8 @@ class WriteDB:
             day_week=day,
             anons=anons
         )
+        # Скачивания изображения
+        download_image(anime.url_image_preview_s, anime_data.url_image_preview)
         return anime
 
     def _write_anime_composed(
