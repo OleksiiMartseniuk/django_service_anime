@@ -19,7 +19,7 @@ logger = logging.getLogger('main')
 @admin.register(Anime)
 class AnimeAdmin(admin.ModelAdmin):
     list_display = (
-        'title', 'id_anime', 'rating', 'votes', 'day_week', 'anons'
+        'title', 'id', 'id_anime', 'rating', 'votes', 'day_week', 'anons'
     )
     list_filter = ('day_week', 'anons')
     search_fields = ('title', 'id_anime')
