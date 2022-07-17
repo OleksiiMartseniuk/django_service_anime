@@ -24,8 +24,8 @@ class AnimeAnonsListView(generics.ListAPIView):
     Вывод списка аниме анонсов
     ---
     """
-    queryset = Anime.objects.filter(anons=True).values('id', 'title',
-                                                       'url_image_preview')
+    queryset = Anime.objects.filter(anons=True).\
+        only('id', 'title', 'url_image_preview', 'url_image_preview_s')
     serializer_class = AnimeMinAnonsSerializers
 
 
