@@ -3,3 +3,5 @@ venv
 .env
 db.sqlite3
 information.log
+media/*
+!.gitignore
