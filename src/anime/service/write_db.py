@@ -74,7 +74,7 @@ class WriteDB:
                 anime_db.screen_image.add(screen_db)
 
         if anime_data.genre:
-            for genre in anime_data.genre.split(', '):
+            for genre in re.split(r', |. ', anime_data.genre):
                 genre_db = self._write_genre(genre)
                 anime_db.genre.add(genre_db)
 
