@@ -1,21 +1,16 @@
-import logging
-
-from typing import List
-
-from rest_framework.exceptions import ValidationError
+from django_filters import rest_framework as filters
 
 from src.anime.models import Anime
 
 
-WEEK = ['monday', 'tuesday', 'wednesday',
-        'thursday', 'friday', 'saturday', 'sunday']
+class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
+    pass
 
 
-def get_anime_list_day(day: str) -> List[dict]:
-    """Получения списка аниме по дню недели"""
-    if day not in WEEK:
-        raise ValidationError(f'Неверное значения[{day}]-[{", ".join(WEEK)}]')
-    anime_list = Anime.objects.filter(day_week=day). \
-        only('id', 'title', 'url_image_preview',
-             'url_image_preview_s', 'timer')
-    return anime_list
+class AnimeFilter(filters.FilterSet):
+    genre = CharFilterInFilter(field_name='genre__title', lookup_expr='in')
+    anons = filters.BooleanFilter()
+
+    class Meta:
+        model = Anime
+        fields = ['genre', 'day_week', 'anons']
