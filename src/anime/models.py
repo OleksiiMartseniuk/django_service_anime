@@ -92,7 +92,7 @@ class Statistics(models.Model):
         ('delete', messages.DElETE_SCHEDULE_FORM),
         ('schedule_update', messages.SCHEDULE_UPDATE_FORM),
         ('anons_update', messages.ANONS_UPDATE_FORM),
-        ('series', messages.SCHEDULE_FORM),
+        ('series', messages.SERIES_FORM),
         ('series_update', messages.SERIES_UPDATE_FORM),
         ('delete_series', messages.DElETE_SERIES_FORM),
     ]
