@@ -4,9 +4,12 @@ announcements, displaying a full description, viewing episodes. Using the admin 
 
 #### Сlient
 * Getting anime
-* Getting announcements
-* Getting anime by day of the week
-* Get episodes to watch
+* Getting list anime
+* Filter on genre, anons, day week
+* Search name anime
+* Getting list announcements
+* Getting list genre
+* Get list episodes to watch
 #### Admin panel 
 * Parser
     * Anime record
@@ -25,7 +28,7 @@ announcements, displaying a full description, viewing episodes. Using the admin 
 * Django Rest Framework
 * Celery
 * Redis
-* Sqlite 
+* Postgres 
 * Requests
 * BeautifulSoup
 * Logging
