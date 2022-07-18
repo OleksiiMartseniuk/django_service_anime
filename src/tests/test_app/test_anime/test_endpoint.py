@@ -7,13 +7,6 @@ from . import config_data
 
 
 class TestEndPoint(APITestCase):
-    def test_anime_anons_list_view(self):
-        config_data.create_anime()
-        url = reverse('anons')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()), 2)
-
     def test_anime_detail_view(self):
         anime = Anime.objects.create(
             id_anime=1,
@@ -46,13 +39,6 @@ class TestEndPoint(APITestCase):
         self.assertEqual(data['year'], anime.year)
         self.assertEqual(data['timer'], anime.timer)
         self.assertEqual(data['type'], anime.type)
-
-    def test_anime_schedule_day_view(self):
-        config_data.create_anime()
-        url = reverse('schedule-day')
-        response = self.client.post(url, data={'day': 'monday'})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()), 2)
 
     def test_anime_series_list_view(self):
         objs = Series.objects.bulk_create([
