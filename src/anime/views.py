@@ -1,6 +1,8 @@
 from django.utils.decorators import method_decorator
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import generics
+from rest_framework import filters
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -62,5 +64,7 @@ class AnimeListView(generics.ListAPIView):
     queryset = Anime.objects.only('id', 'title', 'url_image_preview',
                                   'url_image_preview_s', 'timer')
     serializer_class = AnimeMinSerializers
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = service.AnimeFilter
     pagination_class = StandardResultsSetPagination
+    search_fields = ['@title']
