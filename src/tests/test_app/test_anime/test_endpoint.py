@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 
 from django.urls import reverse
 
-from src.anime.models import Anime, Series
+from src.anime.models import Anime, Series, Genre
 from . import config_data
 
 
@@ -49,8 +49,76 @@ class TestEndPoint(APITestCase):
         url = reverse('series', args=[1])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+        data = response.json()['results']
+        self.assertEqual(response.json()['count'], 3)
+        self.assertEqual(data[0]['name'], objs[1].name)
+        self.assertEqual(data[1]['name'], objs[0].name)
+        self.assertEqual(data[2]['name'], objs[2].name)
+
+    def test_genre_list_view(self):
+        objs = Genre.objects.bulk_create([
+            Genre(title='test'),
+            Genre(title='test1')
+        ])
+        url = reverse('genre-list')
+        response = self.client.get(url)
         data = response.json()
-        self.assertEqual(data['count'], 3)
-        self.assertEqual(data['results'][0]['name'], objs[2].name)
-        self.assertEqual(data['results'][1]['name'], objs[1].name)
-        self.assertEqual(data['results'][2]['name'], objs[0].name)
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]['title'], objs[0].title)
+        self.assertEqual(data[1]['title'], objs[1].title)
+
+    def test_anime_list_view(self):
+        config_data.create_anime()
+        url = reverse('anime')
+        response = self.client.get(url)
+        data = response.json()['results']
+        self.assertEqual(response.json()['count'], 2)
+        self.assertTrue(Anime.objects.filter(id=data[0]['id']).exists())
+        self.assertTrue(Anime.objects.filter(id=data[1]['id']).exists())
+
+    def test_anime_list_view_day_week(self):
+        config_data.create_anime()
+        url = reverse('anime')
+        response = self.client.get(url, {'day_week': 'monday'})
+        data = response.json()['results']
+        self.assertEqual(response.json()['count'], 2)
+        self.assertTrue(Anime.objects.filter(id=data[0]['id']).exists())
+        self.assertTrue(Anime.objects.filter(id=data[1]['id']).exists())
+
+    def test_anime_list_view_anons(self):
+        config_data.create_anime()
+        url = reverse('anime')
+        response = self.client.get(url, {'anons': True})
+        data = response.json()['results']
+        self.assertEqual(response.json()['count'], 2)
+        self.assertTrue(Anime.objects.filter(id=data[0]['id']).exists())
+        self.assertTrue(Anime.objects.filter(id=data[1]['id']).exists())
+
+    def test_anime_list_view_search(self):
+        config_data.create_anime()
+        url = reverse('anime')
+        response = self.client.get(url, {'search': 'title1'})
+        data = response.json()['results']
+        self.assertEqual(response.json()['count'], 1)
+        self.assertTrue(Anime.objects.filter(id=data[0]['id']).exists())
+
+    def test_anime_list_view_genre(self):
+        anime = Anime.objects.create(
+            id_anime=1,
+            title='title',
+            link='anime_data.link',
+            rating=1,
+            votes=1,
+            description='anime_data.description',
+            director='anime_data.director',
+            url_image_preview='url_image_preview',
+            year='anime_data.year',
+            type='an',
+        )
+        genre = Genre.objects.create(title='test')
+        anime.genre.add(genre)
+        url = reverse('anime')
+        response = self.client.get(url, {'genre': 'test'})
+        data = response.json()['results']
+        self.assertEqual(response.json()['count'], 1)
+        self.assertTrue(Anime.objects.filter(id=data[0]['id']).exists())
