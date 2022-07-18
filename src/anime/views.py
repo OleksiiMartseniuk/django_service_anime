@@ -11,12 +11,13 @@ from .service.pagination import (
     LargeResultsSetPagination,
     StandardResultsSetPagination
 )
-from .models import Anime, Series
+from .models import Anime, Series, Genre
 from .service import service
 from .serializers import (
     AnimeSerializers,
     AnimeMinSerializers,
-    SeriesSerializers
+    SeriesSerializers,
+    GenreSerializers
 )
 
 
@@ -68,3 +69,12 @@ class AnimeListView(generics.ListAPIView):
     filterset_class = service.AnimeFilter
     pagination_class = StandardResultsSetPagination
     search_fields = ['@title']
+
+
+class GenreListView(generics.ListAPIView):
+    """
+    Вывод списка жанров
+    ---
+    """
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializers
