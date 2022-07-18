@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_yasg',
+    'django_filters',
     'silk',
 
     'src.anime',
@@ -156,3 +157,10 @@ LOGGING = {
 # Celery Configuration Options
 CELERY_BROKER_URL = os.getenv('REDIS_CLOUD_URL')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_CLOUD_URL')
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
+}
