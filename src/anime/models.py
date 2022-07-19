@@ -1,8 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-from .service.admin import messages
-
 
 class Genre(models.Model):
     """Жанры"""
@@ -86,20 +84,10 @@ class Anime(models.Model):
 
 class Statistics(models.Model):
     """Статистика роботы Parser"""
-    MESSAGE_CHOICES = [
-        ('schedule', messages.SCHEDULE_FORM),
-        ('anons', messages.ANONS_FORM),
-        ('delete', messages.DElETE_SCHEDULE_FORM),
-        ('schedule_update', messages.SCHEDULE_UPDATE_FORM),
-        ('anons_update', messages.ANONS_UPDATE_FORM),
-        ('series', messages.SERIES_FORM),
-        ('series_update', messages.SERIES_UPDATE_FORM),
-        ('delete_series', messages.DElETE_SERIES_FORM),
-    ]
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='statistics',
         on_delete=models.CASCADE,
     )
-    message = models.CharField(max_length=16, choices=MESSAGE_CHOICES)
+    message = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
