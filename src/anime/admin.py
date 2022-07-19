@@ -42,13 +42,13 @@ class AnimeAdmin(admin.ModelAdmin):
         if request.method == 'POST':
             form = ParserForm(request.POST)
             if form.is_valid():
-                status = ParserControl().control(form.data['action'])
+                action = form.data['action']
+                status = ParserControl().control(action)
                 self.message_user(request, status.message, level=status.level)
-
                 # Добавления действия в статистику
                 Statistics.objects.create(
                     author=request.user,
-                    message=form.data['action']
+                    message=dict(form.fields['action'].choices)[action]
                 )
                 logger.info(f'Пользователь [{request.user.username}]-'
                             f'[{form.data["action"]}]')
