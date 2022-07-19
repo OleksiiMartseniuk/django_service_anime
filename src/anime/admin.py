@@ -79,7 +79,7 @@ class AnimeAdmin(admin.ModelAdmin):
         """Просмотр файла логов"""
         with open(settings.FILENAME_LOGGING, 'r') as fl:
             file = fl.read()
-        file = file.split('\n')
+        file = file.split('\n')[::-1]
         return TemplateResponse(request, 'admin/log.html', {'file': file})
 
 
