@@ -42,6 +42,19 @@
     <a href="{% url 'admin:views-log' %}">
         <input type="button" value='Open log file'>
     </a>
+    <br><br>
 
+    <h1>Auto Update</h1>
+    <span style="color:#666">Обновления каждый день в 4 утра</span>
+    <br>
+    <br>
+    <p style="{%if status_task %} color:green {% else %} color:red {% endif %}">
+        <b>Status</b>: {%if status_task %} Included {% else %} Disabled {% endif %}</p>
+    <a href="{% url 'admin:task-update' %}">
+        <input
+        type="button"
+        style="{%if status_task %} background:red {% endif %}"
+        value='{%if status_task %} Switch off {% else %} Turn on {% endif %}'>
+    </a>
 </div>
 {% endblock %}
