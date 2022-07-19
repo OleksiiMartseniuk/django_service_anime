@@ -8,6 +8,8 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
+from django_celery_beat.models import PeriodicTask
+
 from .models import Anime, Genre, Series, ScreenImages, Statistics
 from .forms import ParserForm
 from .service.admin.parser_control import ParserControl
@@ -32,13 +34,15 @@ class AnimeAdmin(admin.ModelAdmin):
             path('download/', self.admin_site.admin_view(self.download),
                  name='download'),
             path('views-log/', self.admin_site.admin_view(self.views_log),
-                 name='views-log')
+                 name='views-log'),
+            path('task-update', self.admin_site.admin_view(self.auto_update),
+                 name='task-update')
         ]
         return my_urls + urls
 
     def parser(self, request):
         form = ParserForm()
-
+        status_task = PeriodicTask.objects.get(name='add-every-day-morning')
         if request.method == 'POST':
             form = ParserForm(request.POST)
             if form.is_valid():
@@ -56,7 +60,8 @@ class AnimeAdmin(admin.ModelAdmin):
         context = dict(
             self.admin_site.each_context(request),
             form=form,
-            statistics=Statistics.objects.order_by('-created')[:10]
+            statistics=Statistics.objects.order_by('-created')[:10],
+            status_task=status_task.enabled,
         )
         return TemplateResponse(request, 'admin/parser.html', context)
 
@@ -81,6 +86,20 @@ class AnimeAdmin(admin.ModelAdmin):
             file = fl.read()
         file = file.split('\n')[::-1]
         return TemplateResponse(request, 'admin/log.html', {'file': file})
+
+    def auto_update(self, request):
+        """Авто обновления"""
+        status_task = PeriodicTask.objects.get(name='add-every-day-morning')
+        status_task.enabled = False if status_task.enabled else True
+        status_task.save()
+        # Добавления действия в статистику
+        Statistics.objects.create(
+            author=request.user,
+            message=f'Авто обновления [{status_task.enabled}]'
+        )
+        logger.info(f'Пользователь [{request.user.username}] -'
+                    f' auto-update - [{status_task.enabled}]')
+        return redirect('admin:parser')
 
 
 @admin.register(Genre)
