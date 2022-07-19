@@ -18,6 +18,7 @@ announcements, displaying a full description, viewing episodes. Using the admin 
     * Series recording
     * Series update
     * Delete series
+    * Auto update
 * Statistics
 * Download file log 
 * Views file log
