@@ -108,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
@@ -162,6 +162,7 @@ LOGGING = {
 # Celery Configuration Options
 CELERY_BROKER_URL = os.getenv('REDIS_CLOUD_URL')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_CLOUD_URL')
+CELERY_TIMEZONE = 'Europe/Kiev'
 
 
 REST_FRAMEWORK = {
