@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'django.contrib.postgres',
+    'django_celery_beat',
     'silk',
 
     'src.anime',
@@ -163,6 +164,7 @@ LOGGING = {
 CELERY_BROKER_URL = os.getenv('REDIS_CLOUD_URL')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_CLOUD_URL')
 CELERY_TIMEZONE = 'Europe/Kiev'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
 REST_FRAMEWORK = {

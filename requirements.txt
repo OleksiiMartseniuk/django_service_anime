@@ -16,8 +16,10 @@ coreapi==2.3.3
 coreschema==0.0.4
 Deprecated==1.2.13
 Django==4.0.5
+django-celery-beat==2.3.0
 django-filter==22.1
 django-silk==5.0.1
+django-timezone-field==5.0
 djangorestframework==3.13.1
 drf-yasg==1.20.0
 gprof2dot==2021.2.21
@@ -39,6 +41,7 @@ pycodestyle==2.8.0
 pydantic==1.9.1
 pyparsing==3.0.9
 pytest==7.1.2
+python-crontab==2.6.0
 python-dateutil==2.8.2
 pytz==2022.1
 redis==4.3.4
@@ -51,6 +54,7 @@ sqlparse==0.4.2
 toml==0.10.2
 tomli==2.0.1
 typing_extensions==4.2.0
+tzdata==2022.1
 uritemplate==4.1.1
 urllib3==1.26.9
 vine==5.0.0
