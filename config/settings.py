@@ -133,7 +133,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FILENAME_LOGGING = os.path.join(BASE_DIR, 'information.log')
+FILENAME_LOGGING = os.path.join(BASE_DIR, 'log', 'information.log')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
