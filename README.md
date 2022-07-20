@@ -33,6 +33,8 @@ announcements, displaying a full description, viewing episodes. Using the admin 
 * Requests
 * BeautifulSoup
 * Logging
+* NGINX
+* Docker
 
 #### Test
 * Pytest
@@ -41,5 +43,41 @@ announcements, displaying a full description, viewing episodes. Using the admin 
     * Run test(app) `python manage.py test src/tests/test_app`
 
 #### Docs
-* Swagger
+* Swagger `http://localhost/swagger/`
 
+#### Instructions
+
+Сreate a file at the root of the project `.env.docker`
+
+```
+export DEBUG=0
+export SECRET_KEY='your_secret_key'
+export DJANGO_SETTINGS_MODULE=config.settings
+export DJANGO_ALLOWED_HOSTS='localhost 127.0.0.1 0.0.0.0'
+
+
+# Redis
+export REDIS_CLOUD_URL=redis://django_anime_service_redis:6379/0
+
+# Data Base
+export POSTGRES_DB=your_name_db
+export POSTGRES_USER=your_name_user
+export POSTGRES_PASSWORD=your_passwor
+export HOST_DB=django_anime_service_database
+export PORT_DB=5432
+```
+
+Build the image and run the container
+
+`docker-compose up --build`
+
+Create superuser
+ 
+```
+docker exec -it django_anime_service_web bash
+python manage.py createsuperuser
+```
+
+If you need to clear the database
+
+`docker-compose down -v`
