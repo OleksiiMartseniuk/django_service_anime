@@ -37,6 +37,7 @@ announcements, displaying a full description, viewing episodes. Using the admin 
 * Docker
 
 #### Test
+`docker exec -it django_anime_service_web bash`
 * Pytest
     * Run test(module animevost) `pytest src/tests/test_animevost`
 * UnitTest Django
