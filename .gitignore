@@ -1,7 +1,10 @@
 .idea
 venv
 .env
+.env.docker
+static
+docker_dev
+celerybeat-schedule
 db.sqlite3
-information.log
 media/*
 !.gitignore
