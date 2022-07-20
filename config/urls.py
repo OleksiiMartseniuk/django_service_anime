@@ -32,8 +32,6 @@ urlpatterns = [
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc'
     ),
-    # django-silk
-    path('silk/', include('silk.urls', namespace='silk')),
     # app anime
     path('v1/', include('src.anime.urls')),
 ]
