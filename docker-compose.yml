@@ -15,11 +15,17 @@ services:
     env_file: .env.docker
     depends_on:
       - database
+
   redis:
     image: redis
     container_name: django_anime_service_redis
+    volumes:
+      - redis:/bitnami/redis/data
     ports:
       - "6379:6379"
+    depends_on:
+      - database
+
   database:
     image: postgres:14
     volumes:
@@ -28,6 +34,7 @@ services:
     ports:
       - "5432:5432"
     env_file: .env.docker
+
   worker:
     build: .
     container_name: django_anime_service_worker
@@ -38,6 +45,7 @@ services:
       - log:/app/log
     depends_on:
       - redis
+
   beat:
     build: .
     container_name: django_anime_service_beat
@@ -66,3 +74,4 @@ volumes:
   static:
   media:
   log:
+  redis:
