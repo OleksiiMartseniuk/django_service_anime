@@ -88,6 +88,8 @@ class Statistics(models.Model):
         settings.AUTH_USER_MODEL,
         related_name='statistics',
         on_delete=models.CASCADE,
+        blank=True,
+        null=True
     )
     message = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
