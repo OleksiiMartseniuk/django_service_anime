@@ -3,7 +3,7 @@ import logging
 from config.celery import app
 
 from .service.service_vost import ServiceAnime
-from .models import Anime, Series
+from .models import Anime, Series, Statistics
 
 
 logger = logging.getLogger('main')
@@ -51,3 +51,6 @@ def auto_update():
         logger.info('Обновления успешно [series]')
     else:
         logger.error('Не данных для обновления [series]')
+
+    # Запись в статистику
+    Statistics.objects.create(message='Авто обновления выполнено')
