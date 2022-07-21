@@ -105,6 +105,29 @@ class TestWriteDB(APITestCase):
         self.assertEqual(anime.screen_image.count(), 1)
         self.assertEqual(anime.genre.count(), 2)
 
+    def test_write_anime_update(self):
+        anime = Anime.objects.create(
+            id_anime=2696,
+            title='anime_data.title',
+            link='anime_data.link',
+            rating=1,
+            votes=1,
+            description='anime_data.description',
+            director='anime_data.director',
+            url_image_preview='anime_data.url_image_preview',
+            year='anime_data.year',
+            type='an'
+        )
+        self.assertEqual(Anime.objects.count(), 1)
+
+        obj = self.writer.write_anime(
+            config_data.write_anime_shem,
+            update=True
+        )
+
+        self.assertEqual(Anime.objects.count(), 1)
+        self.assertEqual(anime, obj)
+
     @mock.patch('src.anime.service.write_db.download_image')
     @mock.patch('src.anime.service.write_db.WriteDB._write_anime')
     def test_write_anime_composed(self, mock_write_anime, mock_download_image):

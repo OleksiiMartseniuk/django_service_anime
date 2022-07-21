@@ -52,11 +52,14 @@ class WriteDB:
     def _write_anime_composed(
             self,
             base_anime: models.Anime,
-            anime_composed_list: List[schemas.AnimeData]
+            anime_list: List[schemas.AnimeData],
+            update: bool = False
     ) -> None:
         """Запись в поле Anime.anime_composed"""
-        if anime_composed_list:
-            obj_lit = [self.write_anime(sche) for sche in anime_composed_list]
+        if anime_list:
+            obj_lit = [
+                self.write_anime(sch, update=update) for sch in anime_list
+            ]
             obj_lit.append(base_anime)
             for obj_main in obj_lit:
                 for obj1_composed in obj_lit:
@@ -66,9 +69,16 @@ class WriteDB:
     def write_anime(
             self,
             anime_data: schemas.AnimeData,
-            day: str = ''
+            day: str = '',
+            update: bool = False
     ) -> models.Anime:
         """Запись дынных аниме"""
+        # При обновлении Anime.anime_composed
+        # Если Anime.anime_composed уже существуют
+        if update:
+            if models.Anime.objects.filter(id_anime=anime_data.id).exists():
+                return models.Anime.objects.get(id_anime=anime_data.id)
+
         anime_db = self._write_anime(anime_data, day)
 
         if anime_data.screen_image:
@@ -117,7 +127,11 @@ class WriteDB:
         """Запись аниме с Anime.anime_composed"""
         if not models.Anime.objects.filter(id_anime=anime_data.id).exists():
             anime = self.write_anime(anime_data, day)
-            self._write_anime_composed(anime, anime_data.anime_composed)
+            self._write_anime_composed(
+                anime,
+                anime_data.anime_composed,
+                update=True
+            )
 
     def write_series(self, id: int, series_data: List[schemas.Series]) -> None:
         """Запись серий"""
