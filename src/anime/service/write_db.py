@@ -46,7 +46,11 @@ class WriteDB:
             anons=anons
         )
         # Скачивания изображения
-        download_image(anime.url_image_preview_s, anime_data.url_image_preview)
+        if anime.url_image_preview:
+            download_image(
+                anime.url_image_preview_s,
+                anime_data.url_image_preview
+            )
         return anime
 
     def _write_anime_composed(
