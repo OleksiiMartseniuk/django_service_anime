@@ -20,10 +20,6 @@ class ScreenImages(models.Model):
         null=True
     )
 
-    def delete(self, using=None, keep_parents=False):
-        self.images_s.delete()
-        return super().delete()
-
 
 class Series(models.Model):
     """Серии"""
@@ -78,10 +74,6 @@ class Anime(models.Model):
         blank=True
     )
     anons = models.BooleanField('Анонс', default=False)
-
-    def delete(self, using=None, keep_parents=False):
-        self.url_image_preview_s.delete()
-        return super().delete()
 
     def __str__(self):
         return self.title
