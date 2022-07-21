@@ -20,6 +20,10 @@ class ScreenImages(models.Model):
         null=True
     )
 
+    def delete(self, using=None, keep_parents=False):
+        self.images_s.delete()
+        return super().delete()
+
 
 class Series(models.Model):
     """Серии"""
@@ -74,9 +78,9 @@ class Anime(models.Model):
     )
     anons = models.BooleanField('Анонс', default=False)
 
-    class Meta:
-        # add index id_anime
-        pass
+    def delete(self, using=None, keep_parents=False):
+        self.url_image_preview_s.delete()
+        return super().delete()
 
     def __str__(self):
         return self.title
