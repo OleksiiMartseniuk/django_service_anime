@@ -24,7 +24,7 @@ class AnimeAdmin(admin.ModelAdmin):
         'title', 'id', 'id_anime', 'rating', 'votes', 'day_week', 'anons'
     )
     list_filter = ('day_week', 'anons')
-    search_fields = ('title', 'id_anime')
+    search_fields = ('title', 'id_anime', 'id')
     filter_horizontal = ['anime_composed', 'genre', 'screen_image']
 
     def get_urls(self):
