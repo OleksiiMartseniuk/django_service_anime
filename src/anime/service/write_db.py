@@ -56,9 +56,12 @@ class WriteDB:
     ) -> None:
         """Запись в поле Anime.anime_composed"""
         if anime_composed_list:
-            for anime_schemas in anime_composed_list:
-                anime_composed = self.write_anime(anime_schemas)
-                base_anime.anime_composed.add(anime_composed)
+            obj_lit = [self.write_anime(sche) for sche in anime_composed_list]
+            obj_lit.append(base_anime)
+            for obj_main in obj_lit:
+                for obj1_composed in obj_lit:
+                    if obj_main.id != obj1_composed.id:
+                        obj_main.anime_composed.add(obj1_composed)
 
     def write_anime(
             self,

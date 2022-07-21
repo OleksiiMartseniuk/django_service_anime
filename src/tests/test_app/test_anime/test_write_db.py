@@ -132,6 +132,7 @@ class TestWriteDB(APITestCase):
             year='test.year',
             type='as'
         )
+        anime2 = Anime.objects.get(id_anime=1)
 
         self.assertEqual(anime.anime_composed.count(), 0)
 
@@ -141,6 +142,7 @@ class TestWriteDB(APITestCase):
         )
 
         self.assertEqual(anime.anime_composed.count(), 1)
+        self.assertEqual(anime2.anime_composed.count(), 1)
 
     @mock.patch('src.anime.service.write_db.download_image')
     def test_write_anime_composed_empty(self, mock_download_image):
@@ -189,8 +191,7 @@ class TestWriteDB(APITestCase):
         anime_composed = Anime.objects.filter(
             id_anime=id_con.anime_composed[0].id
         )[0]
-
-        self.assertEqual(anime_composed.anime_composed.count(), 0)
+        self.assertEqual(anime_composed.anime_composed.count(), 1)
         self.assertEqual(anime_composed.genre.count(), 3)
         self.assertEqual(anime_composed.screen_image.count(), 1)
         self.assertEqual(anime_composed.day_week, '')
@@ -240,8 +241,7 @@ class TestWriteDB(APITestCase):
         anime_composed = Anime.objects.filter(
             id_anime=anons_list[0].anime_composed[0].id
         )[0]
-
-        self.assertEqual(anime_composed.anime_composed.count(), 0)
+        self.assertEqual(anime_composed.anime_composed.count(), 1)
         self.assertEqual(anime_composed.genre.count(), 3)
         self.assertEqual(anime_composed.screen_image.count(), 1)
         self.assertEqual(anime_composed.day_week, '')
@@ -307,8 +307,7 @@ class TestWriteDB(APITestCase):
         anime_composed = Anime.objects.filter(
             id_anime=anons_data.anime_composed[0].id
         )[0]
-
-        self.assertEqual(anime_composed.anime_composed.count(), 0)
+        self.assertEqual(anime_composed.anime_composed.count(), 1)
         self.assertEqual(anime_composed.genre.count(), 3)
         self.assertEqual(anime_composed.screen_image.count(), 1)
         self.assertEqual(anime_composed.day_week, '')
