@@ -49,7 +49,8 @@ class Anime(models.Model):
     )
     genre = models.ManyToManyField(
         Genre,
-        related_name='genres'
+        related_name='genres',
+        blank=True
     )
     anime_composed = models.ManyToManyField(
         'Anime',
