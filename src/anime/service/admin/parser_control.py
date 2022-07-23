@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from django.contrib import messages
 
 from src.anime.tasks import parser
+from src.anime.service.utils import delete_img_files
 
 from . import messages as ex_massages
 
@@ -29,6 +30,9 @@ class ParserControl:
                 status = Status(message=ex_massages.ANONS)
             case 'delete':
                 parser.delay('delete')
+                status = Status(message=ex_massages.DElETE)
+            case 'delete_img':
+                delete_img_files()
                 status = Status(message=ex_massages.DElETE)
             case 'schedule_update':
                 parser.delay('schedule_update')
