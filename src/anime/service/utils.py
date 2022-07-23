@@ -1,9 +1,12 @@
 import re
 import requests
 import logging
+import os
+import glob
 
 from django.core.files import File
 from django.db.models.fields.files import ImageFieldFile
+from django.conf import settings
 
 from io import BytesIO
 
@@ -31,3 +34,14 @@ def download_image(obj_image: ImageFieldFile, image_url: str) -> None:
             logger.error(str(ex))
     logger.error(f'Неверный http статус [{responses.status_code}] '
                  f'url[{image_url}]')
+
+
+def delete_img_files() -> None:
+    """Удаления всех изображений с директории"""
+    path_list = [
+        f'{settings.MEDIA_ROOT}/preview/*',
+        f'{settings.MEDIA_ROOT}/screen_images/*'
+    ]
+    for path in path_list:
+        for file in glob.glob(path):
+            os.remove(file)
