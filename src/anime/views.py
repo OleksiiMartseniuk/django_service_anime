@@ -63,7 +63,6 @@ class AnimeListView(generics.ListAPIView):
     ---
     """
     queryset = Anime.objects.only('id', 'title',
-                                  'url_image_preview',
                                   'url_image_preview_s',
                                   'timer').order_by('id')
     serializer_class = AnimeMinSerializers
