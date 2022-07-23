@@ -1,5 +1,5 @@
 from django import forms
-from .models import Anime, Series
+from .models import Anime, Series, ScreenImages
 from .service.admin import messages
 
 
@@ -8,6 +8,7 @@ class ParserForm(forms.Form):
         ('schedule', messages.SCHEDULE_FORM),
         ('anons', messages.ANONS_FORM),
         ('delete', messages.DElETE_SCHEDULE_FORM),
+        ('delete_img', messages.DELETE_IMG_FILE_FORM),
         ('schedule_update', messages.SCHEDULE_UPDATE_FORM),
         ('anons_update', messages.ANONS_UPDATE_FORM),
         ('series', messages.SERIES_FORM),
@@ -24,6 +25,8 @@ class ParserForm(forms.Form):
                 self.anons_valid()
             case 'delete':
                 self.delete_valid()
+            case 'delete_img':
+                self.delete_img_valid()
             case 'schedule_update':
                 self.schedule_update_valid()
             case 'anons_update':
@@ -67,3 +70,7 @@ class ParserForm(forms.Form):
     def delete_series_valid(self):
         if not Series.objects.count():
             raise forms.ValidationError('Данных для удаления нет!')
+
+    def delete_img_valid(self):
+        if Anime.objects.count() and ScreenImages.objects.count():
+            raise forms.ValidationError('Данные в бд не удалены!')
