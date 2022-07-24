@@ -2,7 +2,11 @@ import os
 from unittest import mock
 from rest_framework.test import APITestCase
 
-from src.anime.service.utils import get_number, download_image
+from src.anime.service.utils import (
+    get_number,
+    download_image,
+    delete_img_files
+)
 from src.anime.models import ScreenImages
 
 
@@ -29,3 +33,8 @@ class TestUtils(APITestCase):
         file_path = 'media/screen_images/test.gif'
         if os.path.isfile(file_path):
             os.remove(file_path)
+
+    @mock.patch('src.anime.service.utils.os.remove')
+    def test_delete_img_files(self, mock_remove):
+        delete_img_files()
+        mock_remove.assert_called()
