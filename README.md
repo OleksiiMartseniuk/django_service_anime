@@ -10,6 +10,7 @@ announcements, displaying a full description, viewing episodes. Using the admin 
 * Getting list announcements
 * Getting list genre
 * Get list episodes to watch
+* Sorting by rating, votes
 #### Admin panel 
 * Parser
     * Anime record
