@@ -66,10 +66,12 @@ class AnimeListView(generics.ListAPIView):
                                   'url_image_preview_s',
                                   'timer').order_by('id')
     serializer_class = AnimeMinSerializers
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter,
+                       filters.OrderingFilter]
     filterset_class = service.AnimeFilter
     pagination_class = StandardResultsSetPagination
     search_fields = ['@title']
+    ordering_fields = ['rating', 'votes']
 
 
 class GenreListView(generics.ListAPIView):
