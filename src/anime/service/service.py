@@ -1,3 +1,4 @@
+from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 
 from src.anime.models import Anime
@@ -14,3 +15,11 @@ class AnimeFilter(filters.FilterSet):
     class Meta:
         model = Anime
         fields = ['genre', 'day_week', 'anons']
+
+
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 50
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
