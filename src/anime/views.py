@@ -1,16 +1,8 @@
-from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework import generics
 from rest_framework import filters
 
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-
-from .service.pagination import (
-    LargeResultsSetPagination,
-    StandardResultsSetPagination
-)
 from .models import Anime, Series, Genre
 from .service import service
 from .serializers import (
@@ -30,25 +22,13 @@ class AnimeDetailView(generics.RetrieveAPIView):
     serializer_class = AnimeSerializers
 
 
-@method_decorator(
-    name='get',
-    decorator=swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                'id_anime',
-                openapi.IN_PATH,
-                type=openapi.TYPE_INTEGER
-            )
-        ]
-    ),
-)
 class AnimeSeriesListView(generics.ListAPIView):
     """
     Вывод серий по id_anime
     ---
     """
     serializer_class = SeriesSerializers
-    pagination_class = LargeResultsSetPagination
+    pagination_class = service.LargeResultsSetPagination
 
     def get_queryset(self):
         id_anime = self.kwargs['id_anime']
@@ -69,7 +49,7 @@ class AnimeListView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter,
                        filters.OrderingFilter]
     filterset_class = service.AnimeFilter
-    pagination_class = StandardResultsSetPagination
+    pagination_class = service.StandardResultsSetPagination
     search_fields = ['@title']
     ordering_fields = ['rating', 'votes']
 
