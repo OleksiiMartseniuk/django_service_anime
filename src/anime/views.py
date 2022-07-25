@@ -62,8 +62,8 @@ class AnimeListView(generics.ListAPIView):
     Вывод всех аниме
     ---
     """
-    queryset = Anime.objects.only('id', 'title', 'rating',
-                                  'votes', 'timer', 'anons',
+    queryset = Anime.objects.only('id', 'title', 'rating', 'url_image_preview',
+                                  'votes', 'timer', 'anons', 'link',
                                   'url_image_preview_s').order_by('id')
     serializer_class = AnimeMinSerializers
     filter_backends = [DjangoFilterBackend, filters.SearchFilter,
