@@ -46,8 +46,23 @@ class TestEndPoint(APITestCase):
             Series(id_anime=1, name='5 t', std='test', hd='test', number=5),
             Series(id_anime=1, name='OVA', std='test', hd='test', number=None),
         ])
-        url = reverse('series', args=[1])
+        url = reverse('series')
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()['results']
+        self.assertEqual(response.json()['count'], 3)
+        self.assertEqual(data[0]['name'], objs[1].name)
+        self.assertEqual(data[1]['name'], objs[0].name)
+        self.assertEqual(data[2]['name'], objs[2].name)
+
+    def test_anime_series_list_view_id_anime(self):
+        objs = Series.objects.bulk_create([
+            Series(id_anime=1, name='12 t', std='test', hd='test', number=12),
+            Series(id_anime=1, name='5 t', std='test', hd='test', number=5),
+            Series(id_anime=1, name='OVA', std='test', hd='test', number=None),
+        ])
+        url = reverse('series')
+        response = self.client.get(url, {'id_anime': 1})
         self.assertEqual(response.status_code, 200)
         data = response.json()['results']
         self.assertEqual(response.json()['count'], 3)
