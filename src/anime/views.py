@@ -29,12 +29,9 @@ class AnimeSeriesListView(generics.ListAPIView):
     """
     serializer_class = SeriesSerializers
     pagination_class = service.LargeResultsSetPagination
-
-    def get_queryset(self):
-        id_anime = self.kwargs['id_anime']
-        queryset = Series.objects.filter(id_anime=id_anime).\
-            values('id', 'name', 'std', 'hd', 'number').order_by('number')
-        return queryset
+    filterset_fields = ['id_anime']
+    queryset = Series.objects.values('id', 'name', 'std', 'hd').\
+        order_by('number')
 
 
 class AnimeListView(generics.ListAPIView):
