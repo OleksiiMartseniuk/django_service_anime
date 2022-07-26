@@ -231,7 +231,8 @@ class TestWriteDB(APITestCase):
             director='test.director',
             url_image_preview='test.url_image_preview',
             year='test.year',
-            type='as'
+            type='as',
+            day_week='monday'
         )
         self.assertEqual(Anime.objects.count(), 1)
         self.writer.write_anime_schedule(config_data.write_anime_schedule_data)
