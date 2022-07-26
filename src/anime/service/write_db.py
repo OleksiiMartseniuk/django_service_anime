@@ -26,7 +26,7 @@ class WriteDB:
     def _write_anime(
             self,
             anime_data: schemas.AnimeData,
-            day: str = ''
+            day: str = None
     ) -> models.Anime:
         """Запись в таблицу Anime"""
         anons = True if re.search(r'Анонс', anime_data.title) else False
@@ -73,7 +73,7 @@ class WriteDB:
     def write_anime(
             self,
             anime_data: schemas.AnimeData,
-            day: str = '',
+            day: str = None,
             update: bool = False
     ) -> models.Anime:
         """Запись дынных аниме"""
@@ -126,7 +126,7 @@ class WriteDB:
     def write_anime_full(
             self,
             anime_data: schemas.AnimeFull,
-            day: str = ''
+            day: str = None
     ) -> None:
         """Запись аниме с Anime.anime_composed"""
         if not models.Anime.objects.filter(id_anime=anime_data.id).exists():

@@ -74,7 +74,7 @@ class ServiceAnime:
 
     def series_update(self) -> None:
         """Обновления серий"""
-        list_id_anime = models.Anime.objects.filter(~Q(day_week='')).\
+        list_id_anime = models.Anime.objects.filter(~Q(day_week=None)).\
             values_list('id_anime', flat=True)
         for id in list_id_anime:
             data_series = ApiAnimeVostClient().get_play_list(id)
