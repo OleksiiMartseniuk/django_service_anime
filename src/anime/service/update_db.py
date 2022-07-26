@@ -7,6 +7,8 @@ from src.anime.service.utils import get_number
 from src.base.animevost import schemas
 from src.anime.models import Anime, Series
 
+from django.db.models import Q
+
 
 logger = logging.getLogger('main')
 
@@ -50,10 +52,14 @@ class UpdateDataParser:
             anime_data: dict[str: List[schemas.AnimeFull]]
     ) -> None | List[AnimeMini]:
         """Обновления данных schedule"""
+        # Список до записи
         write_list = []
+        # Список всех принятых anime id
+        id_list = []
         for key, value in anime_data.items():
             for anime_schemas in value:
                 status = self._update_anime(anime_schemas, key)
+                id_list.append(anime_schemas.id)
                 if not status:
                     write_list.append(self._create_schemas(
                         anime_schemas.id,
@@ -62,6 +68,12 @@ class UpdateDataParser:
                     ))
                     logger.info(f'Аниме(schedule) id={anime_schemas.id} '
                                 f'записано')
+        id_list_db = Anime.objects.filter(~Q(day_week=None)).\
+            values_list('id_anime', flat=True)
+        result_id = set(id_list_db) - set(id_list)
+        if result_id:
+            for id in result_id:
+                Anime.objects.filter(id_anime=id).update(day_week=None)
         if write_list:
             return write_list
 

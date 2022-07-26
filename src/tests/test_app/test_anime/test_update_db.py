@@ -83,6 +83,44 @@ class TestUpdateDataParser(APITestCase):
         mock_update_anime.assert_called_once()
         self.assertEqual(result, [config_data.create_schemas])
 
+    def test_update_anime_schedule_result_id(self):
+        anime = Anime.objects.create(
+            id_anime=2,
+            title='test.title',
+            link='test.link',
+            rating=2,
+            votes=2,
+            description='test.description',
+            director='test.director',
+            url_image_preview='test.url_image_preview',
+            year='test.year',
+            type='as',
+            day_week='monday'
+        )
+        anime1 = Anime.objects.create(
+            id_anime=2696,
+            title='test.title',
+            link='test.link',
+            rating=2,
+            votes=2,
+            description='test.description',
+            director='test.director',
+            url_image_preview='test.url_image_preview',
+            year='test.year',
+            type='as',
+            day_week='monday'
+        )
+        data = config_data.update_anime_schedule_data
+        self.assertEqual(Anime.objects.count(), 2)
+        self.assertEqual(anime.day_week, 'monday')
+        self.assertEqual(anime1.day_week, 'monday')
+        UpdateDataParser().update_anime_schedule(data)
+        self.assertEqual(Anime.objects.count(), 2)
+        anime_obj = Anime.objects.get(id=anime.id)
+        anime_obj1 = Anime.objects.get(id=anime1.id)
+        self.assertEqual(anime_obj.day_week, None)
+        self.assertEqual(anime_obj1.day_week, 'monday')
+
     @mock.patch('src.anime.service.update_db.UpdateDataParser._update_anime')
     def test_update_anime_anons(self, mock_update_anime):
         mock_update_anime.return_value = 1
