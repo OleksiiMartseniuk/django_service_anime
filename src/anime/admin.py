@@ -23,7 +23,7 @@ class AnimeAdmin(admin.ModelAdmin):
     list_display = (
         'title', 'id', 'id_anime', 'rating', 'votes', 'day_week', 'anons'
     )
-    list_filter = ('day_week', 'anons')
+    list_filter = ('day_week', 'anons', 'genre__title')
     search_fields = ('title', 'id_anime', 'id')
     filter_horizontal = ['anime_composed', 'genre', 'screen_image']
 
