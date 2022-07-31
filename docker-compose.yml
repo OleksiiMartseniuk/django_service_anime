@@ -14,7 +14,7 @@ services:
       - "8000:8000"
     env_file: .env.docker
     depends_on:
-      - database
+      - redis
 
   redis:
     image: redis
@@ -24,7 +24,7 @@ services:
     ports:
       - "6379:6379"
     depends_on:
-      - web
+      - database
 
   database:
     image: postgres:14
@@ -44,7 +44,7 @@ services:
       - media:/app/media
       - log:/app/log
     depends_on:
-      - redis
+      - nginx
 
   beat:
     build: .
@@ -63,6 +63,7 @@ services:
     restart: on-failure
     ports:
       - "80:80"
+    env_file: .env.docker
     volumes:
       - static:/static
       - media:/media
