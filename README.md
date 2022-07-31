@@ -67,6 +67,9 @@ export POSTGRES_USER=your_name_user
 export POSTGRES_PASSWORD=your_passwor
 export HOST_DB=django_anime_service_database
 export PORT_DB=5432
+
+# Nginx
+export TZ='your_timezone'
 ```
 
 Build the image and run the container
