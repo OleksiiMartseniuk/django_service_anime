@@ -10,7 +10,14 @@ from django.shortcuts import redirect
 
 from django_celery_beat.models import PeriodicTask
 
-from .models import Anime, Genre, Series, ScreenImages, Statistics
+from .models import (
+    Anime,
+    Genre,
+    Series,
+    ScreenImages,
+    Statistics,
+    BotStatistics
+)
 from .forms import ParserForm
 from .service.admin.parser_control import ParserControl
 
@@ -125,3 +132,10 @@ class ScreenImagesAdmin(admin.ModelAdmin):
 class StatisticsAdmin(admin.ModelAdmin):
     list_display = ('author', 'message', 'created')
     list_filter = ('author', 'message', 'created')
+
+
+@admin.register(BotStatistics)
+class BotStatisticsAdmin(admin.ModelAdmin):
+    list_display = ('id_user', 'action', 'created')
+    list_filter = ('id_user', 'action', 'created')
+    search_fields = ('id_user', 'action')
