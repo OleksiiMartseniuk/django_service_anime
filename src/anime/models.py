@@ -91,3 +91,11 @@ class Statistics(models.Model):
     )
     message = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
+
+
+class BotStatistics(models.Model):
+    """Статистика бота"""
+    id_user = models.IntegerField('id пользователя')
+    action = models.CharField(max_length=255)
+    message = models.CharField(max_length=255)
+    created = models.DateTimeField()
