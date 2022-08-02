@@ -99,3 +99,6 @@ class BotStatistics(models.Model):
     action = models.CharField(max_length=255)
     message = models.CharField(max_length=255)
     created = models.DateTimeField()
+
+    def __str__(self):
+        return f'Пользователь [{self.id_user}] действия [{self.action}]'
