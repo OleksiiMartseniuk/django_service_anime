@@ -108,6 +108,7 @@ class BotCollBackMessage(models.Model):
     """Сообщения пользователя"""
     id_user = models.IntegerField('id пользователя')
     message = models.TextField()
+    read = models.BooleanField('Прочитано', default=True)
     created = models.DateTimeField()
 
     def __str__(self):
