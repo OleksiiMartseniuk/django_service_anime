@@ -144,6 +144,6 @@ class BotStatisticsAdmin(admin.ModelAdmin):
 
 @admin.register(BotCollBackMessage)
 class BotCollBackMessageAdmin(admin.ModelAdmin):
-    list_display = ('id_user', 'created')
-    list_filter = ('id_user', 'created')
+    list_display = ('id_user', 'created', 'read')
+    list_filter = ('id_user', 'created', 'read')
     search_fields = ('id_user',)
