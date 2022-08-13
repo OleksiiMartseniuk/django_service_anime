@@ -25,11 +25,7 @@ class UpdateDataParser:
     """Обновления данных Parser"""
     def _create_schemas(self, id: int, link: str, day: str = '') -> AnimeMini:
         """Создать схему AnimeComposed"""
-        return AnimeMini(
-            id=id,
-            link=link,
-            day=day
-        )
+        return AnimeMini(id=id, link=link, day=day)
 
     def _update_anime(
             self,
