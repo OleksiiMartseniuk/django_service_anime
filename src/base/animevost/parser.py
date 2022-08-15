@@ -55,7 +55,8 @@ class ParserClient:
         return anime_composed
 
     def get_schedule(
-            self, full: bool = False
+            self,
+            full: bool = False
     ) -> dict[str: List[AnimeMin]]:
         """ Получения расписания """
         text_page = self._get(self.url)
