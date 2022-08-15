@@ -29,7 +29,7 @@ class UpdateDataParser:
 
     def _update_anime(
             self,
-            anime_data: schemas.AnimeData,
+            anime_data: schemas.AnimeData | schemas.Anime,
             day: str = ''
     ) -> bool:
         """Обновления данных anime"""
@@ -107,3 +107,29 @@ class UpdateDataParser:
                     hd=data.hd,
                     number=get_number(data.name)
                 )
+
+    def update_indefinite_exit(
+            self,
+            anime_list: List[schemas.Anime]
+    ) -> list | None:
+        """Обновления аниме с неопределенным сроком выхода"""
+        list_id_anime = Anime.objects.filter(indefinite_exit=False).\
+            values_list('id_anime', flat=True)
+
+        list_id_anime_indefinite = Anime.objects.\
+            filter(indefinite_exit=True).values_list('id_anime', flat=True)
+
+        # Список до записи
+        write_list = []
+
+        for anime in anime_list:
+            if anime.id in list_id_anime_indefinite:
+                # обновить и перейти на следующую итерацию
+                self._update_anime(anime)
+                continue
+            if anime.id not in list_id_anime:
+                # добавить в список до записи
+                write_list.append(anime)
+
+        if write_list:
+            return write_list
