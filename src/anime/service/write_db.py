@@ -26,7 +26,8 @@ class WriteDB:
     def _write_anime(
             self,
             anime_data: schemas.AnimeData,
-            day: str = None
+            day: str = None,
+            indefinite_exit: bool = False
     ) -> models.Anime:
         """Запись в таблицу Anime"""
         anons = True if re.search(r'Анонс', anime_data.title) else False
@@ -43,7 +44,8 @@ class WriteDB:
             timer=anime_data.timer,
             type=anime_data.type,
             day_week=day,
-            anons=anons
+            anons=anons,
+            indefinite_exit=indefinite_exit
         )
         # Скачивания изображения
         if anime.url_image_preview:
