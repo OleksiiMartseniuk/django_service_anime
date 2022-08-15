@@ -148,3 +148,41 @@ class TestServiceAnime(APITestCase):
         self.assertEqual(Series.objects.count(), 1)
         ServiceAnime().delete_series()
         self.assertEqual(Series.objects.count(), 0)
+
+    @mock.patch('src.anime.service.service_vost.WriteDB.write_anime_full')
+    @mock.patch('src.anime.service.service_vost.UpdateDataParser.update_indefinite_exit')
+    @mock.patch('src.anime.service.service_vost.ApiAnimeVostClient.get_last_anime')
+    def test_update_indefinite_exit(
+            self,
+            mock_get_last_anime,
+            mock_update_indefinite_exit,
+            mock_write_anime_full
+    ):
+        mock_update_indefinite_exit.return_value = None
+        ServiceAnime().update_indefinite_exit()
+        mock_get_last_anime.assert_called_once()
+        mock_update_indefinite_exit.assert_called_once()
+        self.assertFalse(mock_write_anime_full.called)
+
+    @mock.patch('src.anime.service.service_vost.schemas.AnimeFull')
+    @mock.patch('src.anime.service.service_vost.ParserClient.get_anime_one')
+    @mock.patch('src.anime.service.service_vost.WriteDB.write_anime_full')
+    @mock.patch(
+        'src.anime.service.service_vost.UpdateDataParser.update_indefinite_exit')
+    @mock.patch(
+        'src.anime.service.service_vost.ApiAnimeVostClient.get_last_anime')
+    def test_update_indefinite_exit_write(
+            self,
+            mock_get_last_anime,
+            mock_update_indefinite_exit,
+            mock_write_anime_full,
+            mock_get_anime_one,
+            mock_anime_full
+    ):
+        mock_update_indefinite_exit.return_value = [config_data.anime_schemas]
+        ServiceAnime().update_indefinite_exit()
+        mock_get_last_anime.assert_called_once()
+        mock_update_indefinite_exit.assert_called_once()
+        mock_get_anime_one.assert_called_once()
+        mock_anime_full.assert_called_once()
+        mock_write_anime_full.assert_called_once()

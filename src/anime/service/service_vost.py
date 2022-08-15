@@ -5,9 +5,14 @@ from django.db.models import Q
 
 from src.base.animevost.service import ServiceAnimeVost
 from src.base.animevost.service import ApiAnimeVostClient
+from src.base.animevost.service import ParserClient
+from src.base.animevost import schemas
+
 from src.anime.service.write_db import WriteDB
 from src.anime.service.update_db import UpdateDataParser, AnimeMini
 from src.anime import models
+
+from src.anime.service.utils import get_link
 
 
 logger = logging.getLogger('main')
@@ -80,4 +85,27 @@ class ServiceAnime:
             data_series = ApiAnimeVostClient().get_play_list(id)
             UpdateDataParser().update_series(id, data_series)
         logger.info('Обновления серий')
-        
+
+    def update_indefinite_exit(self):
+        """Обновления аниме с неопределенным сроком выхода"""
+        data_anime = ApiAnimeVostClient().get_last_anime()
+        write_list = UpdateDataParser().update_indefinite_exit(data_anime)
+        logger.info('Обновления аниме с неопределенным сроком выхода')
+        if write_list:
+            for anime_shem in write_list:
+                # формирования схемы AnimeMin
+                anime_min = ParserClient().get_anime_one(
+                    anime_shem.id,
+                    get_link(anime_shem.id, anime_shem.title)
+                )
+                # формирования схемы AnimeFull
+                anime_full = schemas.AnimeFull(
+                    **anime_shem.dict(),
+                    link=anime_min.link,
+                    anime_composed=anime_min.anime_composed
+                )
+                WriteDB().write_anime_full(anime_full)
+                logger.info(
+                    f'До запись anime в update_indefinite_exit '
+                    f'[id_anime - {anime_full.id}, title - {anime_full.title}]'
+                )
