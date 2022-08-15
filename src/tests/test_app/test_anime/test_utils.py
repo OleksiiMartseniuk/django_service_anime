@@ -34,3 +34,18 @@ class TestUtils(APITestCase):
     def test_delete_img_files(self, mock_remove):
         utils.delete_img_files()
         mock_remove.assert_called()
+
+    def test_get_link(self):
+        link = 'https://animevost.org/tip/tv/2761-tunshi-xingkong.html'
+        result = utils.get_link(
+            2761,
+            'Пожиратель звёзд / Tunshi Xingkong [1-48 из 52+]'
+        )
+        self.assertEqual(result, link)
+
+    def test_none_get_link(self):
+        result = utils.get_link(
+            2761,
+            'Пожиратель звёзд'
+        )
+        self.assertIsNone(result)
