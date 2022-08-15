@@ -79,8 +79,8 @@ class WriteDB:
             update: bool = False
     ) -> models.Anime:
         """Запись дынных аниме"""
-        # При обновлении Anime.anime_composed
-        # Если Anime.anime_composed уже существуют
+        # При обновлении Anime.anime_composed сначала ищем в db на совпадения
+        # если значения найдено возвращаем obj[Anime]
         if update:
             if models.Anime.objects.filter(id_anime=anime_data.id).exists():
                 return models.Anime.objects.get(id_anime=anime_data.id)
