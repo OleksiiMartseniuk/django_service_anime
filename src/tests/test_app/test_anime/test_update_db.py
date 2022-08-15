@@ -158,3 +158,20 @@ class TestUpdateDataParser(APITestCase):
         series_list = Series.objects.filter(id_anime=1)
         self.assertEqual(series_list[0].name, '350 серия')
         self.assertEqual(series_list[1].name, '937 серия')
+
+    @mock.patch('src.anime.service.update_db.UpdateDataParser._update_anime')
+    def test_update_indefinite_exit_update(self, mock_update_anime):
+        config_data.create_anime_indefinite()
+        result = UpdateDataParser().update_indefinite_exit(
+            [config_data.anime_schemas]
+        )
+        mock_update_anime.assert_called_once()
+        self.assertIsNone(result)
+
+    @mock.patch('src.anime.service.update_db.UpdateDataParser._update_anime')
+    def test_update_indefinite_exit_write(self, mock_update_anime):
+        result = UpdateDataParser().update_indefinite_exit(
+            [config_data.anime_schemas]
+        )
+        self.assertFalse(mock_update_anime.called)
+        self.assertEqual(result, [config_data.anime_schemas])
