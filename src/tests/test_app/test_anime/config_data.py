@@ -1,6 +1,6 @@
-from src.base.animevost.schemas import AnimeData, AnimeFull, Series
+from src.base.animevost.schemas import AnimeData, AnimeFull, Series, Anime
 from src.anime.service.update_db import AnimeMini
-from src.anime.models import Anime
+from src.anime import models
 
 write_anime_shem = AnimeData(
     id=2696,
@@ -177,8 +177,8 @@ create_schemas = AnimeMini(id=1, link='https://test')
 
 
 def create_anime():
-    Anime.objects.bulk_create([
-        Anime(
+    models.Anime.objects.bulk_create([
+        models.Anime(
             id_anime=1,
             title='title',
             link='anime_data.link',
@@ -192,7 +192,7 @@ def create_anime():
             anons=True,
             day_week='monday'
         ),
-        Anime(
+        models.Anime(
             id_anime=2,
             title='title1',
             link='anime_data.link',
@@ -223,7 +223,7 @@ write_series_data = [
 
 
 def create_anime_one():
-    Anime.objects.create(
+    models.Anime.objects.create(
         id_anime=1,
         title='title',
         link='anime_data.link',
@@ -237,3 +237,36 @@ def create_anime_one():
         anons=True,
         day_week='monday'
     )
+
+
+def create_anime_indefinite():
+    models.Anime.objects.create(
+        id_anime=1,
+        title='title',
+        link='anime_data.link',
+        rating=1,
+        votes=1,
+        description='anime_data.description',
+        director='anime_data.director',
+        url_image_preview='url_image_preview',
+        year='anime_data.year',
+        type='an',
+        indefinite_exit=True
+    )
+
+
+anime_schemas = Anime(
+    id=1,
+    title='Воины Пограничья / Kyoukai Senki [1-25 из 25]',
+    screen_image=[
+        'https://animevost.org.jpg'
+    ],
+    rating=3190,
+    votes=888,
+    description='description',
+    director='Хабара Нобуёси',
+    url_image_preview='https://animevost.org/uploads/posts/2021-10/1633371168_1.jpg',
+    year='2021',
+    genre='приключения, комедия',
+    timer=0,
+    type='ТВ')
