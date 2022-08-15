@@ -75,6 +75,10 @@ class Anime(models.Model):
         null=True
     )
     anons = models.BooleanField('Анонс', default=False)
+    indefinite_exit = models.BooleanField(
+        'Неопределенный выход',
+        default=False
+    )
 
     def __str__(self):
         return self.title
