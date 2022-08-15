@@ -6,6 +6,7 @@ import glob
 
 from django.core.files import File
 from django.db.models.fields.files import ImageFieldFile
+from django.utils.text import slugify
 from django.conf import settings
 
 from io import BytesIO
@@ -45,3 +46,16 @@ def delete_img_files() -> None:
     for path in path_list:
         for file in glob.glob(path):
             os.remove(file)
+
+
+def get_link(id_anime: int, title: str) -> str | None:
+    """Формирования ссылки с названия"""
+    base_url = 'https://animevost.org/tip/tv/' + f'{id_anime}-'
+    title_list = re.split(r'/ |\[', title)
+    if len(title_list) > 1:
+        slug = slugify(title_list[1])
+        return base_url + slug + '.html'
+    else:
+        logger.error(
+            f'Неверный формат в названии - [{title}] ссылка не сформирована'
+        )
