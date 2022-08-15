@@ -7,7 +7,8 @@ from .schemas import AnimeData, AnimeFull, AnimeMin
 
 class ServiceAnimeVost:
     def _create_anime_full_list(
-            self, list_anime_shem: List[AnimeMin]
+            self,
+            list_anime_shem: List[AnimeMin]
     ) -> List[AnimeFull]:
         """Создания списка схемы AnimeFull"""
         list_anime = []
