@@ -36,8 +36,13 @@ class ApiAnimeVostClient:
                          f'url-"{url}"')
             raise ApiAnimeVostClientStatusCodeError
 
-    def _post(self, url: str, params: dict = {},
-              data: dict = {}, data_list: bool = False) -> dict | None:
+    def _post(
+            self,
+            url: str,
+            params: dict = {},
+            data: dict = {},
+            data_list: bool = False
+    ) -> dict | None:
         response = requests.post(url=url, params=params, data=data)
         if response.status_code == 200:
             if data_list:
@@ -105,7 +110,11 @@ class ApiAnimeVostClient:
         data = data_json.get('data')
         return self._create_anime_schemas(data[0])
 
-    def get_last_anime(self, page: int = 1, quantity: int = 10) -> List[Anime]:
+    def get_last_anime(
+            self,
+            page: int = 1,
+            quantity: int = 10
+    ) -> List[Anime]:
         """ Получения последних обновленных аниме"""
         url = self.url_v2 + '/last'
         params = {'page': page, 'quantity': quantity}
