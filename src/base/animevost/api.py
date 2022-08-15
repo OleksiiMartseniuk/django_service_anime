@@ -113,7 +113,7 @@ class ApiAnimeVostClient:
     def get_last_anime(
             self,
             page: int = 1,
-            quantity: int = 10
+            quantity: int = 30
     ) -> List[Anime]:
         """ Получения последних обновленных аниме"""
         url = self.url_v2 + '/last'
