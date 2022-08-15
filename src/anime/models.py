@@ -37,7 +37,12 @@ class Anime(models.Model):
     """Аниме"""
     id_anime = models.IntegerField('ID animevost', unique=True)
     title = models.CharField('Названия', max_length=255)
-    link = models.CharField('Ссылка animevost', max_length=255)
+    link = models.CharField(
+        'Ссылка animevost',
+        max_length=255,
+        blank=True,
+        null=True
+    )
     screen_image = models.ManyToManyField(
         ScreenImages,
         related_name='screen_images',
