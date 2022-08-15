@@ -43,6 +43,7 @@ class TestUtils(APITestCase):
         )
         self.assertEqual(result, link)
 
+    @mock.patch('src.anime.service.utils.logger', mock.Mock())
     def test_none_get_link(self):
         result = utils.get_link(
             2761,
