@@ -81,7 +81,7 @@ class Anime(models.Model):
     )
     anons = models.BooleanField('Анонс', default=False)
     indefinite_exit = models.BooleanField(
-        'Неопределенный выход',
+        'Неопределенная дата выход',
         default=False
     )
 
