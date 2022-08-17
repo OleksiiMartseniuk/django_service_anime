@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'django_celery_beat',
     'corsheaders',
-    'silk',
 
     'src.anime',
 ]
@@ -48,8 +47,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # django-silk
-    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
