@@ -11,10 +11,11 @@ class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
 class AnimeFilter(filters.FilterSet):
     genre = CharFilterInFilter(field_name='genre__title', lookup_expr='in')
     anons = filters.BooleanFilter()
+    indefinite_exit = filters.BooleanFilter()
 
     class Meta:
         model = Anime
-        fields = ['genre', 'day_week', 'anons']
+        fields = ['genre', 'day_week', 'anons', 'indefinite_exit']
 
 
 class LargeResultsSetPagination(PageNumberPagination):
