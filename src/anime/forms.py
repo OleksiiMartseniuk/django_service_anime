@@ -14,6 +14,7 @@ class ParserForm(forms.Form):
         ('series', messages.SERIES_FORM),
         ('series_update', messages.SERIES_UPDATE_FORM),
         ('delete_series', messages.DElETE_SERIES_FORM),
+        ('update_indefinite_exit', messages.UPDATE_INDEFINITE_EXIT)
     ])
 
     def clean_action(self):
