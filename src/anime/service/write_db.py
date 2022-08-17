@@ -76,7 +76,8 @@ class WriteDB:
             self,
             anime_data: schemas.AnimeData,
             day: str = None,
-            update: bool = False
+            update: bool = False,
+            indefinite_exit: bool = False
     ) -> models.Anime:
         """Запись дынных аниме"""
         # При обновлении Anime.anime_composed сначала ищем в db на совпадения
@@ -85,7 +86,7 @@ class WriteDB:
             if models.Anime.objects.filter(id_anime=anime_data.id).exists():
                 return models.Anime.objects.get(id_anime=anime_data.id)
 
-        anime_db = self._write_anime(anime_data, day)
+        anime_db = self._write_anime(anime_data, day, indefinite_exit)
 
         if anime_data.screen_image:
             for screen in anime_data.screen_image:
@@ -128,11 +129,16 @@ class WriteDB:
     def write_anime_full(
             self,
             anime_data: schemas.AnimeFull,
-            day: str = None
+            day: str = None,
+            indefinite_exit: bool = False
     ) -> None:
         """Запись аниме с Anime.anime_composed"""
         if not models.Anime.objects.filter(id_anime=anime_data.id).exists():
-            anime = self.write_anime(anime_data, day)
+            anime = self.write_anime(
+                anime_data,
+                day,
+                indefinite_exit=indefinite_exit
+            )
             self._write_anime_composed(
                 anime,
                 anime_data.anime_composed,
