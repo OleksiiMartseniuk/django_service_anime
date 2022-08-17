@@ -5,8 +5,6 @@ from django.db.models import Q
 
 from src.base.animevost.service import ServiceAnimeVost
 from src.base.animevost.service import ApiAnimeVostClient
-from src.base.animevost.service import ParserClient
-from src.base.animevost import schemas
 
 from src.anime.service.write_db import WriteDB
 from src.anime.service.update_db import UpdateDataParser, AnimeMini
@@ -93,18 +91,17 @@ class ServiceAnime:
         logger.info('Обновления аниме с неопределенным сроком выхода')
         if write_list:
             for anime_shem in write_list:
-                # формирования схемы AnimeMin
-                anime_min = ParserClient().get_anime_one(
-                    anime_shem.id,
-                    get_link(anime_shem.id, anime_shem.title)
-                )
+                link = get_link(anime_shem.id, anime_shem.title)
+                if not link:
+                    # Если силка не сформирована преходит
+                    # на следующую итерацию
+                    continue
                 # формирования схемы AnimeFull
-                anime_full = schemas.AnimeFull(
-                    **anime_shem.dict(),
-                    link=anime_min.link,
-                    anime_composed=anime_min.anime_composed
+                anime_full = ServiceAnimeVost().get_anime_data(
+                    anime_shem.id,
+                    link
                 )
-                WriteDB().write_anime_full(anime_full)
+                WriteDB().write_anime_full(anime_full, indefinite_exit=True)
                 logger.info(
                     f'До запись anime в update_indefinite_exit '
                     f'[id_anime - {anime_full.id}, title - {anime_full.title}]'
