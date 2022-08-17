@@ -61,7 +61,12 @@ class Anime(models.Model):
     rating = models.IntegerField('Рейтинг')
     votes = models.IntegerField('Голоса')
     description = models.TextField('Описания')
-    director = models.CharField('Режиссёр', max_length=100)
+    director = models.CharField(
+        'Режиссёр',
+        max_length=100,
+        blank=True,
+        null=True
+    )
     url_image_preview = models.CharField('Preview изображения', max_length=255)
     url_image_preview_s = models.ImageField(
         'Preview изображения [сервер]',
