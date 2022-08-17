@@ -49,6 +49,9 @@ class ParserControl:
             case 'delete_series':
                 parser.delay('delete_series')
                 status = Status(message=ex_massages.DElETE)
+            case 'update_indefinite_exit':
+                parser.delay('update_indefinite_exit')
+                status = Status(message=ex_massages.UPDATE_INDEFINITE_EXIT)
             case _:
                 status = Status(
                     message=ex_massages.ERROR,
