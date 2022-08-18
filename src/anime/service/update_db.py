@@ -70,6 +70,7 @@ class UpdateDataParser:
             values_list('id_anime', flat=True)
         result_id = set(id_list_db) - set(id_list)
         if result_id:
+            # Аниме которые закончили свой выход
             for id in result_id:
                 Anime.objects.filter(id_anime=id).update(day_week=None)
         if write_list:
