@@ -8,6 +8,7 @@ from src.base.animevost import schemas
 from src.anime.models import Anime, Series
 
 from django.db.models import Q
+from django.utils import timezone
 
 
 logger = logging.getLogger('main')
@@ -40,7 +41,8 @@ class UpdateDataParser:
             votes=anime_data.votes,
             timer=anime_data.timer,
             day_week=day,
-            anons=anons
+            anons=anons,
+            updated=timezone.now()
         )
 
     def update_anime_schedule(
