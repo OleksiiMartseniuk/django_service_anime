@@ -1,6 +1,7 @@
-from dataclasses import dataclass
-import re
 import logging
+import re
+
+from dataclasses import dataclass
 from typing import List
 
 from src.anime.service.utils import get_number
