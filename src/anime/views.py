@@ -49,7 +49,7 @@ class AnimeListView(generics.ListAPIView):
     filterset_class = service.AnimeFilter
     pagination_class = service.StandardResultsSetPagination
     search_fields = ['@title']
-    ordering_fields = ['rating', 'votes']
+    ordering_fields = ['rating', 'votes', 'updated']
 
 
 class GenreListView(generics.ListAPIView):
