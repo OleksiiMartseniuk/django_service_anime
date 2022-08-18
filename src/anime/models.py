@@ -89,6 +89,7 @@ class Anime(models.Model):
         'Неопределенная дата выход',
         default=False
     )
+    updated = models.DateTimeField('Обновлен', auto_now=True)
 
     def __str__(self):
         return self.title
