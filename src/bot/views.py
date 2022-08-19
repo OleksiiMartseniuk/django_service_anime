@@ -1,4 +1,5 @@
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 from .serializers import (
     BotStatisticsSerializer,
@@ -12,6 +13,7 @@ class StatisticsBotView(generics.CreateAPIView):
     ---
     """
     serializer_class = BotStatisticsSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class BotCollBackMessageView(generics.CreateAPIView):
@@ -20,3 +22,4 @@ class BotCollBackMessageView(generics.CreateAPIView):
     ---
     """
     serializer_class = BotCollBackMessageSerializer
+    permission_classes = [IsAuthenticated]
