@@ -6,7 +6,7 @@ class BotStatistics(models.Model):
     id_user = models.IntegerField('id пользователя')
     action = models.CharField(max_length=255)
     message = models.CharField(max_length=255)
-    created = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Пользователь [{self.id_user}] действия [{self.action}]'
@@ -17,7 +17,7 @@ class BotCollBackMessage(models.Model):
     id_user = models.IntegerField('id пользователя')
     message = models.TextField()
     read = models.BooleanField('Прочитано', default=False)
-    created = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Пользователь [{self.id_user}]'
