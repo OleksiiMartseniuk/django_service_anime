@@ -15,9 +15,7 @@ from .models import (
     Genre,
     Series,
     ScreenImages,
-    Statistics,
-    BotStatistics,
-    BotCollBackMessage
+    Statistics
 )
 from .forms import ParserForm
 from .service.admin.parser_control import ParserControl
@@ -134,17 +132,3 @@ class ScreenImagesAdmin(admin.ModelAdmin):
 class StatisticsAdmin(admin.ModelAdmin):
     list_display = ('author', 'message', 'created')
     list_filter = ('author', 'message', 'created')
-
-
-@admin.register(BotStatistics)
-class BotStatisticsAdmin(admin.ModelAdmin):
-    list_display = ('id_user', 'action', 'created')
-    list_filter = ('id_user', 'action', 'created')
-    search_fields = ('id_user', 'action')
-
-
-@admin.register(BotCollBackMessage)
-class BotCollBackMessageAdmin(admin.ModelAdmin):
-    list_display = ('id_user', 'created', 'read')
-    list_filter = ('id_user', 'created', 'read')
-    search_fields = ('id_user',)
