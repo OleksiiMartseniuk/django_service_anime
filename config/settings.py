@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'src.anime',
+    'src.bot',
 ]
 
 MIDDLEWARE = [
