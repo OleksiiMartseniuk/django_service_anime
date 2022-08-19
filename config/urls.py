@@ -36,7 +36,7 @@ urlpatterns = [
         name='schema-redoc'
     ),
     # token
-    path('v1/api-token-auth/', views.obtain_auth_token),
+    path('v1/api-token-auth/', views.obtain_auth_token, name='auth'),
     # app anime
     path('v1/anime/', include('src.anime.urls')),
     # app bot
