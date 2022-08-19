@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from rest_framework import permissions
+from rest_framework.authtoken import views
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -34,8 +35,10 @@ urlpatterns = [
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc'
     ),
+    # token
+    path('v1/api-token-auth/', views.obtain_auth_token),
     # app anime
-    path('v1/', include('src.anime.urls')),
+    path('v1/anime/', include('src.anime.urls')),
     # app bot
     path('v1/bot/', include('src.bot.urls')),
 ]
