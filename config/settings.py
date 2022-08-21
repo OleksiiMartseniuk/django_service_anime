@@ -200,6 +200,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://0.0.0.0:8000"
 ]
 
+# Telegram
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 BOT_CHAT_ID = os.getenv('BOT_CHAT_ID')
 API_TELEGRAM = f'https://api.telegram.org/bot{BOT_TOKEN}/'
