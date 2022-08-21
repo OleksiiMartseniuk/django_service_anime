@@ -12,6 +12,12 @@ announcements, displaying a full description, viewing episodes. Using the admin 
 * Get list episodes to watch
 * Get list anime with an unspecified release date
 * Sorting by rating, votes, time updated
+
+#### Telegram Bot
+* Send statistic
+* To accept message user
+
+[Go to bot](https://github.com/OleksiiMartseniuk/bot_anime)
 #### Admin panel 
 * Parser
     * Anime record
@@ -24,6 +30,11 @@ announcements, displaying a full description, viewing episodes. Using the admin 
 * Statistics
 * Download file log 
 * Views file log
+* Bot
+  * Uploading images to the telegram server
+
+Privet api - token auth <br>
+Create token `python manage.py drf_create_token <username>`
 
 #### Technology
 * Python => 3.10 
