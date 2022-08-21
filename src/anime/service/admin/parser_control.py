@@ -1,21 +1,16 @@
 import logging
-from dataclasses import dataclass
+
 from django.contrib import messages
 
 from src.anime.tasks import parser
 from src.anime.service.utils import delete_img_files
 
+from src.base.utils import Status
+
 from . import messages as ex_massages
 
 
 logger = logging.getLogger('main')
-
-
-@dataclass
-class Status:
-    """Сообщения"""
-    message: str
-    level: int = messages.INFO
 
 
 class ParserControl:
