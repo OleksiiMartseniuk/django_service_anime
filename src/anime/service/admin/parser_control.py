@@ -6,9 +6,7 @@ from src.anime.tasks import parser
 from src.anime.service.utils import delete_img_files
 
 from src.base.utils import Status
-
-from . import messages as ex_massages
-
+from src.base import messages as ex_massages
 
 logger = logging.getLogger('main')
 

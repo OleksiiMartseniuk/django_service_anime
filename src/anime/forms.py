@@ -1,6 +1,8 @@
 from django import forms
+
+from src.base import messages
+
 from .models import Anime, Series, ScreenImages
-from .service.admin import messages
 
 
 class ParserForm(forms.Form):

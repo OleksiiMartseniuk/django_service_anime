@@ -4,7 +4,7 @@ from unittest import mock
 from django.contrib import messages as dj_messages
 
 from src.anime.service.admin.parser_control import ParserControl, Status
-from src.anime.service.admin import messages
+from src.base import messages
 
 
 class TestParserControl(APITestCase):
