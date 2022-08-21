@@ -9,7 +9,7 @@ urlpatterns = [
         name='create-statistic'
     ),
     path(
-        'massage/',
+        'message/',
         views.BotCollBackMessageView.as_view(),
         name='create-massage'
     )
