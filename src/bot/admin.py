@@ -1,12 +1,19 @@
+import logging
+
 from django.contrib import admin
 from django.urls import path
 from django.template.response import TemplateResponse
 
+from .forms import BotForm
+from .services.admin import service
 from .models import (
     BotStatistics,
     BotCollBackMessage,
     BotIdImage
 )
+
+
+logger = logging.getLogger('main')
 
 
 @admin.register(BotStatistics)
@@ -24,8 +31,19 @@ class BotStatisticsAdmin(admin.ModelAdmin):
         return my_urls + urls
 
     def bot(self, request):
+        form = BotForm()
+        if request.method == 'POST':
+            form = BotForm(request.POST)
+            if form.is_valid():
+                action = form.data['action']
+                status = service.form_control_bot(action)
+                self.message_user(request, status.message, level=status.level)
+
+                logger.info(f'Пользователь [{request.user.username}]-'
+                            f'[{form.data["action"]}]')
         context = dict(
             self.admin_site.each_context(request),
+            form=form
         )
         return TemplateResponse(request, 'admin/bot.html', context)
 
