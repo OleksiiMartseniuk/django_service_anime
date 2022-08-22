@@ -1,5 +1,4 @@
 from src.anime.models import Anime
-from src.bot.models import BotIdImage
 
 
 send_photo_data = {
@@ -24,6 +23,7 @@ def create_anime(
         director: str = 'anime_data.director',
         url_image_preview: str = 'url_image_preview',
         url_image_preview_s: str = 'url_image_preview_s',
+        telegram_id_file: str = None,
         year: str = 'anime_data.year',
         type: str = 'an',
         anons: bool = True,
@@ -39,18 +39,9 @@ def create_anime(
         director=director,
         url_image_preview=url_image_preview,
         url_image_preview_s=url_image_preview_s,
+        telegram_id_file=telegram_id_file,
         year=year,
         type=type,
         anons=anons,
         day_week=day_week
-    )
-
-
-def create_bot_id_image(
-        id_photo: str = 'TEST',
-        id_anime: int = 1
-):
-    return BotIdImage.objects.create(
-        id_photo=id_photo,
-        id_anime=id_anime
     )
