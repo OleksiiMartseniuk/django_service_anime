@@ -20,4 +20,4 @@ def write_id_images(anime: Anime) -> None:
         except Exception as ex:
             logger.error(ex)
     else:
-        logger.info('Нет данных в переменой data')
+        logger.error('Нет данных в переменой data')
