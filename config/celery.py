@@ -15,9 +15,5 @@ app.conf.beat_schedule = {
     'add-every-day-morning': {
         'task': 'src.anime.tasks.auto_update',
         'schedule': crontab(minute=0, hour='4'),
-    },
-    'add-every-day-morning-bot': {
-        'task': 'src.bot.tasks.auto_write_img',
-        'schedule': crontab(minute=0, hour='5'),
     }
 }
