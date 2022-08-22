@@ -95,6 +95,9 @@ class ServiceAnime:
                 if not link:
                     # Если силка не сформирована преходит
                     # на следующую итерацию
+                    logger.info(
+                        f'Ссылка не сформирована anime[{anime_shem.title}]'
+                    )
                     continue
                 # формирования схемы AnimeFull
                 anime_full = ServiceAnimeVost().get_anime_data(
