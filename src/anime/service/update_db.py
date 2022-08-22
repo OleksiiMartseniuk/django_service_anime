@@ -126,7 +126,8 @@ class UpdateDataParser:
         # Список до записи
         write_list = []
 
-        for anime in anime_list:
+        # Переворачиваем список с переданными аниме
+        for anime in anime_list[::-1]:
             if anime.id in list_id_anime_indefinite:
                 # обновить и перейти на следующую итерацию
                 self._update_anime(anime)
