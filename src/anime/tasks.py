@@ -4,6 +4,7 @@ import requests
 from config.celery import app
 
 from .service.service_vost import ServiceAnime
+from .service import service
 from .models import Anime, Series, Statistics
 
 
@@ -32,6 +33,8 @@ def parser(action: str) -> None:
                 ServiceAnime().delete_series()
             case 'update_indefinite_exit':
                 ServiceAnime().update_indefinite_exit()
+            case 'write_telegram':
+                service.write_images_telegram()
 
     except requests.exceptions.RequestException as exr:
         logger.error(exr)
@@ -64,6 +67,8 @@ def auto_update():
         else:
             logger.error('Не данных для обновления [series]')
 
+        # Запись картинки на сервер telegram
+        service.write_images_telegram()
         # Обновления аниме с неопределенным сроком выхода
         ServiceAnime().update_indefinite_exit()
 

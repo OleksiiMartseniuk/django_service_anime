@@ -16,7 +16,8 @@ class ParserForm(forms.Form):
         ('series', messages.SERIES_FORM),
         ('series_update', messages.SERIES_UPDATE_FORM),
         ('delete_series', messages.DElETE_SERIES_FORM),
-        ('update_indefinite_exit', messages.UPDATE_INDEFINITE_EXIT)
+        ('update_indefinite_exit', messages.UPDATE_INDEFINITE_EXIT),
+        ('write_telegram', messages.WRITE_TELEGRAM_BOT_FORM),
     ])
 
     def clean_action(self):
@@ -40,6 +41,8 @@ class ParserForm(forms.Form):
                 self.series_update_valid()
             case 'delete_series':
                 self.delete_series_valid()
+            case 'write_telegram':
+                self.write_telegram_valid()
         return action
 
     def schedule_valid(self):
@@ -77,3 +80,7 @@ class ParserForm(forms.Form):
     def delete_img_valid(self):
         if Anime.objects.count() and ScreenImages.objects.count():
             raise forms.ValidationError('Данные в бд не удалены!')
+
+    def write_telegram_valid(self):
+        if not Anime.objects.filter(telegram_id_file=None).count():
+            raise forms.ValidationError('Нет данных для записи')

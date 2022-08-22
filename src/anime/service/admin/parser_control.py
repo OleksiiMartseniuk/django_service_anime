@@ -45,6 +45,9 @@ class ParserControl:
             case 'update_indefinite_exit':
                 parser.delay('update_indefinite_exit')
                 status = Status(message=ex_massages.UPDATE_INDEFINITE_EXIT)
+            case 'write_telegram':
+                parser.delay('write_telegram')
+                status = Status(message=ex_massages.WRITE_TELEGRAM_BOT_FORM)
             case _:
                 status = Status(
                     message=ex_massages.ERROR,
