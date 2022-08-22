@@ -67,11 +67,10 @@ def auto_update():
         else:
             logger.error('Не данных для обновления [series]')
 
-        # Запись картинки на сервер telegram
-        service.write_images_telegram()
         # Обновления аниме с неопределенным сроком выхода
         ServiceAnime().update_indefinite_exit()
-
+        # Запись картинок на сервер telegram
+        service.write_images_telegram()
         # Запись в статистику
         Statistics.objects.create(message='Авто обновления выполнено')
 
