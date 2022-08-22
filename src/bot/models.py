@@ -21,12 +21,3 @@ class BotCollBackMessage(models.Model):
 
     def __str__(self):
         return f'Пользователь [{self.id_user}]'
-
-
-class BotIdImage(models.Model):
-    """ID photo телеграм сервис"""
-    id_photo = models.CharField('ID telegram', max_length=255)
-    id_anime = models.IntegerField('ID anime')
-
-    def __str__(self):
-        return f'anime id-{self.id_anime}'
