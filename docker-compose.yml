@@ -5,6 +5,7 @@ services:
     build: .
     container_name: django_anime_service_web
     command: bash entrypoint.sh
+    restart: always
     volumes:
       - .:/app
       - static:/app/static
