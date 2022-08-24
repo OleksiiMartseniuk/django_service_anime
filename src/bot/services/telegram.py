@@ -18,8 +18,7 @@ class TelegramApiClient:
         if response.status_code == 200:
             return response.json()
         else:
-            logger.error(f'Неверный статус код {response.status_code} '
-                         f'url-"{url}"')
+            logger.error(f'Неверный статус код {response.status_code} ')
 
     def send_photo(self, path_img: str) -> dict | None:
         """Отправка фото на сервер телеграм"""
