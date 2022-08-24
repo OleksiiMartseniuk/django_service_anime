@@ -60,6 +60,12 @@ def auto_update():
             logger.info('Обновления успешно [anons]')
         else:
             logger.error('Не данных для обновления [anons]')
+
+        # Обновления аниме с неопределенным сроком выхода
+        ServiceAnime().update_indefinite_exit()
+        # Запись картинок на сервер telegram
+        service.write_images_telegram()
+
         # Обновления серий
         if Series.objects.count():
             ServiceAnime().series_update()
@@ -67,10 +73,6 @@ def auto_update():
         else:
             logger.error('Не данных для обновления [series]')
 
-        # Обновления аниме с неопределенным сроком выхода
-        ServiceAnime().update_indefinite_exit()
-        # Запись картинок на сервер telegram
-        service.write_images_telegram()
         # Запись в статистику
         Statistics.objects.create(message='Авто обновления выполнено')
 
