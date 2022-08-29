@@ -18,7 +18,7 @@ services:
       - redis
 
   redis:
-    image: redis/redis-stack-server:latest
+    image: redis
     container_name: django_anime_service_redis
     command: redis-server --requirepass yourpassword
     volumes:
