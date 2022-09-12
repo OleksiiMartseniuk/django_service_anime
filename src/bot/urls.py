@@ -12,5 +12,6 @@ urlpatterns = [
         'message/',
         views.BotCollBackMessageView.as_view(),
         name='create-massage'
-    )
+    ),
+    path('create-user/', views.BotUserCreate.as_view(), name='create-user'),
 ]
