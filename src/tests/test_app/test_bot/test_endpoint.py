@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from src.bot.models import BotStatistics, BotCollBackMessage, BotUser
 
+from . import config_data
 
 User = get_user_model()
 
@@ -80,4 +81,20 @@ class TestEndPoint(APITestCase):
         self.assertEqual(data_json['username'], data['username'])
         self.assertEqual(data_json['user_id'], data['user_id'])
         self.assertEqual(data_json['chat_id'], data['chat_id'])
+        self.client.credentials()
+
+    def test_add_anime_user_view(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        self.create_user()
+        self.authenticate('test', 'password')
+        self.assertEqual(user.anime.count(), 0)
+        url = reverse('add-anime')
+        data = {
+            'anime_ids': [anime.id],
+            'user_id': user.user_id,
+        }
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(user.anime.count(), 1)
         self.client.credentials()
