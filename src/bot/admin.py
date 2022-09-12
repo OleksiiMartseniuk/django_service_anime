@@ -47,3 +47,4 @@ class BotUserAdmin(admin.ModelAdmin):
     list_display = ('username',)
     list_filter = ('user_id', 'chat_id')
     search_fields = ('user_id',)
+    filter_horizontal = ('anime',)
