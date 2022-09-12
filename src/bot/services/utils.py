@@ -31,12 +31,12 @@ def add_anime(anime_ids: list[int], user_id: int) -> None:
     if Anime.objects.filter(id__in=anime_ids).exists():
         anime_objs = Anime.objects.filter(id__in=anime_ids)
     else:
-        logger.debug('Аниме не найдено')
+        logger.debug(f'Аниме не найдено [{anime_ids}]')
         raise ValidationError('Аниме не найдено', code=404)
 
     if BotUser.objects.filter(user_id=user_id).exists():
         user = BotUser.objects.get(user_id=user_id)
         user.anime.add(*anime_objs)
     else:
-        logger.debug('Пользователь не найде')
+        logger.debug(f'Пользователь не найде [{user_id}]')
         raise ValidationError('Пользователь не найде', code=404)
