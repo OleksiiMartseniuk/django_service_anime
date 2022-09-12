@@ -22,3 +22,8 @@ class BotUserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = BotUser
         exclude = ['anime']
+
+
+class AddAnimeUserSerializer(serializers.Serializer):
+    anime_ids = serializers.ListField(child=serializers.IntegerField())
+    user_id = serializers.IntegerField()
