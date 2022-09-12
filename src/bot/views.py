@@ -3,7 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from .serializers import (
     BotStatisticsSerializer,
-    BotCollBackMessageSerializer
+    BotCollBackMessageSerializer,
+    BotUserCreateSerializer
 )
 
 
@@ -22,4 +23,13 @@ class BotCollBackMessageView(generics.CreateAPIView):
     ---
     """
     serializer_class = BotCollBackMessageSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class BotUserCreate(generics.CreateAPIView):
+    """
+    Создания пользователя
+    ---
+    """
+    serializer_class = BotUserCreateSerializer
     permission_classes = [IsAuthenticated]
