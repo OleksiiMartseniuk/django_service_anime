@@ -13,5 +13,14 @@ urlpatterns = [
         views.BotCollBackMessageView.as_view(),
         name='create-massage'
     ),
-    path('create-user/', views.BotUserCreate.as_view(), name='create-user'),
+    path(
+        'create-user/',
+        views.BotUserCreateView.as_view(),
+        name='create-user'
+    ),
+    path(
+        'add-anime/',
+        views.AddAnimeUserView.as_view(),
+        name='add-anime'
+    ),
 ]
