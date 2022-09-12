@@ -20,6 +20,7 @@ class TestUtils(APITestCase):
             config_data.send_photo_data['result']['photo'][-1]['file_id']
         )
 
+    @mock.patch('src.bot.services.utils.logger', mock.Mock())
     @mock.patch('src.bot.services.utils.TelegramApiClient.send_photo')
     def test_write_id_images_data_none(self, mock_send_photo):
         mock_send_photo.return_value = None
