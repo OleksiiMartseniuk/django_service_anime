@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import BotStatistics, BotCollBackMessage
+from .models import BotStatistics, BotCollBackMessage, BotUser
 
 
 class BotStatisticsSerializer(serializers.ModelSerializer):
@@ -15,3 +15,10 @@ class BotCollBackMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = BotCollBackMessage
         exclude = ['read', 'created']
+
+
+class BotUserCreateSerializer(serializers.ModelSerializer):
+    """Создания пользователя"""
+    class Meta:
+        model = BotUser
+        exclude = ['anime']
