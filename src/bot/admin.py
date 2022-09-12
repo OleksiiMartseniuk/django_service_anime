@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path
 
-from .models import BotStatistics, BotCollBackMessage
+from .models import BotStatistics, BotCollBackMessage, BotUser
 
 
 logger = logging.getLogger('main')
@@ -40,3 +40,10 @@ class BotCollBackMessageAdmin(admin.ModelAdmin):
     list_filter = ('id_user', 'created', 'read')
     search_fields = ('id_user',)
     readonly_fields = ('created',)
+
+
+@admin.register(BotUser)
+class BotUserAdmin(admin.ModelAdmin):
+    list_display = ('username',)
+    list_filter = ('user_id', 'chat_id')
+    search_fields = ('user_id',)
