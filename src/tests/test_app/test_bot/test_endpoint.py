@@ -3,7 +3,7 @@ from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
-from src.bot.models import BotStatistics, BotCollBackMessage
+from src.bot.models import BotStatistics, BotCollBackMessage, BotUser
 
 
 User = get_user_model()
@@ -61,4 +61,23 @@ class TestEndPoint(APITestCase):
         data_json = response.json()
         self.assertEqual(data_json['id_user'], data['id_user'])
         self.assertEqual(data_json['message'], data['message'])
+        self.client.credentials()
+
+    def test_bot_user_create(self):
+        self.create_user()
+        self.authenticate('test', 'password')
+        self.assertEqual(BotUser.objects.count(), 0)
+        url = reverse('create-user')
+        data = {
+            'username': 'test',
+            'user_id': 1234567,
+            'chat_id': 7654321
+        }
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(BotUser.objects.count(), 1)
+        data_json = response.json()
+        self.assertEqual(data_json['username'], data['username'])
+        self.assertEqual(data_json['user_id'], data['user_id'])
+        self.assertEqual(data_json['chat_id'], data['chat_id'])
         self.client.credentials()
