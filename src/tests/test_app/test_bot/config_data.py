@@ -1,5 +1,5 @@
 from src.anime.models import Anime
-
+from src.bot.models import BotUser
 
 send_photo_data = {
     'result':
@@ -44,4 +44,16 @@ def create_anime(
         type=type,
         anons=anons,
         day_week=day_week
+    )
+
+
+def create_bot_user(
+        username: str = 'test',
+        user_id: int = 12345,
+        chat_id: int = 54321
+) -> BotUser:
+    return BotUser.objects.create(
+        username=username,
+        user_id=user_id,
+        chat_id=chat_id
     )
