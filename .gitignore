@@ -8,3 +8,5 @@ celerybeat-schedule
 db.sqlite3
 media/*
 !.gitignore
+__pycache__
+.vscode
