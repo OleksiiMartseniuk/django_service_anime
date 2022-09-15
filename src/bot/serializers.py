@@ -21,7 +21,7 @@ class BotUserCreateSerializer(serializers.ModelSerializer):
     """Создания пользователя"""
     class Meta:
         model = BotUser
-        exclude = ['anime']
+        exclude = ['track']
 
 
 class AddAnimeUserSerializer(serializers.Serializer):
