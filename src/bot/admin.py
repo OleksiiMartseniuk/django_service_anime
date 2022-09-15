@@ -4,7 +4,12 @@ from django.contrib import admin
 from django.template.response import TemplateResponse
 from django.urls import path
 
-from .models import BotStatistics, BotCollBackMessage, BotUser
+from .models import (
+    BotStatistics,
+    BotCollBackMessage,
+    BotUser,
+    BotUserAnimePeriodTask
+)
 
 
 logger = logging.getLogger('main')
@@ -47,4 +52,9 @@ class BotUserAdmin(admin.ModelAdmin):
     list_display = ('username',)
     list_filter = ('user_id', 'chat_id')
     search_fields = ('user_id',)
-    filter_horizontal = ('anime',)
+
+
+@admin.register(BotUserAnimePeriodTask)
+class BotUserAnimePeriodTaskAdmin(admin.ModelAdmin):
+    list_display = ('user', 'anime')
+    list_filter = ('user',)
