@@ -1,5 +1,7 @@
 from django.db import models
 
+from django_celery_beat.models import PeriodicTask
+
 from src.anime.models import Anime
 
 
@@ -30,7 +32,20 @@ class BotUser(models.Model):
     username = models.CharField('Имя пользователя', max_length=255)
     user_id = models.IntegerField('ID пользователя telegram')
     chat_id = models.IntegerField('ChatID пользователя telegram')
-    anime = models.ManyToManyField(Anime, blank=True)
+    track = models.ManyToManyField(
+        Anime,
+        through='BotUserAnimePeriodTask',
+        through_fields=('user', 'anime'),
+        blank=True
+    )
 
     def __str__(self):
         return self.username
+
+
+class BotUserAnimePeriodTask(models.Model):
+    """Расширенная таблица м2м"""
+    user = models.ForeignKey(BotUser, on_delete=models.CASCADE)
+    anime = models.ForeignKey(Anime, on_delete=models.CASCADE)
+    # Дополнительное поле PeriodicTask
+    period_task = models.ForeignKey(PeriodicTask, on_delete=models.CASCADE)
