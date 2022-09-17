@@ -2,7 +2,7 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 
 from src.anime.models import Anime
-from src.bot.services.utils import write_id_images
+from src.bot.services.service import write_id_images
 
 
 class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
