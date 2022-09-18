@@ -5,8 +5,6 @@ from datetime import datetime
 
 from src.anime.models import Anime
 
-from ..models import BotUser, BotUserAnimePeriodTask
-
 
 logger = logging.getLogger('main')
 
