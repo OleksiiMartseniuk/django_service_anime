@@ -9,7 +9,7 @@ from .serializers import (
     AddAnimeUserSerializer
 )
 
-from .services import utils
+from .services import service
 
 
 class StatisticsBotView(generics.CreateAPIView):
@@ -50,7 +50,7 @@ class AddAnimeUserView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            utils.add_anime(
+            service.add_anime(
                 serializer.data['anime_ids'],
                 serializer.data['user_id']
             )
