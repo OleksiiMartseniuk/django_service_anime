@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 
 from src.anime.models import Anime
 
+from . import task
 from .telegram import TelegramApiClient
 from ..models import BotUser, BotUserAnimePeriodTask
 
@@ -27,6 +28,22 @@ def write_id_images(anime: Anime) -> None:
         logger.error(f'Нет данных в переменой data [{anime.title}]')
 
 
+def formation_list_bot_user_anime_period_task(
+    anime_objs: list[Anime], user: BotUser
+) -> list[BotUserAnimePeriodTask]:
+    """Формирования списка BotUserAnimePeriodTask"""
+    result = []
+    for anime in anime_objs:
+        schedule = task.create_crontab_schedule(anime.timer, anime.day_week)
+        period_task = task.create_periodic_task(anime.id, schedule, user)
+        result.append(
+            BotUserAnimePeriodTask(
+                user=user, anime=anime, period_task=period_task
+            )
+        )
+    return result
+
+
 def add_anime(anime_ids: list[int], user_id: int) -> None:
     """Добавить аниме в отслеживаемые"""
     if Anime.objects.filter(id__in=anime_ids).exists():
@@ -37,9 +54,9 @@ def add_anime(anime_ids: list[int], user_id: int) -> None:
 
     if BotUser.objects.filter(user_id=user_id).exists():
         user = BotUser.objects.get(user_id=user_id)
-        # BotUserAnimePeriodTask.objects.create()
-        # изменить добавления
-        # user.anime.add(*anime_objs)
+        BotUserAnimePeriodTask.objects.bulk_create(
+            formation_list_bot_user_anime_period_task(anime_objs, user)
+        )
     else:
         logger.error(f'Пользователь не найде [{user_id}]')
         raise ValidationError('Пользователь не найде', code=404)
