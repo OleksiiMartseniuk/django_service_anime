@@ -4,11 +4,12 @@ from rest_framework.test import APITestCase
 from unittest import mock
 
 from src.bot.services import service
-
+from src.bot.models import BotUserAnimePeriodTask
 from . import config_data
 
 
 class TestService(APITestCase):
+
     @mock.patch('src.bot.services.service.TelegramApiClient.send_photo')
     def test_write_id_images(self, mock_send_photo):
         mock_send_photo.return_value = config_data.send_photo_data
@@ -40,3 +41,34 @@ class TestService(APITestCase):
         self.assertIsNone(anime.telegram_id_file)
         service.write_id_images(anime)
         self.assertIsNone(anime.telegram_id_file)
+
+    def test_formation_list_bot_user_anime_period_task(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        objects = service.formation_list_bot_user_anime_period_task(
+            [anime], user
+        )
+        obj: BotUserAnimePeriodTask = objects[0]
+
+        self.assertEqual(obj.anime.id, anime.id)
+        self.assertEqual(obj.user.id, user.id)
+
+    # @mock.patch('src.bot.services.utils.logger', mock.Mock())
+    # def test_add_anime(self):
+    #     anime = config_data.create_anime()
+    #     user = config_data.create_bot_user()
+    #     self.assertEqual(user.anime.count(), 0)
+    #     utils.add_anime([anime.id], user.user_id)
+    #     self.assertEqual(user.anime.count(), 1)
+
+    # @mock.patch('src.bot.services.utils.logger', mock.Mock())
+    # def test_add_anime_invalid_anime(self):
+    #     user = config_data.create_bot_user()
+    #     self.assertEqual(user.anime.count(), 0)
+    #     self.assertRaises(ValidationError, utils.add_anime, [1], user.user_id)
+    #     self.assertEqual(user.anime.count(), 0)
+
+    # @mock.patch('src.bot.services.utils.logger', mock.Mock())
+    # def test_add_anime_invalid_user(self):
+    #     anime = config_data.create_anime()
+    #     self.assertRaises(ValidationError, utils.add_anime, [anime.id], 1)
