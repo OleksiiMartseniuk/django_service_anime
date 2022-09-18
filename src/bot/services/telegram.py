@@ -3,6 +3,10 @@ import logging
 
 from django.conf import settings
 
+from src.anime.models import Anime
+
+from . import utils
+
 
 logger = logging.getLogger('main')
 
@@ -28,3 +32,15 @@ class TelegramApiClient:
         with open(path_img, 'rb') as fl:
             response = self._post(url, params=params, files={'photo': fl})
         return response
+
+    def send_cart(self, chat_id: int, anime: Anime):
+        """Отправить карточку с аниме"""
+        url = self.url + 'sendPhoto'
+        file_id = anime.telegram_id_file
+        params = {
+            'chat_id': chat_id,
+            'photo': file_id if file_id else anime.url_image_preview,
+            'caption': utils.get_cart(anime),
+            'parse_mode': 'HTML'
+        }
+        return self._post(url, params=params)
