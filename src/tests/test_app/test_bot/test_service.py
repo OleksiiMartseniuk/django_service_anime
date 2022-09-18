@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-
+from rest_framework.exceptions import ValidationError
 
 from unittest import mock
 
@@ -53,22 +53,23 @@ class TestService(APITestCase):
         self.assertEqual(obj.anime.id, anime.id)
         self.assertEqual(obj.user.id, user.id)
 
-    # @mock.patch('src.bot.services.utils.logger', mock.Mock())
-    # def test_add_anime(self):
-    #     anime = config_data.create_anime()
-    #     user = config_data.create_bot_user()
-    #     self.assertEqual(user.anime.count(), 0)
-    #     utils.add_anime([anime.id], user.user_id)
-    #     self.assertEqual(user.anime.count(), 1)
+    def test_add_anime(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        self.assertEqual(user.track.count(), 0)
+        service.add_anime([anime.id], user.user_id)
+        self.assertEqual(user.track.count(), 1)
 
-    # @mock.patch('src.bot.services.utils.logger', mock.Mock())
-    # def test_add_anime_invalid_anime(self):
-    #     user = config_data.create_bot_user()
-    #     self.assertEqual(user.anime.count(), 0)
-    #     self.assertRaises(ValidationError, utils.add_anime, [1], user.user_id)
-    #     self.assertEqual(user.anime.count(), 0)
+    @mock.patch('src.bot.services.service.logger', mock.Mock())
+    def test_add_anime_invalid_anime(self):
+        user = config_data.create_bot_user()
+        self.assertEqual(user.track.count(), 0)
+        self.assertRaises(
+            ValidationError, service.add_anime, [1], user.user_id
+        )
+        self.assertEqual(user.track.count(), 0)
 
-    # @mock.patch('src.bot.services.utils.logger', mock.Mock())
-    # def test_add_anime_invalid_user(self):
-    #     anime = config_data.create_anime()
-    #     self.assertRaises(ValidationError, utils.add_anime, [anime.id], 1)
+    @mock.patch('src.bot.services.service.logger', mock.Mock())
+    def test_add_anime_invalid_user(self):
+        anime = config_data.create_anime()
+        self.assertRaises(ValidationError, service.add_anime, [anime.id], 1)
