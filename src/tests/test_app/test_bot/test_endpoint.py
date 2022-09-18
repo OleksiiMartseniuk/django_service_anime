@@ -88,7 +88,7 @@ class TestEndPoint(APITestCase):
         user = config_data.create_bot_user()
         self.create_user()
         self.authenticate('test', 'password')
-        self.assertEqual(user.anime.count(), 0)
+        self.assertEqual(user.track.count(), 0)
         url = reverse('add-anime')
         data = {
             'anime_ids': [anime.id],
@@ -96,5 +96,5 @@ class TestEndPoint(APITestCase):
         }
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(user.anime.count(), 1)
+        self.assertEqual(user.track.count(), 1)
         self.client.credentials()
