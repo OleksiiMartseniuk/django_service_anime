@@ -1,8 +1,11 @@
 from rest_framework.test import APITestCase
 
-from django_celery_beat.models import CrontabSchedule
+from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
+from src.bot.models import BotUser
 from src.bot.services import task
+
+from . import config_data
 
 
 class TestServiceTest(APITestCase):
@@ -35,3 +38,15 @@ class TestServiceTest(APITestCase):
         self.assertEqual(schedule.hour, schedule_test.hour)
         self.assertEqual(schedule.minute, schedule_test.minute)
         self.assertEqual(schedule.day_of_week, schedule_test.day_of_week)
+
+    def test_create_periodic_task(self):
+        self.assertEqual(PeriodicTask.objects.count(), 0)
+        schedule = CrontabSchedule.objects.create(
+            minute='0',
+            hour='10',
+            day_of_week='thursday'
+        )
+        user: BotUser = config_data.create_bot_user()
+        task_: PeriodicTask = task.create_periodic_task(1, schedule, user)
+        self.assertEqual(PeriodicTask.objects.count(), 1)
+        self.assertEqual(task_.name, f'1_{user.id}')
