@@ -1,4 +1,7 @@
 from rest_framework.test import APITestCase
+from rest_framework.exceptions import ValidationError
+
+from unittest import mock
 
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
@@ -38,6 +41,11 @@ class TestServiceTest(APITestCase):
         self.assertEqual(schedule.hour, schedule_test.hour)
         self.assertEqual(schedule.minute, schedule_test.minute)
         self.assertEqual(schedule.day_of_week, schedule_test.day_of_week)
+
+    @mock.patch('src.bot.services.task.logger', mock.Mock())
+    def test_create_crontab_schedule_not_day(self):
+        self.assertEqual(CrontabSchedule.objects.count(), 0)
+        self.assertRaises(ValidationError, task.create_crontab_schedule, 0, '')
 
     def test_create_periodic_task(self):
         self.assertEqual(PeriodicTask.objects.count(), 0)
