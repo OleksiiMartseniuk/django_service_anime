@@ -26,7 +26,7 @@ def create_crontab_schedule(time: int, day: str) -> CrontabSchedule:
         logger.error('Названия дня недели отсутствует')
         raise ValidationError('Названия дня недели отсутствует')
     if time:
-        date = datetime.utcfromtimestamp(time)
+        date = datetime.fromtimestamp(time)
         hour = date.hour
         minute = date.minute
     else:
