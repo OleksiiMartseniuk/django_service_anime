@@ -7,6 +7,7 @@ from django_celery_beat.models import CrontabSchedule, PeriodicTask
 
 from src.bot.models import BotUser
 from src.bot.services import task
+from src.bot.services.task import PeriodicTaskObj
 
 from . import config_data
 
@@ -55,6 +56,8 @@ class TestServiceTest(APITestCase):
             day_of_week='thursday'
         )
         user: BotUser = config_data.create_bot_user()
-        task_: PeriodicTask = task.create_periodic_task(1, schedule, user)
+        task_obj: PeriodicTaskObj = task.create_periodic_task(
+            1, schedule, user
+        )
         self.assertEqual(PeriodicTask.objects.count(), 1)
-        self.assertEqual(task_.name, f'1_{user.id}')
+        self.assertEqual(task_obj.task.name, f'1_{user.id}')
