@@ -35,10 +35,17 @@ def formation_list_bot_user_anime_period_task(
     result = []
     for anime in anime_objs:
         schedule = task.create_crontab_schedule(anime.timer, anime.day_week)
-        period_task = task.create_periodic_task(anime.id, schedule, user)
+        task_obj = task.create_periodic_task(anime.id, schedule, user)
+
+        # Проверка на уникальность
+        if not task_obj.create:
+            logger.error(f'Запись существует anime[{anime.id}] user[{user.id}]'
+                         f'period_task[{task_obj.task.id}]')
+            continue
+
         result.append(
             BotUserAnimePeriodTask(
-                user=user, anime=anime, period_task=period_task
+                user=user, anime=anime, period_task=task_obj.task
             )
         )
     return result
