@@ -1,10 +1,15 @@
-from rest_framework.test import APITestCase
-from rest_framework.exceptions import ValidationError
+import json
 
 from unittest import mock
 
+from rest_framework.test import APITestCase
+from rest_framework.exceptions import ValidationError
+
+from django_celery_beat.models import CrontabSchedule, PeriodicTask
+
 from src.bot.services import service
 from src.bot.models import BotUserAnimePeriodTask
+
 from . import config_data
 
 
@@ -44,7 +49,7 @@ class TestService(APITestCase):
 
     def test_formation_list_bot_user_anime_period_task(self):
         anime = config_data.create_anime()
-        user = config_data.create_bot_user()
+        user = config_data.create_bot_user(username='test1')
         objects = service.formation_list_bot_user_anime_period_task(
             [anime], user
         )
@@ -52,6 +57,26 @@ class TestService(APITestCase):
 
         self.assertEqual(obj.anime.id, anime.id)
         self.assertEqual(obj.user.id, user.id)
+
+    @mock.patch('src.bot.services.service.logger', mock.Mock())
+    def test_formation_list_bot_user_anime_period_task_exists(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        schedule = CrontabSchedule.objects.create(
+            minute='0',
+            hour='10',
+            day_of_week='monday'
+        )
+        PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f'{anime.id}_{user.id}',
+            task='src.bot.tasks.reminders',
+            args=json.dumps([user.chat_id, anime.id]),
+        )
+        objects = service.formation_list_bot_user_anime_period_task(
+            [anime], user
+        )
+        self.assertFalse(objects)
 
     def test_add_anime(self):
         anime = config_data.create_anime()
