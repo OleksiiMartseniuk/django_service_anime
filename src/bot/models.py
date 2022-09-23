@@ -49,3 +49,7 @@ class BotUserAnimePeriodTask(models.Model):
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE)
     # Дополнительное поле PeriodicTask
     period_task = models.ForeignKey(PeriodicTask, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Пользователь[{self.user.username}] - ' \
+               f'Аниме[{self.anime.title}]'
