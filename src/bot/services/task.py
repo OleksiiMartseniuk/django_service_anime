@@ -21,7 +21,6 @@ class PeriodicTaskObj:
 
 def create_crontab_schedule(time: int, day: str) -> CrontabSchedule:
     """Создания кроны"""
-    # TODO поверить формирования времени
     if not day:
         logger.error('Названия дня недели отсутствует')
         raise ValidationError('Названия дня недели отсутствует')
@@ -31,7 +30,7 @@ def create_crontab_schedule(time: int, day: str) -> CrontabSchedule:
         minute = date.minute
     else:
         # Default значения времени
-        hour = 10
+        hour = 22
         minute = 0
     schedule, _ = CrontabSchedule.objects.get_or_create(
         minute=str(minute),
