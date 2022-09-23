@@ -64,7 +64,7 @@ class TestService(APITestCase):
         user = config_data.create_bot_user()
         schedule = CrontabSchedule.objects.create(
             minute='0',
-            hour='10',
+            hour='22',
             day_of_week='monday'
         )
         PeriodicTask.objects.create(
