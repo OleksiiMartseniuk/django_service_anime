@@ -20,19 +20,24 @@ class AnimeMini:
     """Мини описания аниме"""
     id: int
     link: str
-    day: str = ''
+    day: str = None
 
 
 class UpdateDataParser:
     """Обновления данных Parser"""
-    def _create_schemas(self, id: int, link: str, day: str = '') -> AnimeMini:
+    def _create_schemas(
+        self,
+        id: int,
+        link: str,
+        day: str = None
+    ) -> AnimeMini:
         """Создать схему AnimeComposed"""
         return AnimeMini(id=id, link=link, day=day)
 
     def _update_anime(
             self,
             anime_data: schemas.AnimeData | schemas.Anime,
-            day: str = ''
+            day: str = None
     ) -> bool:
         """Обновления данных anime"""
         anons = True if re.search(r'Анонс', anime_data.title) else False
