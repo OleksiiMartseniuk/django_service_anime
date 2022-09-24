@@ -23,4 +23,9 @@ urlpatterns = [
         views.AddAnimeUserView.as_view(),
         name='add-anime'
     ),
+    path(
+        'remove-anime/',
+        views.RemoveAnimeUserView.as_view(),
+        name='remove-anime'
+    )
 ]
