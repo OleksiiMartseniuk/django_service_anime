@@ -1,6 +1,7 @@
 import logging
 
 from rest_framework.exceptions import ValidationError
+from django_celery_beat.models import PeriodicTask
 
 from src.anime.models import Anime
 
@@ -67,3 +68,23 @@ def add_anime(anime_ids: list[int], user_id: int) -> None:
     else:
         logger.error(f'Пользователь не найде [{user_id}]')
         raise ValidationError('Пользователь не найде', code=404)
+
+
+def delate_anime(anime_ids: list[int], user_id: int) -> None:
+    """Удалить аниме с отслеживание"""
+    period_task_id_list = BotUserAnimePeriodTask.objects.filter(
+        anime__id__in=anime_ids,
+        user__user_id=user_id
+    ).values_list('period_task__id', flat=True)
+
+    if not period_task_id_list:
+        logger.warning(f'Не найдено ни одного объекта '
+                       f'BotUserAnimePeriodTask anime_ids[{anime_ids}] '
+                       f'user_id[{user_id}]')
+        raise ValidationError(
+            'Не найдено ни одного объекта BotUserAnimePeriodTask',
+            code=404
+        )
+    # Удаления PeriodicTask и также удаляйте объекты,
+    # которые имеют ссылки на него (BotUserAnimePeriodTask)
+    PeriodicTask.objects.filter(id__in=period_task_id_list).delete()
