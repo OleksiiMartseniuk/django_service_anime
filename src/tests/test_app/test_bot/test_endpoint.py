@@ -1,9 +1,18 @@
+import json
+
 from rest_framework.test import APITestCase
 
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
-from src.bot.models import BotStatistics, BotCollBackMessage, BotUser
+from django_celery_beat.models import CrontabSchedule, PeriodicTask
+
+from src.bot.models import (
+    BotStatistics,
+    BotCollBackMessage,
+    BotUser,
+    BotUserAnimePeriodTask
+)
 
 from . import config_data
 
@@ -97,4 +106,41 @@ class TestEndPoint(APITestCase):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(user.track.count(), 1)
+        self.client.credentials()
+
+    def test_remove_anime_user_view(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        schedule = CrontabSchedule.objects.create(
+            minute='0',
+            hour='22',
+            day_of_week='monday'
+        )
+        period_task = PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f'{anime.id}_{user.id}',
+            task='src.bot.tasks.reminders',
+            args=json.dumps([user.chat_id, anime.id]),
+        )
+        BotUserAnimePeriodTask.objects.create(
+            user=user,
+            anime=anime,
+            period_task=period_task
+        )
+        self.assertEqual(PeriodicTask.objects.count(), 1)
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
+
+        self.create_user()
+        self.authenticate('test', 'password')
+
+        url = reverse('remove-anime')
+        data = {
+            'anime_ids': [anime.id],
+            'user_id': user.user_id,
+        }
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(PeriodicTask.objects.count(), 0)
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 0)
         self.client.credentials()
