@@ -24,6 +24,6 @@ class BotUserCreateSerializer(serializers.ModelSerializer):
         exclude = ['track']
 
 
-class AddAnimeUserSerializer(serializers.Serializer):
+class TrackedAnimeUserSerializer(serializers.Serializer):
     anime_ids = serializers.ListField(child=serializers.IntegerField())
     user_id = serializers.IntegerField()
