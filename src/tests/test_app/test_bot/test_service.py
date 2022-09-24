@@ -98,3 +98,54 @@ class TestService(APITestCase):
     def test_add_anime_invalid_user(self):
         anime = config_data.create_anime()
         self.assertRaises(ValidationError, service.add_anime, [anime.id], 1)
+
+    def test_delate_anime(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        schedule = CrontabSchedule.objects.create(
+            minute='0',
+            hour='22',
+            day_of_week='monday'
+        )
+        period_task = PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f'{anime.id}_{user.id}',
+            task='src.bot.tasks.reminders',
+            args=json.dumps([user.chat_id, anime.id]),
+        )
+        BotUserAnimePeriodTask.objects.create(
+            user=user,
+            anime=anime,
+            period_task=period_task
+        )
+        self.assertEqual(PeriodicTask.objects.count(), 1)
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
+        service.delate_anime([anime.id], user.user_id)
+        self.assertEqual(PeriodicTask.objects.count(), 0)
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 0)
+
+    @mock.patch('src.bot.services.service.logger', mock.Mock())
+    def test_delate_anime_not_exists(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        schedule = CrontabSchedule.objects.create(
+            minute='0',
+            hour='22',
+            day_of_week='monday'
+        )
+        period_task = PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f'{anime.id}_{user.id}',
+            task='src.bot.tasks.reminders',
+            args=json.dumps([user.chat_id, anime.id]),
+        )
+        BotUserAnimePeriodTask.objects.create(
+            user=user,
+            anime=anime,
+            period_task=period_task
+        )
+        self.assertEqual(PeriodicTask.objects.count(), 1)
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
+        self.assertRaises(ValidationError, service.delate_anime, [anime.id], 1)
+        self.assertEqual(PeriodicTask.objects.count(), 1)
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
