@@ -24,9 +24,9 @@ class TestWriteDB(APITestCase):
     def test_write_genre_decorator(self):
         self.assertEqual(0, Genre.objects.count())
 
-        result1 = self.writer._write_genre('приключения')
-        result2 = self.writer._write_genre('приключения')
-        result3 = self.writer._write_genre('приключения')
+        self.writer._write_genre('приключения')
+        self.writer._write_genre('приключения')
+        self.writer._write_genre('приключения')
         self.assertEqual(1, Genre.objects.count())
 
     @mock.patch('src.anime.service.write_db.download_image')
