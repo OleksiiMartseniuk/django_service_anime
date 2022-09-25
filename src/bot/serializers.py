@@ -27,3 +27,8 @@ class BotUserCreateSerializer(serializers.ModelSerializer):
 class TrackedAnimeUserSerializer(serializers.Serializer):
     anime_ids = serializers.ListField(child=serializers.IntegerField())
     user_id = serializers.IntegerField()
+
+
+class TrackedUserSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    subscriber = serializers.BooleanField()
