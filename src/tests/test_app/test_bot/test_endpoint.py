@@ -144,3 +144,57 @@ class TestEndPoint(APITestCase):
         self.assertEqual(PeriodicTask.objects.count(), 0)
         self.assertEqual(BotUserAnimePeriodTask.objects.count(), 0)
         self.client.credentials()
+
+    def test_get_anime_user_view_true(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        schedule = CrontabSchedule.objects.create(
+            minute='0',
+            hour='22',
+            day_of_week='monday'
+        )
+        period_task = PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f'{anime.id}_{user.id}',
+            task='src.bot.tasks.reminders',
+            args=json.dumps([user.chat_id, anime.id]),
+        )
+        BotUserAnimePeriodTask.objects.create(
+            user=user,
+            anime=anime,
+            period_task=period_task
+        )
+
+        self.create_user()
+        self.authenticate('test', 'password')
+
+        url = reverse('get-anime')
+        data = {
+            'user_id': user.user_id,
+            'subscriber': True,
+        }
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()[0]
+        self.assertEqual(data['id'], anime.id)
+        self.assertEqual(data['title'], anime.title)
+        self.client.credentials()
+
+    def test_get_anime_user_view_false(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+
+        self.create_user()
+        self.authenticate('test', 'password')
+
+        url = reverse('get-anime')
+        data = {
+            'user_id': user.user_id,
+            'subscriber': False,
+        }
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()[0]
+        self.assertEqual(data['id'], anime.id)
+        self.assertEqual(data['title'], anime.title)
+        self.client.credentials()
