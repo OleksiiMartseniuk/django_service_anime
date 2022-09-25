@@ -98,5 +98,5 @@ class GetAnimeUserView(generics.GenericAPIView):
                 serializer.data['subscriber']
             )
             serializer_anime_list = AnimeSerializer(anime_list, many=True)
-            return Response(serializer_anime_list.data, status=201)
+            return Response(serializer_anime_list.data, status=200)
         return Response(serializer.errors, status=400)
