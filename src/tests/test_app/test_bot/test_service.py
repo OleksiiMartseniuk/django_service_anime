@@ -6,6 +6,7 @@ from rest_framework.test import APITestCase
 from rest_framework.exceptions import ValidationError
 
 from django_celery_beat.models import CrontabSchedule, PeriodicTask
+from src.anime.models import Anime
 
 from src.bot.services import service
 from src.bot.models import BotUserAnimePeriodTask
@@ -149,3 +150,50 @@ class TestService(APITestCase):
         self.assertRaises(ValidationError, service.delate_anime, [anime.id], 1)
         self.assertEqual(PeriodicTask.objects.count(), 1)
         self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
+
+    def test_get_anime_tracked_subscriber_true(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        schedule = CrontabSchedule.objects.create(
+            minute='0',
+            hour='22',
+            day_of_week='monday'
+        )
+        period_task = PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f'{anime.id}_{user.id}',
+            task='src.bot.tasks.reminders',
+            args=json.dumps([user.chat_id, anime.id]),
+        )
+        BotUserAnimePeriodTask.objects.create(
+            user=user,
+            anime=anime,
+            period_task=period_task
+        )
+        result = service.get_anime_tracked(user.user_id, subscriber=True)
+        self.assertEqual(len(result), 1)
+        data: Anime = result[0]
+        self.assertEqual(data.title, anime.title)
+        self.assertEqual(data.id, anime.id)
+
+    def test_get_anime_tracked_subscriber_false(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+
+        result = service.get_anime_tracked(user.user_id, subscriber=False)
+        self.assertEqual(len(result), 1)
+        data: Anime = result[0]
+        self.assertEqual(data.title, anime.title)
+        self.assertEqual(data.id, anime.id)
+
+    def test_get_anime_tracked_subscriber_false_exists(self):
+        user = config_data.create_bot_user()
+
+        result = service.get_anime_tracked(user.user_id, subscriber=False)
+        self.assertFalse(result)
+
+    def test_get_anime_tracked_subscriber_true_exists(self):
+        user = config_data.create_bot_user()
+
+        result = service.get_anime_tracked(user.user_id, subscriber=True)
+        self.assertFalse(result)
