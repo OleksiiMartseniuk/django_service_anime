@@ -1,6 +1,10 @@
 import logging
 
 from rest_framework.exceptions import ValidationError
+
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+
 from django_celery_beat.models import PeriodicTask
 
 from src.anime.models import Anime
@@ -88,3 +92,20 @@ def delate_anime(anime_ids: list[int], user_id: int) -> None:
     # Удаления PeriodicTask и также удаляйте объекты,
     # которые имеют ссылки на него (BotUserAnimePeriodTask)
     PeriodicTask.objects.filter(id__in=period_task_id_list).delete()
+
+
+def get_anime_tracked(user_id: int, subscriber: bool) -> list[Anime] | None:
+    """Вывод аниме с отслеживание пользователя
+    Parameters:
+        subscriber (bool) - True: Получения список подписок
+        subscriber (bool) - False: Получения список возможных подписок
+    """
+    user = get_object_or_404(BotUser, user_id=user_id)
+
+    if subscriber:
+        anime_list = user.track.all()
+    else:
+        anime_list_id = user.track.all().values_list('id', flat=True)
+        anime_list = Anime.objects.filter(~Q(day_week=None)).\
+            exclude(id__in=anime_list_id)
+    return anime_list
