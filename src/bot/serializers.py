@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from src.anime.models import Anime
+
 from .models import BotStatistics, BotCollBackMessage, BotUser
 
 
@@ -32,3 +34,11 @@ class TrackedAnimeUserSerializer(serializers.Serializer):
 class TrackedUserSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     subscriber = serializers.BooleanField()
+
+
+class AnimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Anime
+        fields = ['id', 'title', 'url_image_preview_s', 'anons', 'link',
+                  'timer', 'rating', 'votes', 'url_image_preview',
+                  'telegram_id_file', 'day_week']
