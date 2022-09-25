@@ -27,5 +27,10 @@ urlpatterns = [
         'remove-anime/',
         views.RemoveAnimeUserView.as_view(),
         name='remove-anime'
+    ),
+    path(
+        'get-anime/',
+        views.GetAnimeUserView.as_view(),
+        name='get-anime'
     )
 ]
