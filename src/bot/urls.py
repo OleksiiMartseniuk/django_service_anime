@@ -19,6 +19,11 @@ urlpatterns = [
         name='create-user'
     ),
     path(
+        'get-user/<int:user_id>/',
+        views.GetBotUserView.as_view(),
+        name='get-user'
+    ),
+    path(
         'add-anime/',
         views.AddAnimeUserView.as_view(),
         name='add-anime'
