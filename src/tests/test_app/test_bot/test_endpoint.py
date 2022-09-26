@@ -92,6 +92,20 @@ class TestEndPoint(APITestCase):
         self.assertEqual(data_json['chat_id'], data['chat_id'])
         self.client.credentials()
 
+    def test_get_user(self):
+        user = config_data.create_bot_user()
+        self.create_user()
+        self.authenticate('test', 'password')
+        url = reverse('get-user', args=[user.user_id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['id'], user.id)
+        self.assertEqual(data['username'], user.username)
+        self.assertEqual(data['user_id'], user.user_id)
+        self.assertEqual(data['chat_id'], user.chat_id)
+        self.assertEqual(data['staff'], user.staff)
+
     def test_add_anime_user_view(self):
         anime = config_data.create_anime()
         user = config_data.create_bot_user()
