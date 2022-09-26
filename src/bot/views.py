@@ -4,10 +4,13 @@ from rest_framework.response import Response
 
 from drf_yasg.utils import swagger_auto_schema
 
+from src.bot.models import BotUser
+
 from .serializers import (
     BotStatisticsSerializer,
     BotCollBackMessageSerializer,
     BotUserCreateSerializer,
+    GetBotUserSerializer,
     TrackedAnimeUserSerializer,
     TrackedUserSerializer,
     AnimeSerializer
@@ -41,6 +44,19 @@ class BotUserCreateView(generics.CreateAPIView):
     """
     serializer_class = BotUserCreateSerializer
     permission_classes = [IsAuthenticated]
+
+
+class GetBotUserView(generics.RetrieveAPIView):
+    """
+    Получения пользователя
+    ---
+    """
+    queryset = BotUser.objects.all().values(
+        'id', 'username', 'user_id', 'chat_id', 'staff'
+    )
+    permission_classes = [IsAuthenticated]
+    serializer_class = GetBotUserSerializer
+    lookup_field = 'user_id'
 
 
 class AddAnimeUserView(generics.GenericAPIView):
