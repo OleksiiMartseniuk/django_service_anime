@@ -29,9 +29,13 @@ class BotCollBackMessage(models.Model):
 
 class BotUser(models.Model):
     """Пользователь бота"""
-    username = models.CharField('Имя пользователя', max_length=255)
-    user_id = models.IntegerField('ID пользователя telegram')
-    chat_id = models.IntegerField('ChatID пользователя telegram')
+    username = models.CharField(
+        'Имя пользователя',
+        max_length=255,
+        unique=True
+    )
+    user_id = models.IntegerField('ID пользователя telegram', unique=True)
+    chat_id = models.IntegerField('ChatID пользователя telegram', unique=True)
     track = models.ManyToManyField(
         Anime,
         through='BotUserAnimePeriodTask',
