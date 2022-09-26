@@ -168,12 +168,8 @@ class TestEndPoint(APITestCase):
         self.create_user()
         self.authenticate('test', 'password')
 
-        url = reverse('get-anime')
-        data = {
-            'user_id': user.user_id,
-            'subscriber': True,
-        }
-        response = self.client.post(url, data=data)
+        url = reverse('get-anime', args=[user.user_id, True])
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         data = response.json()[0]
         self.assertEqual(data['id'], anime.id)
@@ -187,12 +183,8 @@ class TestEndPoint(APITestCase):
         self.create_user()
         self.authenticate('test', 'password')
 
-        url = reverse('get-anime')
-        data = {
-            'user_id': user.user_id,
-            'subscriber': False,
-        }
-        response = self.client.post(url, data=data)
+        url = reverse('get-anime', args=[user.user_id, False])
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         data = response.json()[0]
         self.assertEqual(data['id'], anime.id)
