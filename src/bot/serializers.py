@@ -23,6 +23,13 @@ class BotUserCreateSerializer(serializers.ModelSerializer):
     """Создания пользователя"""
     class Meta:
         model = BotUser
+        exclude = ['track', 'staff']
+
+
+class GetBotUserSerializer(serializers.ModelSerializer):
+    """Вывод пользователя"""
+    class Meta:
+        model = BotUser
         exclude = ['track']
 
 
