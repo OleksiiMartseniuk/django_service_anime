@@ -87,11 +87,12 @@ class GetAnimeUserView(generics.GenericAPIView):
     ---
     """
     permission_classes = [IsAuthenticated]
-    serializer_class = TrackedUserSerializer
 
     @swagger_auto_schema(responses={200: AnimeSerializer(many=True)})
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+    def get(self, request, user_id: int, subscriber: bool):
+        serializer = TrackedUserSerializer(
+            data={'user_id': user_id, 'subscriber': subscriber}
+        )
         if serializer.is_valid():
             anime_list = service.get_anime_tracked(
                 serializer.data['user_id'],
