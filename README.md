@@ -18,7 +18,7 @@ announcements, displaying a full description, viewing episodes. Using the admin 
 * To accept message user
 
 [Go to bot](https://github.com/OleksiiMartseniuk/bot_anime)
-#### Admin panel 
+#### Admin panel
 * Parser
     * Anime record
     * Schedule update
@@ -28,21 +28,25 @@ announcements, displaying a full description, viewing episodes. Using the admin 
     * Delete series
     * Auto update
 * Statistics
-* Download file log 
+* Download file log
 * Views file log
 * Bot
   * Uploading images to the telegram server
+  * Creating a telegram user
+  * Add anime to subscriber list
+  * Remove anime with followed user
+  * Anime output tracked by the user
 
 Privet api - token auth <br>
 Create token `python manage.py drf_create_token <username>`
 
 #### Technology
-* Python => 3.10 
+* Python => 3.10
 * Django
 * Django Rest Framework
 * Celery
 * Redis
-* Postgres 
+* Postgres
 * Requests
 * BeautifulSoup
 * Logging
@@ -89,7 +93,7 @@ Build the image and run the container
 `docker-compose up --build`
 
 Create superuser
- 
+
 ```
 docker exec -it django_anime_service_web bash
 python manage.py createsuperuser
