@@ -36,6 +36,7 @@ class BotUser(models.Model):
     )
     user_id = models.IntegerField('ID пользователя telegram', unique=True)
     chat_id = models.IntegerField('ChatID пользователя telegram', unique=True)
+    staff = models.BooleanField(default=False)
     track = models.ManyToManyField(
         Anime,
         through='BotUserAnimePeriodTask',
