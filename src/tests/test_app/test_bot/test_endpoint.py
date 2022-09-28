@@ -92,14 +92,14 @@ class TestEndPoint(APITestCase):
         self.assertEqual(data_json['chat_id'], data['chat_id'])
         self.client.credentials()
 
-    def test_get_user(self):
+    def test_list_user(self):
         user = config_data.create_bot_user()
         self.create_user()
         self.authenticate('test', 'password')
-        url = reverse('get-user', args=[user.user_id])
+        url = reverse('user-bot')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        data = response.json()
+        data = response.json()[0]
         self.assertEqual(data['id'], user.id)
         self.assertEqual(data['username'], user.username)
         self.assertEqual(data['user_id'], user.user_id)
