@@ -2,6 +2,8 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from drf_yasg.utils import swagger_auto_schema
 
 from src.bot.models import BotUser
@@ -46,9 +48,9 @@ class BotUserCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class GetBotUserView(generics.RetrieveAPIView):
+class BotUserListView(generics.ListAPIView):
     """
-    Получения пользователя
+    Вывод пользователей telegram бота
     ---
     """
     queryset = BotUser.objects.all().values(
@@ -56,7 +58,8 @@ class GetBotUserView(generics.RetrieveAPIView):
     )
     permission_classes = [IsAuthenticated]
     serializer_class = GetBotUserSerializer
-    lookup_field = 'user_id'
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user_id', 'staff']
 
 
 class AddAnimeUserView(generics.GenericAPIView):
