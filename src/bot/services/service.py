@@ -39,7 +39,7 @@ def formation_list_bot_user_anime_period_task(
     """Формирования списка BotUserAnimePeriodTask"""
     result = []
     for anime in anime_objs:
-        schedule = task.create_crontab_schedule(anime.timer, anime.day_week)
+        schedule = task.create_crontab_schedule(anime.timer)
         task_obj = task.create_periodic_task(anime.id, schedule, user)
 
         # Проверка на уникальность
