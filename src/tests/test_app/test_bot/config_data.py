@@ -27,7 +27,8 @@ def create_anime(
         year: str = 'anime_data.year',
         type: str = 'an',
         anons: bool = True,
-        day_week: str = 'monday'
+        day_week: str = 'monday',
+        timer: int = 0
 ):
     return Anime.objects.create(
         id_anime=id_anime,
@@ -43,7 +44,8 @@ def create_anime(
         year=year,
         type=type,
         anons=anons,
-        day_week=day_week
+        day_week=day_week,
+        timer=timer
     )
 
 
