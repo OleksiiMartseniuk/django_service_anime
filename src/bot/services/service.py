@@ -113,3 +113,14 @@ def get_anime_tracked(user_id: int, subscriber: bool) -> list[Anime] | None:
                                                'url_image_preview_s',
                                                'telegram_id_file', 'day_week')
     return anime_list
+
+
+def update_user_tracked() -> None:
+    """Обновить список подписок пользователя"""
+    period_task_id_list = BotUserAnimePeriodTask.objects.filter(
+        anime__timer=0
+    ).values_list('period_task__id', flat=True)
+    if period_task_id_list:
+        PeriodicTask.objects.filter(id__in=period_task_id_list).delete()
+    else:
+        logger.info('Нет данных для удаления')
