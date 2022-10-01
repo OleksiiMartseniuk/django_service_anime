@@ -106,7 +106,7 @@ def get_anime_tracked(user_id: int, subscriber: bool) -> list[Anime] | None:
         anime_list = user.track.all()
     else:
         anime_list_id = user.track.all().values_list('id', flat=True)
-        anime_list = Anime.objects.filter(~Q(day_week=None)).\
+        anime_list = Anime.objects.filter(~Q(day_week=None) & ~Q(timer=0)).\
             exclude(id__in=anime_list_id).only('id', 'title', 'rating',
                                                'url_image_preview', 'votes',
                                                'timer', 'anons', 'link',
