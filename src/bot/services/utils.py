@@ -17,7 +17,8 @@ def get_cart(anime: Anime) -> str:
     else:
         date = 'В течении дня'
     time = f'<b>Время выхода</b> 🕜️ ({date}) \n'
-    return f"<b>{anime.title.split('/')[0]}</b> \n\n" \
+    return f"<u>Вышла новая серия❗️</u> \n" \
+           f"<b>{anime.title.split('/')[0]}</b> \n\n" \
            f"{time}" \
            f"<b>Рейтинг</b> 📊 {anime.rating}\n" \
            f"<b>Голоса</b> 🗳️ {anime.votes}\n\n" \
