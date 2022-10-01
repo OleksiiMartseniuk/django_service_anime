@@ -177,7 +177,7 @@ class TestService(APITestCase):
         self.assertEqual(data.id, anime.id)
 
     def test_get_anime_tracked_subscriber_false(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
 
         result = service.get_anime_tracked(user.user_id, subscriber=False)
