@@ -12,6 +12,9 @@ from src.bot.models import BotUser
 
 logger = logging.getLogger('main')
 
+# 1 - Понедельник 0 - Воскресения
+day_week_celery = [1, 2, 3, 4, 5, 6, 0]
+
 
 @dataclass
 class PeriodicTaskObj:
@@ -29,7 +32,7 @@ def create_crontab_schedule(time: int) -> CrontabSchedule:
     schedule, _ = CrontabSchedule.objects.get_or_create(
         minute=date.minute,
         hour=date.hour,
-        day_of_week=date.weekday()
+        day_of_week=day_week_celery[date.weekday()]
     )
     return schedule
 
