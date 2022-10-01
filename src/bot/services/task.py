@@ -12,9 +12,6 @@ from src.bot.models import BotUser
 
 logger = logging.getLogger('main')
 
-# 1 - Понедельник 0 - Воскресения
-day_week_celery = [1, 2, 3, 4, 5, 6, 0]
-
 
 @dataclass
 class PeriodicTaskObj:
@@ -24,6 +21,9 @@ class PeriodicTaskObj:
 
 def create_crontab_schedule(time: int) -> CrontabSchedule:
     """Создания кроны"""
+    # 1 - Понедельник 0 - Воскресения
+    day_week_celery = [1, 2, 3, 4, 5, 6, 0]
+
     if not time:
         logger.error('Время выхода серий отсутствует')
         raise ValidationError('Время выхода серий отсутствует')
