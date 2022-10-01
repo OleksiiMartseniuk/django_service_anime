@@ -49,7 +49,7 @@ class TestService(APITestCase):
         self.assertIsNone(anime.telegram_id_file)
 
     def test_formation_list_bot_user_anime_period_task(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user(username='test1')
         objects = service.formation_list_bot_user_anime_period_task(
             [anime], user
@@ -61,12 +61,12 @@ class TestService(APITestCase):
 
     @mock.patch('src.bot.services.service.logger', mock.Mock())
     def test_formation_list_bot_user_anime_period_task_exists(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
         schedule = CrontabSchedule.objects.create(
-            minute='0',
-            hour='22',
-            day_of_week='monday'
+            minute=33,
+            hour=0,
+            day_of_week=4
         )
         PeriodicTask.objects.create(
             crontab=schedule,
@@ -80,7 +80,7 @@ class TestService(APITestCase):
         self.assertFalse(objects)
 
     def test_add_anime(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
         self.assertEqual(user.track.count(), 0)
         service.add_anime([anime.id], user.user_id)
@@ -101,12 +101,12 @@ class TestService(APITestCase):
         self.assertRaises(ValidationError, service.add_anime, [anime.id], 1)
 
     def test_delate_anime(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
         schedule = CrontabSchedule.objects.create(
-            minute='0',
-            hour='22',
-            day_of_week='monday'
+            minute=33,
+            hour=0,
+            day_of_week=4
         )
         period_task = PeriodicTask.objects.create(
             crontab=schedule,
@@ -127,12 +127,12 @@ class TestService(APITestCase):
 
     @mock.patch('src.bot.services.service.logger', mock.Mock())
     def test_delate_anime_not_exists(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
         schedule = CrontabSchedule.objects.create(
-            minute='0',
-            hour='22',
-            day_of_week='monday'
+            minute=33,
+            hour=0,
+            day_of_week=4
         )
         period_task = PeriodicTask.objects.create(
             crontab=schedule,
@@ -152,12 +152,12 @@ class TestService(APITestCase):
         self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
 
     def test_get_anime_tracked_subscriber_true(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
         schedule = CrontabSchedule.objects.create(
-            minute='0',
-            hour='22',
-            day_of_week='monday'
+            minute=33,
+            hour=0,
+            day_of_week=4
         )
         period_task = PeriodicTask.objects.create(
             crontab=schedule,

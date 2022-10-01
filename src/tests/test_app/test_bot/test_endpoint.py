@@ -107,7 +107,7 @@ class TestEndPoint(APITestCase):
         self.assertEqual(data['staff'], user.staff)
 
     def test_add_anime_user_view(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
         self.create_user()
         self.authenticate('test', 'password')
@@ -123,12 +123,12 @@ class TestEndPoint(APITestCase):
         self.client.credentials()
 
     def test_remove_anime_user_view(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
         schedule = CrontabSchedule.objects.create(
-            minute='0',
-            hour='22',
-            day_of_week='monday'
+            minute=33,
+            hour=0,
+            day_of_week=4
         )
         period_task = PeriodicTask.objects.create(
             crontab=schedule,
@@ -160,12 +160,12 @@ class TestEndPoint(APITestCase):
         self.client.credentials()
 
     def test_get_anime_user_view_true(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
         schedule = CrontabSchedule.objects.create(
-            minute='0',
-            hour='22',
-            day_of_week='monday'
+            minute=33,
+            hour=0,
+            day_of_week=4
         )
         period_task = PeriodicTask.objects.create(
             crontab=schedule,
@@ -191,7 +191,7 @@ class TestEndPoint(APITestCase):
         self.client.credentials()
 
     def test_get_anime_user_view_false(self):
-        anime = config_data.create_anime()
+        anime = config_data.create_anime(timer=1663277581)
         user = config_data.create_bot_user()
 
         self.create_user()
