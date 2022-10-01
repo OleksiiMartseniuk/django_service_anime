@@ -19,23 +19,17 @@ class PeriodicTaskObj:
     create: bool
 
 
-def create_crontab_schedule(time: int, day: str) -> CrontabSchedule:
+def create_crontab_schedule(time: int) -> CrontabSchedule:
     """Создания кроны"""
-    if not day:
-        logger.error('Названия дня недели отсутствует')
-        raise ValidationError('Названия дня недели отсутствует')
-    if time:
-        date = datetime.fromtimestamp(time)
-        hour = date.hour
-        minute = date.minute
-    else:
-        # Default значения времени
-        hour = 22
-        minute = 0
+    if not time:
+        logger.error('Время выхода серий отсутствует')
+        raise ValidationError('Время выхода серий отсутствует')
+
+    date = datetime.fromtimestamp(time)
     schedule, _ = CrontabSchedule.objects.get_or_create(
-        minute=str(minute),
-        hour=str(hour),
-        day_of_week=day
+        minute=date.minute,
+        hour=date.hour,
+        day_of_week=date.weekday()
     )
     return schedule
 
