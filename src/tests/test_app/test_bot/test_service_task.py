@@ -20,13 +20,13 @@ class TestServiceTest(APITestCase):
         self.assertEqual(CrontabSchedule.objects.count(), 1)
         self.assertEqual(schedule.hour, 0)
         self.assertEqual(schedule.minute, 33)
-        self.assertEqual(schedule.day_of_week, 4)
+        self.assertEqual(schedule.day_of_week, 5)
 
     def test_create_crontab_schedule_get(self):
         schedule = CrontabSchedule.objects.create(
             minute=33,
             hour=0,
-            day_of_week=4
+            day_of_week=5
         )
         self.assertEqual(CrontabSchedule.objects.count(), 1)
         schedule_test = task.create_crontab_schedule(1663277581)

@@ -66,7 +66,7 @@ class TestService(APITestCase):
         schedule = CrontabSchedule.objects.create(
             minute=33,
             hour=0,
-            day_of_week=4
+            day_of_week=5
         )
         PeriodicTask.objects.create(
             crontab=schedule,
