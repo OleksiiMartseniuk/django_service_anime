@@ -197,3 +197,53 @@ class TestService(APITestCase):
 
         result = service.get_anime_tracked(user.user_id, subscriber=True)
         self.assertFalse(result)
+
+    def test_update_user_tracked(self):
+        anime = config_data.create_anime()
+        user = config_data.create_bot_user()
+        schedule = CrontabSchedule.objects.create(
+            minute=33,
+            hour=0,
+            day_of_week=5
+        )
+        period_task = PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f'{anime.id}_{user.id}',
+            task='src.bot.tasks.reminders',
+            args=json.dumps([user.chat_id, anime.id]),
+        )
+        BotUserAnimePeriodTask.objects.create(
+            user=user,
+            anime=anime,
+            period_task=period_task
+        )
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
+        self.assertEqual(PeriodicTask.objects.count(), 1)
+        service.update_user_tracked()
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 0)
+        self.assertEqual(PeriodicTask.objects.count(), 0)
+
+    def test_update_user_tracked_exist(self):
+        anime = config_data.create_anime(timer=1663277581)
+        user = config_data.create_bot_user()
+        schedule = CrontabSchedule.objects.create(
+            minute=33,
+            hour=0,
+            day_of_week=5
+        )
+        period_task = PeriodicTask.objects.create(
+            crontab=schedule,
+            name=f'{anime.id}_{user.id}',
+            task='src.bot.tasks.reminders',
+            args=json.dumps([user.chat_id, anime.id]),
+        )
+        BotUserAnimePeriodTask.objects.create(
+            user=user,
+            anime=anime,
+            period_task=period_task
+        )
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
+        self.assertEqual(PeriodicTask.objects.count(), 1)
+        service.update_user_tracked()
+        self.assertEqual(BotUserAnimePeriodTask.objects.count(), 1)
+        self.assertEqual(PeriodicTask.objects.count(), 1)
