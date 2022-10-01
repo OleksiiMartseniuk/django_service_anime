@@ -7,6 +7,8 @@ from .service.service_vost import ServiceAnime
 from .service import service
 from .models import Anime, Series, Statistics
 
+from src.bot.services.service import update_user_tracked
+
 
 logger = logging.getLogger('main')
 
@@ -72,6 +74,9 @@ def auto_update():
             logger.info('Обновления успешно [series]')
         else:
             logger.error('Не данных для обновления [series]')
+
+        # Обновить список подписок telegram пользователя
+        update_user_tracked()
 
         # Запись в статистику
         Statistics.objects.create(message='Авто обновления выполнено')
