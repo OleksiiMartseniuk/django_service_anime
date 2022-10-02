@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -27,7 +27,7 @@ class StatisticsBotView(generics.CreateAPIView):
     ---
     """
     serializer_class = BotStatisticsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 
 class BotCollBackMessageView(generics.CreateAPIView):
@@ -36,7 +36,7 @@ class BotCollBackMessageView(generics.CreateAPIView):
     ---
     """
     serializer_class = BotCollBackMessageSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 
 class BotUserCreateView(generics.CreateAPIView):
@@ -45,7 +45,7 @@ class BotUserCreateView(generics.CreateAPIView):
     ---
     """
     serializer_class = BotUserCreateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 
 class BotUserListView(generics.ListAPIView):
@@ -56,7 +56,7 @@ class BotUserListView(generics.ListAPIView):
     queryset = BotUser.objects.all().values(
         'id', 'username', 'user_id', 'chat_id', 'staff'
     )
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     serializer_class = GetBotUserSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['user_id', 'staff']
@@ -67,7 +67,7 @@ class AddAnimeUserView(generics.GenericAPIView):
     Добавить аниме в отслеживаемые пользователем
     ---
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     serializer_class = TrackedAnimeUserSerializer
 
     def post(self, request):
@@ -86,7 +86,7 @@ class RemoveAnimeUserView(generics.GenericAPIView):
     Удаления аниме с отслеживаемые пользователем
     ---
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     serializer_class = TrackedAnimeUserSerializer
 
     def post(self, request):
@@ -105,7 +105,7 @@ class GetAnimeUserView(generics.GenericAPIView):
     Вывод аниме отслеживаемые пользователем
     ---
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     @swagger_auto_schema(responses={200: AnimeSerializer(many=True)})
     def get(self, request, user_id: int, subscriber: bool):
