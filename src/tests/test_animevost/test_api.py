@@ -50,14 +50,6 @@ class TestApiAnimeVostClient:
         result = client_api._post('https://test')
         assert result == {'data': 'test'}
 
-        mock_post.return_value.json.return_value = {'status': 'false'}
-        with pytest.raises(ApiAnimeVostClientAttributeError):
-            client_api._post('https://test')
-
-        mock_post.return_value.json.return_value = [{'status': 'false'}]
-        result = client_api._post('https://test', data_list=True)
-        assert result == [{'status': 'false'}]
-
     @pytest.mark.parametrize('status_code', [500, 400, 300])
     @mock.patch('src.base.animevost.api.requests.post')
     def test_post_status(self, mock_post, status_code, client_api):
@@ -73,10 +65,6 @@ class TestApiAnimeVostClient:
 
         with pytest.raises(ApiAnimeVostClientStatusCodeError):
             client_api._post('https://test')
-
-        mock_post.return_value.json.return_value = {'error': 'massage'}
-        result = client_api._post('https://test')
-        assert result == {'error': 'massage'}
 
     @mock.patch('src.base.animevost.api.requests.get')
     def test_get_last_anime(self, mock_get,  client_api):
@@ -106,9 +94,6 @@ class TestApiAnimeVostClient:
     def test_search_error_name(self, mock_post, client_api):
         mock_post.return_value.status_code = 404
         mock_post.return_value.json.return_value = {'error': 'Not'}
-
-        result = client_api.search('test')
-        assert result == {'error': 'Not'}
 
         mock_post.return_value.json.return_value = {'data': 'Not'}
         with pytest.raises(ApiAnimeVostClientStatusCodeError):
