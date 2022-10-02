@@ -34,30 +34,13 @@ class ApiAnimeVostClient:
                          f'url-"{url}"')
             raise ApiAnimeVostClientStatusCodeError
 
-    def _post(
-            self,
-            url: str,
-            params: dict = {},
-            data: dict = {},
-            data_list: bool = False
-    ) -> dict | None:
-        response = requests.post(url=url, params=params, data=data)
+    def _post(self, url: str, data: dict = {}) -> dict | None:
+        response = requests.post(url=url, data=data)
         if response.status_code == 200:
-            if data_list:
-                return response.json()
-            elif not response.json().get('data'):
-                raise ApiAnimeVostClientAttributeError
             return response.json()
-        elif response.status_code == 404:
-            if response.json().get('error'):
-                return response.json()
-            else:
-                logger.error(f'Неверный статус код {response.status_code} '
-                             f'и нет данных на запрос "{url}"')
-                raise ApiAnimeVostClientStatusCodeError
         else:
             logger.error(f'Неверный статус код {response.status_code} '
-                         f'url-"{url}"')
+                         f'и нет данных на запрос "{url}"')
             raise ApiAnimeVostClientStatusCodeError
 
     def _create_anime_series(self, data: dict) -> Series:
@@ -123,14 +106,14 @@ class ApiAnimeVostClient:
         """Play list аниме по id"""
         url = self.url_v1 + '/playlist'
         data = {'id': id}
-        data_json = self._post(url, data=data, data_list=True)
+        data_json = self._post(url, data=data)
+        if isinstance(data_json, dict) and data_json.get('error'):
+            raise ApiAnimeVostClientAttributeError
         return list(map(self._create_anime_series, data_json))
 
-    def search(self, name: str) -> list[Anime] | dict:
+    def search(self, name: str) -> list[Anime]:
         """ Поиск """
         url = self.url_v1 + '/search'
         data = {'name': name}
         data_json = self._post(url, data=data)
-        if data_json.get('error'):
-            return data_json
         return list(map(self._create_anime_schemas, data_json['data']))
