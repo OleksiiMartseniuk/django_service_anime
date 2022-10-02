@@ -1,5 +1,3 @@
-from typing import List
-
 from .api import ApiAnimeVostClient
 from .parser import ParserClient
 from .schemas import AnimeData, AnimeFull, AnimeMin
@@ -8,8 +6,8 @@ from .schemas import AnimeData, AnimeFull, AnimeMin
 class ServiceAnimeVost:
     def _create_anime_full_list(
             self,
-            list_anime_shem: List[AnimeMin]
-    ) -> List[AnimeFull]:
+            list_anime_shem: list[AnimeMin]
+    ) -> list[AnimeFull]:
         """Создания списка схемы AnimeFull"""
         list_anime = []
         for anime in list_anime_shem:
@@ -43,7 +41,7 @@ class ServiceAnimeVost:
     def get_data_anime_all(
             self,
             full: bool = False
-    ) -> dict[str: List[AnimeFull]]:
+    ) -> dict[str: list[AnimeFull]]:
         """
         Получения данных аниме
         :arg full: флаг для полного или частичного сбора данных
@@ -60,7 +58,7 @@ class ServiceAnimeVost:
     def get_data_anime_anons_all(
             self,
             full: bool = False
-    ) -> List[AnimeFull]:
+    ) -> list[AnimeFull]:
         """
         Получения данных аниме Anons
         :arg full: флаг для полного или частичного сбора данных

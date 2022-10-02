@@ -1,9 +1,8 @@
 import logging
 import requests
-from bs4 import BeautifulSoup
 import re
 
-from typing import List
+from bs4 import BeautifulSoup
 
 from .setting import HEADERS
 from .schemas import Week, AnimeMin, AnimeComposed
@@ -28,7 +27,7 @@ class ParserClient:
             logger.error(f'Статус код {response.status_code}')
             raise ParserClientStatusCodeError
 
-    def get_composed(self, link: str, id: str) -> List[AnimeComposed]:
+    def get_composed(self, link: str, id: str) -> list[AnimeComposed]:
         """ Аниме состоит из """
         text_page = self._get(link)
 
@@ -57,7 +56,7 @@ class ParserClient:
     def get_schedule(
             self,
             full: bool = False
-    ) -> dict[str: List[AnimeMin]]:
+    ) -> dict[str: list[AnimeMin]]:
         """ Получения расписания """
         text_page = self._get(self.url)
         soup = BeautifulSoup(text_page, 'lxml')
@@ -109,14 +108,14 @@ class ParserClient:
             count_page = soup.find(class_='block_4').find_all('a')[-1].text
             count_page = int(count_page)
         except ValueError:
-            logger.warning(f'Не преобразован в int count_page')
+            logger.warning('Не преобразован в int count_page')
             count_page = 1
         except AttributeError:
             logger.info('count_page не найден атрибут')
             count_page = 1
         return count_page
 
-    def get_anons(self, full: bool = False) -> List[AnimeMin] | None:
+    def get_anons(self, full: bool = False) -> list[AnimeMin] | None:
         """ Получения аниме анонс """
         list_anime = []
         for page in range(1, self._get_count_page() + 1):

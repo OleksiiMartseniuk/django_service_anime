@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import List
 
 from pydantic import BaseModel
 
@@ -22,13 +21,13 @@ class AnimeComposed(BaseModel):
 class AnimeMin(BaseModel):
     id_anime: int
     link: str
-    anime_composed: List[AnimeComposed] | None
+    anime_composed: list[AnimeComposed] | None
 
 
 class Anime(BaseModel):
     id: int
     title: str
-    screen_image: List[str]
+    screen_image: list[str]
     rating: int
     votes: int
     description: str
@@ -51,4 +50,4 @@ class AnimeData(Anime):
 
 
 class AnimeFull(AnimeData):
-    anime_composed: List[AnimeData]
+    anime_composed: list[AnimeData]

@@ -2,8 +2,6 @@ import re
 import requests
 import logging
 
-from typing import List
-
 from .setting import HEADERS
 from .schemas import Anime, Series
 from .exception import (
@@ -114,21 +112,21 @@ class ApiAnimeVostClient:
             self,
             page: int = 1,
             quantity: int = 30
-    ) -> List[Anime]:
+    ) -> list[Anime]:
         """ Получения последних обновленных аниме"""
         url = self.url_v2 + '/last'
         params = {'page': page, 'quantity': quantity}
         data_json = self._get(url, params=params)
         return list(map(self._create_anime_schemas, data_json['data']))
 
-    def get_play_list(self, id: int) -> List[Series]:
+    def get_play_list(self, id: int) -> list[Series]:
         """Play list аниме по id"""
         url = self.url_v1 + '/playlist'
         data = {'id': id}
         data_json = self._post(url, data=data, data_list=True)
         return list(map(self._create_anime_series, data_json))
 
-    def search(self, name: str) -> List[Anime] | dict:
+    def search(self, name: str) -> list[Anime] | dict:
         """ Поиск """
         url = self.url_v1 + '/search'
         data = {'name': name}
