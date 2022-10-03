@@ -25,7 +25,7 @@ http://0.0.0.0/api/v1/
 |<b>GET</b>|**`/anime/genre/`**|Получения списка жанров|
 |<b>GET</b>|**`/anime/series/`**| Получения списка жанров по `[id_anime]`|
 |<b>GET</b>|**`/anime/{id}/`**| Получения полного описания|
-||<b>Администратор telegram бота<b>|<b>Authorization: Token [<u>ApiKey</u>](#bавторизацияb)</b>|
+||<b>Администратор telegram бота<b>|<b>Authorization: Token [<u>ApiKey</u>](#авторизация)</b>|
 |<b><b>POST</b></b>|**`/bot/create-user/`**| Регистрация пользователя telegram|
 |<b>GET</b>|**`/bot/user-bot/`**| Получения списка пользователей telegram, фильтр `[user_id, staff]` |
 |<b>POST</b>|**`/bot/statistic/`**| Запись статистики |

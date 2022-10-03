@@ -25,7 +25,7 @@ http://0.0.0.0/api/v1/
 |<b>GET</b>|**`/anime/genre/`**|Getting a list of genres|
 |<b>GET</b>|**`/anime/series/`**| Getting a list of series by `[id_anime]`|
 |<b>GET</b>|**`/anime/{id}/`**| Get a full description|
-||<b>Telegram bot administrator<b>|<b>Authorization: Token [<u>ApiKey</u>](#bauthorizationb)</b>|
+||<b>Telegram bot administrator<b>|<b>Authorization: Token [<u>ApiKey</u>](#authorization)</b>|
 |<b><b>POST</b></b>|**`/bot/create-user/`**| Telegram user registration|
 |<b>GET</b>|**`/bot/user-bot/`**| Getting a list of telegram users, filter `[user_id, staff]` |
 |<b>POST</b>|**`/bot/statistic/`**| Recording statistics |
