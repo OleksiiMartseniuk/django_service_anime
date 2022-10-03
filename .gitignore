@@ -10,3 +10,4 @@ media/*
 !.gitignore
 __pycache__
 .vscode
+README-tets.md
