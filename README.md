@@ -1,69 +1,87 @@
-# Django service anime
-Web service - which allows you to get anime schedules from the site (animevost.org),
-announcements, displaying a full description, viewing episodes. Using the admin panel to keep statistics, collect data.
+<p align="center">
+      <img src="https://i.ibb.co/CQtKPmb/pngwing-com.png" width="200">
+</p>
 
-#### Сlient
-* Getting anime
-* Getting list anime
-* Filter on genre, anons, day week
-* Search name anime
-* Getting list announcements
-* Getting list genre
-* Get list episodes to watch
-* Get list anime with an unspecified release date
-* Sorting by rating, votes, time updated
+<p align="center">
+   <img src="https://img.shields.io/badge/Python-3.10.6-blue" alt="License">
+   <img src="https://img.shields.io/badge/Framework-Django%204.0.5-blueviolet">
+   <img src="https://img.shields.io/badge/Version-v1.0-blue" alt="Game Version">
+   <img src="https://img.shields.io/badge/License-MIT-brightgreen" alt="License">
+</p>
 
-#### Telegram Bot
-* Send statistic
-* To accept message user
+## About
+---
 
-[Go to bot](https://github.com/OleksiiMartseniuk/bot_anime)
-#### Admin panel
-* Parser
-    * Anime record
-    * Schedule update
-    * Delete anime
-    * Series recording
-    * Series update
-    * Delete series
-    * Auto update
-* Statistics
-* Download file log
-* Views file log
-* Bot
-  * Uploading images to the telegram server
-  * Creating a telegram user
-  * Add anime to subscriber list
-  * Remove anime with followed user
-  * Anime output tracked by the user
+Web service that allows you to receive, update data from the site <b>animevost.org</b>. Manage the data collection process using the admin panel. Interact with the telegram bot, collect user statistics and periodically remind you of the release of new episodes.
 
-Privet api - token auth <br>
-Create token `python manage.py drf_create_token <username>`
+## Documentation
+---
+Language [ru](./docs/README_RU.md)
+```
+http://0.0.0.0/api/v1/
+```
+|Method|Free endpoints|	Descriptions|
+|-----|--------------------|---------|
+|<b>GET</b>|**`/anime/`** |Getting a list of anime, filter `[genre, day_week, anons, indefinite_exit] `sorting `[rating, votes]`|
+|<b>GET</b>|**`/anime/genre/`**|Getting a list of genres|
+|<b>GET</b>|**`/anime/series/`**| Getting a list of series by `[id_anime]`|
+|<b>GET</b>|**`/anime/{id}/`**| Get a full description|
+||<b>Telegram bot administrator<b>|<b>Authorization: Token [<u>ApiKey</u>](#bauthorizationb)</b>|
+|<b><b>POST</b></b>|**`/bot/create-user/`**| Telegram user registration|
+|<b>GET</b>|**`/bot/user-bot/`**| Getting a list of telegram users, filter `[user_id, staff]` |
+|<b>POST</b>|**`/bot/statistic/`**| Recording statistics |
+|<b>POST</b>|**`/bot/message/`**| Sending a message by a user|
+|<b>POST</b>|**`/bot/add-anime/`**|Add anime to subscriber list|
+|<b>POST</b>|**`/bot/remove-anime/`**|Removing anime from a subscriber|
+|<b>GET</b>|**`/bot/get-anime/{user_id}/{subscriber}/`**|Getting the list of anime followed by the user. <br>`subscriber (bool) - True:` Getting a list of subscriptions. <br>`subscriber (bool) - False:` Getting a list of possible subscriptions|
 
-#### Technology
-* Python => 3.10
-* Django
-* Django Rest Framework
-* Celery
-* Redis
-* Postgres
-* Requests
-* BeautifulSoup
-* Logging
-* NGINX
-* Docker
+### <b>Auto documentation</b>
 
-#### Test
-`docker exec -it django_anime_service_web bash`
-* Pytest
-    * Run test(module animevost) `pytest src/tests/test_animevost`
-* UnitTest Django
-    * Run test(app) `python manage.py test src/tests/test_app`
+>`http://0.0.0.0/swagger/`<br>
+>`http://0.0.0.0/redoc/`<br>
 
-#### Docs
-* Swagger `http://localhost/swagger/`
+### <b>Authorization</b>
 
-#### Instructions
+<b>POST</b> **`/api-token-auth/`** Getting an access token `[username, password]` <u>ApiKey</u><br>
+**`-H Authorization: Token ApiKey`**
+
+### <b>Access Specifiers</b>
+**`Superuser`** - Creating users, issuing an access specification <br>
+**`Admin-bot`** - Interaction with telegram bot<br>
+**`User/Anonim`** - Only free endpoints are available
+
+### <b>Admin panel</b>
+
+- Record/Update anime schedule
+- Recording/Updating anime announcements
+- Record/Update series
+- Anime updates with an unspecified release date
+- Deleting all image files
+- Uploading images to the telegram server
+- Admin Statistics
+- View/Download logs
+- Enable/Disable auto updates
+
+### <b>Telegram</b>
+
+- Sending new series release reminders to telegram user when subscribing to anime
+
+[Go to telegram bot](https://github.com/OleksiiMartseniuk/bot_anime)
+
+### <b>Technology</b>
+
+![Python](https://img.shields.io/badge/-Python-blue?style=flat-square)
+![Django](https://img.shields.io/badge/-Django-blueviolet?style=flat-square)
+![DRF](https://img.shields.io/badge/-DRF-red?style=flat-square)
+![Celery](https://img.shields.io/badge/-Celery-important?style=flat-square)
+![Redis](https://img.shields.io/badge/-Redis-critical?style=flat-square)
+![Postgres](https://img.shields.io/badge/-Postgres-yellow?style=flat-square)
+![NGINX](https://img.shields.io/badge/-NGINX-success?style=flat-square)
+![Docker](https://img.shields.io/badge/-Docker-informational?style=flat-square)
+
+<br>
+
+### <b>Installation</b>
 
 Сreate a file at the root of the project `.env.docker`
 
@@ -90,15 +108,44 @@ export TZ='your_timezone'
 
 Build the image and run the container
 
-`docker-compose up --build`
+```bash
+docker-compose up --build
+```
 
 Create superuser
 
-```
+```bash
 docker exec -it django_anime_service_web bash
 python manage.py createsuperuser
 ```
 
 If you need to clear the database
 
-`docker-compose down -v`
+```bash
+docker-compose down -v
+```
+
+
+### <b>Test</b>
+
+
+```bash
+docker exec -it django_anime_service_web bash
+```
+Pytest
+```bash
+pytest src/tests/test_animevost
+```
+UnitTest Django
+```bash
+python manage.py test src/tests/test_app
+```
+
+## Developers
+
+- [Martseniuk Oleksii](https://github.com/OleksiiMartseniuk)
+
+
+## License
+
+Project DjangoServiceAnime is distributed under the MIT license.
