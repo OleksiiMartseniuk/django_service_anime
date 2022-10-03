@@ -10,12 +10,11 @@
 </p>
 
 ## About
----
 
 Web service that allows you to receive, update data from the site <b>animevost.org</b>. Manage the data collection process using the admin panel. Interact with the telegram bot, collect user statistics and periodically remind you of the release of new episodes.
 
 ## Documentation
----
+
 Language [ru](./docs/README_RU.md)
 ```
 http://0.0.0.0/api/v1/
