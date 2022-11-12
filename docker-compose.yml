@@ -4,7 +4,7 @@ services:
   web:
     build: .
     container_name: django_anime_service_web
-    command: bash entrypoint.sh
+    command: bash ./script/entrypoint_web.sh
     restart: always
     volumes:
       - .:/app
@@ -51,7 +51,7 @@ services:
   beat:
     build: .
     container_name: django_anime_service_beat
-    command: celery -A config beat -l info
+    command: bash ./script/entrypoint_beat.sh
     env_file: .env.docker
     volumes:
       - media:/app/media
