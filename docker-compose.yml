@@ -13,14 +13,16 @@ services:
       - log:/app/log
     ports:
       - "8000:8000"
-    env_file: .env.docker
+    env_file: .env
     depends_on:
       - redis
 
   redis:
     image: redis
     container_name: django_anime_service_redis
-    command: redis-server --requirepass yourpassword
+    command: redis-server --requirepass $REDIS_PASSWORD
+    env_file:
+      - ./.env
     volumes:
       - redis:/bitnami/redis/data
     ports:
@@ -35,13 +37,13 @@ services:
     container_name: django_anime_service_database
     ports:
       - "5432:5432"
-    env_file: .env.docker
+    env_file: .env
 
   worker:
     build: .
     container_name: django_anime_service_worker
     command: celery -A config worker -l info
-    env_file: .env.docker
+    env_file: .env
     volumes:
       - media:/app/media
       - log:/app/log
@@ -52,7 +54,7 @@ services:
     build: .
     container_name: django_anime_service_beat
     command: bash ./script/entrypoint_beat.sh
-    env_file: .env.docker
+    env_file: .env
     volumes:
       - media:/app/media
       - log:/app/log
@@ -65,7 +67,7 @@ services:
     restart: on-failure
     ports:
       - "80:80"
-    env_file: .env.docker
+    env_file: .env
     volumes:
       - static:/static
       - media:/media
