@@ -174,9 +174,15 @@ SWAGGER_SETTINGS = {
     },
 }
 
+# Redis Configuration Options
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
+REDIS_CLOUD_URL = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0'
+
 # Celery Configuration Options
-CELERY_BROKER_URL = os.getenv('REDIS_CLOUD_URL')
-CELERY_RESULT_BACKEND = os.getenv('REDIS_CLOUD_URL')
+CELERY_BROKER_URL = REDIS_CLOUD_URL
+CELERY_RESULT_BACKEND = REDIS_CLOUD_URL
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
