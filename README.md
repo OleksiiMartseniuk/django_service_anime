@@ -92,7 +92,7 @@ export DJANGO_ALLOWED_HOSTS='localhost 127.0.0.1 0.0.0.0'
 
 
 # Redis
-export REDIS_PASSWORD=yourpassword
+export REDIS_PASSWORD=your_password
 export REDIS_HOST=django_anime_service_redis
 export REDIS_PORT=6379
 

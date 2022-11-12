@@ -82,7 +82,7 @@ http://0.0.0.0/api/v1/
 
 ### <b>Установка</b>
 
-Создать файл в корне проекта `.env.docker`
+Создать файл в корне проекта `.env`
 
 ```
 export DEBUG=0
@@ -92,12 +92,14 @@ export DJANGO_ALLOWED_HOSTS='localhost 127.0.0.1 0.0.0.0'
 
 
 # Redis
-export REDIS_CLOUD_URL=redis://django_anime_service_redis:6379/0
+export REDIS_PASSWORD=your_password
+export REDIS_HOST=django_anime_service_redis
+export REDIS_PORT=6379
 
 # Data Base
 export POSTGRES_DB=your_name_db
 export POSTGRES_USER=your_name_user
-export POSTGRES_PASSWORD=your_passwor
+export POSTGRES_PASSWORD=your_password
 export HOST_DB=django_anime_service_database
 export PORT_DB=5432
 
