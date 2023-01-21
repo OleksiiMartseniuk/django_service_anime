@@ -47,7 +47,7 @@ def parser(action: str) -> None:
 
 
 @app.task
-def auto_update():
+def auto_update(auth: bool = True):
     """Авто обновления данных"""
     try:
         # Обновления расписания
@@ -79,7 +79,12 @@ def auto_update():
         update_user_tracked()
 
         # Запись в статистику
-        Statistics.objects.create(message='Авто обновления выполнено')
+        if auth:
+            Statistics.objects.create(message='Авто обновления выполнено')
+        else:
+            Statistics.objects.create(
+                message='Выполнено полное ручное обновления'
+            )
 
     except requests.exceptions.RequestException as exr:
         logger.error(exr)

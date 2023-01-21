@@ -2,7 +2,7 @@ import logging
 
 from django.contrib import messages
 
-from src.anime.tasks import parser
+from src.anime.tasks import parser, auto_update
 from src.anime.service.utils import delete_img_files
 
 from src.base.utils import Status
@@ -48,6 +48,9 @@ class ParserControl:
             case 'write_telegram':
                 parser.delay('write_telegram')
                 status = Status(message=ex_massages.WRITE_TELEGRAM_BOT_FORM)
+            case 'full_update':
+                auto_update.delay(False)
+                status = Status(message=ex_massages.FULL_UPDATE)
             case _:
                 status = Status(
                     message=ex_massages.ERROR,

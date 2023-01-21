@@ -18,6 +18,7 @@ class ParserForm(forms.Form):
         ('delete_series', messages.DElETE_SERIES_FORM),
         ('update_indefinite_exit', messages.UPDATE_INDEFINITE_EXIT),
         ('write_telegram', messages.WRITE_TELEGRAM_BOT_FORM),
+        ('full_update', messages.FULL_UPDATE),
     ])
 
     def clean_action(self):
