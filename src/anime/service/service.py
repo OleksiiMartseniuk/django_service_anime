@@ -1,8 +1,13 @@
+import logging
+
 from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 
 from src.anime.models import Anime
 from src.bot.services.service import write_id_images
+
+
+logger = logging.getLogger('main')
 
 
 class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
@@ -31,5 +36,7 @@ def write_images_telegram() -> None:
     """Запись картинки на сервер telegram"""
     anime_list = Anime.objects.filter(telegram_id_file=None).\
         only('url_image_preview_s', 'telegram_id_file')
+    logger.info('Количество %s картинок для отправки на сервер телеграм',
+                anime_list.count())
     for anime in anime_list:
         write_id_images(anime)
