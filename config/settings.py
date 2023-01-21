@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'django_celery_beat',
     'corsheaders',
+    'cachalot',
 
     'src.anime',
     'src.bot',
@@ -178,14 +179,20 @@ SWAGGER_SETTINGS = {
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
-REDIS_CLOUD_URL = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0'
+REDIS_CLOUD_URL = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}'
 
 # Celery Configuration Options
-CELERY_BROKER_URL = REDIS_CLOUD_URL
-CELERY_RESULT_BACKEND = REDIS_CLOUD_URL
+CELERY_BROKER_URL = f'{REDIS_CLOUD_URL}/0'
+CELERY_RESULT_BACKEND = f'{REDIS_CLOUD_URL}/0'
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f'{REDIS_CLOUD_URL}/1'
+    }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
