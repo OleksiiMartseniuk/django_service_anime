@@ -31,7 +31,7 @@ services:
       - database
 
   database:
-    image: postgres:14
+    image: postgres:14-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     container_name: django_anime_service_database
