@@ -85,30 +85,30 @@ http://0.0.0.0/api/v1/
 Сreate a file at the root of the project `.env`
 
 ```
-export DEBUG=0
-export SECRET_KEY='your_secret_key'
-export DJANGO_SETTINGS_MODULE=config.settings
-export DJANGO_ALLOWED_HOSTS='localhost 127.0.0.1 0.0.0.0'
-
+DEBUG=0
+SECRET_KEY='your_secret_key'
+DJANGO_SETTINGS_MODULE=config.settings
+DJANGO_ALLOWED_HOSTS='localhost 127.0.0.1 0.0.0.0'
+CORS_ALLOWED_ORIGINS='http://localhost:4200'
 
 # Redis
-export REDIS_PASSWORD=your_password
-export REDIS_HOST=django_anime_service_redis
-export REDIS_PORT=6379
+REDIS_PASSWORD=your_password
+REDIS_HOST=django_anime_service_redis
+REDIS_PORT=6379
 
 # Data Base
-export POSTGRES_DB=your_name_db
-export POSTGRES_USER=your_name_user
-export POSTGRES_PASSWORD=your_password
-export HOST_DB=django_anime_service_database
-export PORT_DB=5432
+POSTGRES_DB=your_name_db
+POSTGRES_USER=your_name_user
+POSTGRES_PASSWORD=your_password
+HOST_DB=django_anime_service_database
+PORT_DB=5432
 
 # Nginx
-export TZ='your_timezone'
+TZ='your_timezone'
 
 # Telegram
-export BOT_TOKEN=your_token_bot
-export BOT_CHAT_ID=your_chat_id_admin
+BOT_TOKEN=your_token_bot
+BOT_CHAT_ID=your_chat_id_admin
 ```
 
 Build the image and run the container
