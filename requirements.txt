@@ -64,3 +64,4 @@ wrapt==1.14.1
 django-cachalot==2.5.2
 django-redis==5.2.0
 python-dotenv==0.21.1
+django-solo==2.0.0

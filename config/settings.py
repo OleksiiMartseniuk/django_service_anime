@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'corsheaders',
     'cachalot',
+    'solo',
 
     'src.anime',
     'src.bot',
