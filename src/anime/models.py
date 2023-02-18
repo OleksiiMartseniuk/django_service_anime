@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+from solo.models import SingletonModel
+from django_celery_beat.models import PeriodicTask
+
 
 class Genre(models.Model):
     """Жанры"""
@@ -112,3 +115,15 @@ class Statistics(models.Model):
     )
     message = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
+
+
+class AnimeSettings(SingletonModel):
+    status_task = models.BooleanField("Авто обновления", default=True)
+
+    def set_status_task(self):
+        task = PeriodicTask.objects.get(name='add-every-day-morning')
+        task.enabled = self.status_task
+        task.save(update_fields=["enabled"])
+
+    def __str__(self):
+        return "Anime Configuration"
