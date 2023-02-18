@@ -7,6 +7,9 @@ from django.urls import path
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.utils.safestring import mark_safe
+
+from solo.admin import SingletonModelAdmin
 
 from django_celery_beat.models import PeriodicTask
 
@@ -15,13 +18,30 @@ from .models import (
     Genre,
     Series,
     ScreenImages,
-    Statistics
+    Statistics,
+    AnimeSettings
 )
 from .forms import ParserForm
 from .service.admin.parser_control import ParserControl
 
 
 logger = logging.getLogger('main')
+
+
+@admin.register(AnimeSettings)
+class AnimeSettingsAdmin(SingletonModelAdmin):
+    fieldsets = (
+        ("Status", {"fields": ("status_task",)}),
+        ("Action", {"fields": ("authorize",)})
+    )
+    readonly_fields = ("authorize",)
+
+    @staticmethod
+    def authorize(instance):
+        a = []
+        for i in range(10):
+            a.append(f'<a target="_blank" ' f'href="{instance.id}"' f">Authorize eBay</a>")
+        return mark_safe("<br>".join(a))
 
 
 @admin.register(Anime)
