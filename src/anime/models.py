@@ -119,6 +119,10 @@ class Statistics(models.Model):
 
 class AnimeSettings(SingletonModel):
     status_task = models.BooleanField("Авто обновления", default=True)
+    send_images_telegram = models.BooleanField(
+        "Отправлять изображения на сервер telegram",
+        default=False
+    )
 
     def set_status_task(self):
         task = PeriodicTask.objects.get(name='add-every-day-morning')
@@ -126,4 +130,4 @@ class AnimeSettings(SingletonModel):
         task.save(update_fields=["enabled"])
 
     def __str__(self):
-        return "Anime Configuration"
+        return "Anime Settings"
