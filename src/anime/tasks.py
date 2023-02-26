@@ -5,7 +5,7 @@ from config.celery import app
 
 from .service.service_vost import ServiceAnime
 from .service import service
-from .models import Anime, Series, Statistics
+from .models import Anime, Series, Statistics, AnimeSettings
 
 from src.bot.services.service import update_user_tracked
 
@@ -66,7 +66,9 @@ def auto_update(auth: bool = True):
         # Обновления аниме с неопределенным сроком выхода
         ServiceAnime().update_indefinite_exit()
         # Запись картинок на сервер telegram
-        service.write_images_telegram()
+        settings_anime = AnimeSettings.get_solo()
+        if settings_anime.send_images_telegram:
+            service.write_images_telegram()
 
         # Обновления серий
         if Series.objects.count():
