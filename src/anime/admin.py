@@ -54,12 +54,20 @@ class AnimeSettingsAdmin(SingletonModelAdmin):
 @admin.register(Anime)
 class AnimeAdmin(admin.ModelAdmin):
     list_display = (
-        'title', 'id', 'id_anime', 'rating', 'votes', 'day_week', 'anons'
+        'title', 'id', 'get_image','id_anime', 'rating', 'votes', 'day_week', 'anons'
     )
     list_filter = ('day_week', 'anons', 'genre__title', 'indefinite_exit')
     search_fields = ('title', 'id_anime', 'id')
     filter_horizontal = ['anime_composed', 'genre', 'screen_image']
     readonly_fields = ['updated']
+
+    def get_image(self, instance: Anime):
+        if instance.url_image_preview_s:
+            return mark_safe(
+                f"<img src='{instance.url_image_preview_s.url}' width=50>"
+            )
+
+    get_image.short_description = "image"
 
 
 @admin.register(Genre)
