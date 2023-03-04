@@ -10,7 +10,7 @@ from .exception import (
 )
 
 
-logger = logging.getLogger('main')
+logger = logging.getLogger('db')
 
 
 class ApiAnimeVostClient:

@@ -14,7 +14,7 @@ from .telegram import TelegramApiClient
 from ..models import BotUser, BotUserAnimePeriodTask
 
 
-logger = logging.getLogger('main')
+logger = logging.getLogger('db')
 
 
 def write_id_images(anime: Anime) -> None:
@@ -28,7 +28,7 @@ def write_id_images(anime: Anime) -> None:
         except KeyError:
             logger.error(f'Нет ключа в словаре [{data}]')
         except Exception as ex:
-            logger.error(ex)
+            logger.error("Exception", exc_info=ex)
     else:
         logger.error(f'Нет данных в переменой data [{anime.title}]')
 
@@ -123,4 +123,6 @@ def update_user_tracked() -> None:
     if period_task_id_list:
         PeriodicTask.objects.filter(id__in=period_task_id_list).delete()
     else:
-        logger.info('Нет данных для удаления')
+        logger.info(
+            'Нет данных для Обновить список подписок пользователя telegram'
+        )

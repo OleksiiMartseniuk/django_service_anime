@@ -7,7 +7,7 @@ from src.anime.models import Anime
 from src.bot.services.service import write_id_images
 
 
-logger = logging.getLogger('main')
+logger = logging.getLogger('db')
 
 
 class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
@@ -40,3 +40,4 @@ def write_images_telegram() -> None:
                 anime_list.count())
     for anime in anime_list:
         write_id_images(anime)
+    logger.info('Запись картинки на сервер telegram завершено.')

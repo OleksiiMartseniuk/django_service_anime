@@ -12,9 +12,6 @@ from django.db.models import Q
 from django.utils import timezone
 
 
-logger = logging.getLogger('main')
-
-
 @dataclass
 class AnimeMini:
     """Мини описания аниме"""
@@ -70,8 +67,6 @@ class UpdateDataParser:
                         anime_schemas.link,
                         key
                     ))
-                    logger.info(f'Аниме(schedule) id={anime_schemas.id} '
-                                f'записано')
         id_list_db = Anime.objects.filter(~Q(day_week=None)).\
             values_list('id_anime', flat=True)
         result_id = set(id_list_db) - set(id_list)
@@ -95,7 +90,6 @@ class UpdateDataParser:
                     anime_schemas.id,
                     anime_schemas.link
                 ))
-                logger.info(f'Аниме(anons) id={anime_schemas.id} записано')
         if write_list:
             return write_list
 

@@ -10,7 +10,7 @@ from django_celery_beat.models import CrontabSchedule, PeriodicTask
 from src.bot.models import BotUser
 
 
-logger = logging.getLogger('main')
+logger = logging.getLogger('db')
 
 
 @dataclass
