@@ -17,20 +17,17 @@ from ..models import BotUser, BotUserAnimePeriodTask
 logger = logging.getLogger('db')
 
 
-def write_id_images(anime: Anime) -> None:
+def write_id_images(anime: Anime, telegram_client: TelegramApiClient) -> None:
     """Запись id photo telegram в базу"""
-    data = TelegramApiClient().send_photo(anime.url_image_preview_s.path)
-    if data:
-        try:
-            id_photo = data['result']['photo'][-1]['file_id']
-            anime.telegram_id_file = id_photo
-            anime.save()
-        except KeyError:
-            logger.error(f'Нет ключа в словаре [{data}]')
-        except Exception as ex:
-            logger.error("Exception", exc_info=ex)
-    else:
-        logger.error(f'Нет данных в переменой data [{anime.title}]')
+    try:
+        data = telegram_client.send_photo(anime.url_image_preview_s.path)
+        id_photo = data['result']['photo'][-1]['file_id']
+        anime.telegram_id_file = id_photo
+        anime.save()
+    except KeyError:
+        logger.error(f'Нет ключа в словаре [{data}]')
+    except Exception as ex:
+        logger.error("Exception", exc_info=ex)
 
 
 def formation_list_bot_user_anime_period_task(

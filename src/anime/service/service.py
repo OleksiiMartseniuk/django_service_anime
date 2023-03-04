@@ -5,6 +5,7 @@ from django_filters import rest_framework as filters
 
 from src.anime.models import Anime
 from src.bot.services.service import write_id_images
+from src.bot.services.telegram import TelegramApiClient
 
 
 logger = logging.getLogger('db')
@@ -38,6 +39,7 @@ def write_images_telegram() -> None:
         only('url_image_preview_s', 'telegram_id_file')
     logger.info('Количество %s картинок для отправки на сервер телеграм',
                 anime_list.count())
+    telegram_client = TelegramApiClient()
     for anime in anime_list:
-        write_id_images(anime)
+        write_id_images(anime=anime, telegram_client=telegram_client)
     logger.info('Запись картинки на сервер telegram завершено.')

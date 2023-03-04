@@ -14,13 +14,10 @@ class TelegramApiClient:
     """Клиент телеграм api"""
     def __init__(self):
         bot_settings = BotSettings.get_solo()
-        if bot_settings.is_token:
-            self.chat_id = bot_settings.chat_id
-            self.url = f"https://api.telegram.org/bot{bot_settings.token}/"
-        else:
+        if not bot_settings.is_token:
             logger.error("Token and chat_id for telegram not exists")
-            self.chat_id = ""
-            self.url = ""
+        self.chat_id = bot_settings.chat_id
+        self.url = f"https://api.telegram.org/bot{bot_settings.token}/"
 
     def _post(self, url: str, params: dict, **kwargs) -> dict | None:
         response = requests.post(url, params=params, **kwargs)
