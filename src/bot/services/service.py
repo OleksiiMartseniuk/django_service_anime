@@ -27,7 +27,7 @@ def write_id_images(anime: Anime, telegram_client: TelegramApiClient) -> None:
     except KeyError:
         logger.error(f'Нет ключа в словаре [{data}]')
     except Exception as ex:
-        logger.error("Exception", exc_info=ex)
+        logger.error("Send photo in telegram", exc_info=ex)
 
 
 def formation_list_bot_user_anime_period_task(
