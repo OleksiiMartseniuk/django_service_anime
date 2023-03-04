@@ -1,13 +1,29 @@
 from django.contrib import admin
-from django.template.response import TemplateResponse
-from django.urls import path
+from django.utils.safestring import mark_safe
+
+from solo.admin import SingletonModelAdmin
 
 from .models import (
     BotStatistics,
     BotCollBackMessage,
     BotUser,
-    BotUserAnimePeriodTask
+    BotUserAnimePeriodTask,
+    BotSettings
 )
+
+
+@admin.register(BotSettings)
+class AdminBotSettings(SingletonModelAdmin):
+    fieldsets = (
+        ("Setting", {"fields": ("token", "chat_id")}),
+        ("People", {"fields": ("count_action_people",)})
+    )
+    readonly_fields = ("count_action_people",)
+
+    @staticmethod
+    def count_action_people(instance):
+        count = BotStatistics.objects.values('id_user').distinct().count()
+        return mark_safe(f"<b>{count}</b>")
 
 
 @admin.register(BotStatistics)
@@ -16,22 +32,6 @@ class BotStatisticsAdmin(admin.ModelAdmin):
     list_filter = ('id_user', 'action', 'created')
     search_fields = ('id_user', 'action')
     readonly_fields = ('id_user', 'action', 'message', 'created')
-
-    def get_urls(self):
-        urls = super().get_urls()
-        my_urls = [
-            path('bot-info/', self.admin_site.admin_view(self.bot_info),
-                 name='bot-info'),
-        ]
-        return my_urls + urls
-
-    def bot_info(self, request):
-        """Информация о боте"""
-        context = dict(
-            self.admin_site.each_context(request),
-            count=BotStatistics.objects.values('id_user').distinct().count(),
-        )
-        return TemplateResponse(request, 'admin/bot.html', context)
 
 
 @admin.register(BotCollBackMessage)
