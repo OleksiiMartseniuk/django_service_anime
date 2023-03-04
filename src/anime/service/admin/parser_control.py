@@ -1,5 +1,3 @@
-import logging
-
 from django.contrib import messages
 
 from src.anime.models import Anime, Series
@@ -7,8 +5,6 @@ from src.anime.tasks import parser, auto_update
 
 from src.base.utils import Status
 from src.base import messages as ex_massages
-
-logger = logging.getLogger('main')
 
 
 class ParserControl:

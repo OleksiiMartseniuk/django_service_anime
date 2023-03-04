@@ -1,12 +1,8 @@
-import logging
 import re
 
 from datetime import datetime
 
 from src.anime.models import Anime
-
-
-logger = logging.getLogger('main')
 
 
 def get_cart(anime: Anime) -> str:

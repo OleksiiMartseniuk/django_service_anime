@@ -8,7 +8,7 @@ from src.anime.models import Anime
 from . import utils
 
 
-logger = logging.getLogger('main')
+logger = logging.getLogger('db')
 
 
 class TelegramApiClient:

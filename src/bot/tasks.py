@@ -7,7 +7,7 @@ from src.anime.models import Anime
 from .services.telegram import TelegramApiClient
 
 
-logger = logging.getLogger('main')
+logger = logging.getLogger('db')
 
 
 @app.task
