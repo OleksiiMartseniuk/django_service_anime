@@ -1,9 +1,8 @@
 import requests
 import logging
 
-from django.conf import settings
-
 from src.anime.models import Anime
+from src.bot.models import BotSettings
 
 from . import utils
 
@@ -14,8 +13,14 @@ logger = logging.getLogger('db')
 class TelegramApiClient:
     """Клиент телеграм api"""
     def __init__(self):
-        self.url = settings.API_TELEGRAM
-        self.chat_id = settings.BOT_CHAT_ID
+        bot_settings = BotSettings.get_solo()
+        if bot_settings.is_token:
+            self.chat_id = bot_settings.chat_id
+            self.url = f"https://api.telegram.org/bot{bot_settings.token}/"
+        else:
+            logger.error("Token and chat_id for telegram not exists")
+            self.chat_id = ""
+            self.url = ""
 
     def _post(self, url: str, params: dict, **kwargs) -> dict | None:
         response = requests.post(url, params=params, **kwargs)
