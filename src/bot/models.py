@@ -1,5 +1,6 @@
 from django.db import models
 
+from solo.models import SingletonModel
 from django_celery_beat.models import PeriodicTask
 
 from src.anime.models import Anime
@@ -58,3 +59,17 @@ class BotUserAnimePeriodTask(models.Model):
     def __str__(self):
         return f'Пользователь[{self.user.username}] - ' \
                f'Аниме[{self.anime.title}]'
+
+
+class BotSettings(SingletonModel):
+    token = models.CharField(max_length=150)
+    chat_id = models.CharField(max_length=50)
+
+    @property
+    def is_token(self):
+        if self.token and self.chat_id:
+            return True
+        return False
+
+    def __str__(self) -> str:
+        return "Bot Settings"
