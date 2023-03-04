@@ -119,7 +119,11 @@ def update_user_tracked() -> None:
     ).values_list('period_task__id', flat=True)
     if period_task_id_list:
         PeriodicTask.objects.filter(id__in=period_task_id_list).delete()
+        logger.info(
+            "Обновлен список подписок пользователя для телеграм %s",
+            len(period_task_id_list)
+        )
     else:
         logger.info(
-            'Нет данных для Обновить список подписок пользователя telegram'
+            'Нет данных для обновления списока подписок пользователя telegram'
         )
