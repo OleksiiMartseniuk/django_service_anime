@@ -103,6 +103,7 @@ class Anime(models.Model):
     def __str__(self):
         return self.title
 
+
 class AnimeSettings(SingletonModel):
     status_task = models.BooleanField("Авто обновления", default=True)
     send_images_telegram = models.BooleanField(
