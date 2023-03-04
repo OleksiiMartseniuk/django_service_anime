@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import List
 
 from django.db.models import Q
@@ -13,7 +14,7 @@ from src.anime import models
 from src.anime.service.utils import get_link
 
 
-logger = logging.getLogger('main')
+logger = logging.getLogger('db')
 
 
 class ServiceAnime:
@@ -29,33 +30,45 @@ class ServiceAnime:
 
     def anime_schedule(self) -> None:
         """Запись аниме расписания"""
+        logger.info('Запись аниме расписания запущено.')
+        start_time = time.time()
         data_anime_parser = ServiceAnimeVost().get_data_anime_all(full=True)
         WriteDB().write_anime_schedule(data_anime_parser)
-        logger.info('Запись аниме расписания')
+        finish = time.time() - start_time
+        logger.info(f'Запись аниме расписания завершена. Время [{finish}]')
 
     def anime_anons(self) -> None:
         """Запись аниме Анонс"""
+        logger.info('Запись аниме Анонс запущено.')
+        start_time = time.time()
         data_anime = ServiceAnimeVost().get_data_anime_anons_all(full=True)
         WriteDB().write_anime_anons(data_anime)
-        logger.info('Запись аниме Анонс')
+        finish = time.time() - start_time
+        logger.info(f'Запись аниме Анонс завершена. Время [{finish}]')
 
     def anime_schedule_update(self) -> None:
         """Обновления аниме расписания"""
+        logger.info('Обновления аниме расписания запущено.')
+        start_time = time.time()
         data_anime_parser = ServiceAnimeVost().get_data_anime_all()
         anime_list = UpdateDataParser().update_anime_schedule(
             data_anime_parser
         )
         self._write_anime(anime_list)
-        logger.info('Обновления аниме расписания')
+        finish = time.time() - start_time
+        logger.info(f'Обновления аниме расписания завершена. Время [{finish}]')
 
     def anime_anons_update(self) -> None:
         """Обновления аниме Анонс"""
+        logger.info('Обновления аниме Анонс запущено.')
+        start_time = time.time()
         data_anime_parser = ServiceAnimeVost().get_data_anime_anons_all()
         anime_list = UpdateDataParser().update_anime_anons(
             data_anime_parser
         )
         self._write_anime(anime_list)
-        logger.info('Обновления аниме Анонс')
+        finish = time.time() - start_time
+        logger.info(f'Обновления аниме Анонс завершено. Время [{finish}]')
 
     def delete_series(self):
         """Очистка данных таблицы Series"""
@@ -64,26 +77,36 @@ class ServiceAnime:
 
     def series(self) -> None:
         """Запись серий"""
+        logger.info('Запись серий запущено.')
+        start_time = time.time()
         list_id_anime = models.Anime.objects.values_list('id_anime', flat=True)
         for id in list_id_anime:
             data_series = ApiAnimeVostClient().get_play_list(id)
             WriteDB().write_series(id, data_series)
-        logger.info('Запись серий')
+        finish = time.time() - start_time
+        logger.info(f'Запись серий завершена. Время [{finish}]')
 
     def series_update(self) -> None:
         """Обновления серий"""
+        logger.info('Обновления серий запущено.')
+        start_time = time.time()
         list_id_anime = models.Anime.objects.filter(~Q(day_week=None)).\
             values_list('id_anime', flat=True)
         for id in list_id_anime:
             data_series = ApiAnimeVostClient().get_play_list(id)
             UpdateDataParser().update_series(id, data_series)
-        logger.info('Обновления серий')
+        finish = time.time() - start_time
+        logger.info(f'Обновления серий завершено. Время [{finish}]')
 
     def update_indefinite_exit(self):
         """Обновления аниме с неопределенным сроком выхода"""
+        logger.info(
+            'Обновления аниме с неопределенным сроком выхода. '
+            'Сбор данных начат'
+        )
+        start_time = time.time()
         data_anime = ApiAnimeVostClient().get_last_anime()
         write_list = UpdateDataParser().update_indefinite_exit(data_anime)
-        logger.info('Обновления аниме с неопределенным сроком выхода')
         if write_list:
             for anime_shem in write_list:
                 link = get_link(anime_shem.id, anime_shem.title)
@@ -100,7 +123,9 @@ class ServiceAnime:
                     link
                 )
                 WriteDB().write_anime_full(anime_full, indefinite_exit=True)
-                logger.info(
-                    f'До запись anime в update_indefinite_exit '
-                    f'[id_anime - {anime_full.id}, title - {anime_full.title}]'
-                )
+        finish = time.time() - start_time
+        logger.info(
+            'Обновления аниме с неопределенным сроком выхода. '
+            'Завершено время [%s]',
+            finish
+        )

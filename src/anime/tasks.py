@@ -1,16 +1,17 @@
 import logging
 import requests
+import time
 
 from config.celery import app
 
 from .service.service_vost import ServiceAnime
 from .service import service
-from .models import Anime, Series, Statistics, AnimeSettings
+from .models import Anime, Series, AnimeSettings
 
 from src.bot.services.service import update_user_tracked
 
 
-logger = logging.getLogger('main')
+logger = logging.getLogger('db')
 
 
 @app.task
@@ -37,27 +38,25 @@ def parser(action: str) -> None:
                 service.write_images_telegram()
 
     except requests.exceptions.RequestException as exr:
-        logger.error(exr)
-        Statistics.objects.create(message=f'Произошла ошибка #{exr.__class__}')
+        logger.error(f"{exr.__class__}")
     except Exception as ex:
-        logger.error(ex)
-        Statistics.objects.create(message=f'Произошла ошибка #{ex.__class__}')
+        logger.error("Exception", exc_info=ex)
 
 
 @app.task
 def auto_update(auth: bool = True):
     """Авто обновления данных"""
     try:
+        logger.info("Полное обновления данных запущено.")
+        start_time = time.time()
         # Обновления расписания
         if Anime.objects.count():
             ServiceAnime().anime_schedule_update()
-            logger.info('Обновления успешно [schedule]')
         else:
             logger.error('Не данных для обновления [schedule]')
         # Обновления анонсов
         if Anime.objects.filter(anons=True).count():
             ServiceAnime().anime_anons_update()
-            logger.info('Обновления успешно [anons]')
         else:
             logger.error('Не данных для обновления [anons]')
 
@@ -71,24 +70,14 @@ def auto_update(auth: bool = True):
         # Обновления серий
         if Series.objects.count():
             ServiceAnime().series_update()
-            logger.info('Обновления успешно [series]')
         else:
             logger.error('Не данных для обновления [series]')
 
         # Обновить список подписок telegram пользователя
         update_user_tracked()
-
-        # Запись в статистику
-        if auth:
-            Statistics.objects.create(message='Авто обновления выполнено')
-        else:
-            Statistics.objects.create(
-                message='Выполнено полное ручное обновления'
-            )
-
+        finish = time.time() - start_time
+        logger.info(f"Полное обновления данных закончено. Время [{finish}]")
     except requests.exceptions.RequestException as exr:
-        logger.error(exr)
-        Statistics.objects.create(message=f'Произошла ошибка #{exr.__class__}')
+        logger.error(f"{exr.__class__}")
     except Exception as ex:
-        logger.error(ex)
-        Statistics.objects.create(message=f'Произошла ошибка #{ex.__class__}')
+        logger.error("Exception", exc_info=ex)
