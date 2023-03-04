@@ -219,8 +219,3 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS').split(' ')
-
-# Telegram
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-BOT_CHAT_ID = os.getenv('BOT_CHAT_ID')
-API_TELEGRAM = f'https://api.telegram.org/bot{BOT_TOKEN}/'
