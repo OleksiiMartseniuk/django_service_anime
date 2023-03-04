@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 
 from solo.models import SingletonModel
 from django_celery_beat.models import PeriodicTask
