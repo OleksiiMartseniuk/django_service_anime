@@ -106,9 +106,6 @@ PORT_DB=5432
 # Nginx
 TZ='your_timezone'
 
-# Telegram
-BOT_TOKEN=your_token_bot
-BOT_CHAT_ID=your_chat_id_admin
 ```
 
 Build the image and run the container
