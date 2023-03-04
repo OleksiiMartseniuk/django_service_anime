@@ -51,15 +51,37 @@ class AnimeSettingsAdmin(SingletonModelAdmin):
         return redirect('admin:anime_animesettings_changelist')
 
 
+class GenreInline(admin.TabularInline):
+    model = Anime.genre.through
+    extra = 0
+    verbose_name_plural = "Жанры"
+
+
+class ScreenImagesInline(admin.TabularInline):
+    model = Anime.screen_image.through
+    extra = 0
+    verbose_name_plural = "Изображения"
+
+
+class AnimeComposedInline(admin.TabularInline):
+    model = Anime.anime_composed.through
+    fk_name = "to_anime"
+    extra = 0
+    verbose_name_plural = "Аниме состоит из"
+
+
 @admin.register(Anime)
 class AnimeAdmin(admin.ModelAdmin):
     list_display = (
-        'title', 'id', 'get_image','id_anime', 'rating', 'votes', 'day_week', 'anons'
+        'title', 'id', 'get_image',
+        'id_anime', 'rating', 'votes',
+        'day_week', 'anons'
     )
     list_filter = ('day_week', 'anons', 'genre__title', 'indefinite_exit')
     search_fields = ('title', 'id_anime', 'id')
-    filter_horizontal = ['anime_composed', 'genre', 'screen_image']
     readonly_fields = ['updated']
+    inlines = [AnimeComposedInline, GenreInline, ScreenImagesInline]
+    exclude = ["genre", "screen_image", "anime_composed"]
 
     def get_image(self, instance: Anime):
         if instance.url_image_preview_s:
