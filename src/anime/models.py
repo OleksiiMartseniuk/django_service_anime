@@ -103,20 +103,6 @@ class Anime(models.Model):
     def __str__(self):
         return self.title
 
-
-class Statistics(models.Model):
-    """Статистика роботы Parser"""
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='statistics',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
-    message = models.CharField(max_length=255)
-    created = models.DateTimeField(auto_now_add=True)
-
-
 class AnimeSettings(SingletonModel):
     status_task = models.BooleanField("Авто обновления", default=True)
     send_images_telegram = models.BooleanField(
