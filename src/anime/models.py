@@ -22,6 +22,9 @@ class ScreenImages(models.Model):
         null=True
     )
 
+    def __str__(self) -> str:
+        return f"Images - {self.id}"
+
 
 class Series(models.Model):
     """Серии"""
