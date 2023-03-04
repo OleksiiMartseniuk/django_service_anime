@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'cachalot',
     'solo',
+    'django_db_logger',
 
     'src.anime',
     'src.bot',
@@ -149,6 +150,10 @@ LOGGING = {
         }
     },
     'handlers': {
+        'db_log': {
+            'level': 'DEBUG',
+            'class': 'django_db_logger.db_log_handler.DatabaseLogHandler'
+        },
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
@@ -165,6 +170,10 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'db': {
+            'handlers': ['db_log'],
+            'level': 'DEBUG'
+        }
     },
 }
 
