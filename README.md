@@ -90,6 +90,7 @@ SECRET_KEY='your_secret_key'
 DJANGO_SETTINGS_MODULE=config.settings
 DJANGO_ALLOWED_HOSTS='localhost 127.0.0.1 0.0.0.0'
 CORS_ALLOWED_ORIGINS='http://localhost:4200'
+TIME_ZONE='your_timezone'
 
 # Redis
 REDIS_PASSWORD=your_password
@@ -102,10 +103,6 @@ POSTGRES_USER=your_name_user
 POSTGRES_PASSWORD=your_password
 HOST_DB=django_anime_service_database
 PORT_DB=5432
-
-# Nginx
-TZ='your_timezone'
-
 ```
 
 Build the image and run the container

@@ -117,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Kiev'
+TIME_ZONE = os.getenv('TIME_ZONE')
 
 USE_I18N = True
 
@@ -197,7 +197,7 @@ REDIS_CLOUD_URL = f'redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}'
 # Celery Configuration Options
 CELERY_BROKER_URL = f'{REDIS_CLOUD_URL}/0'
 CELERY_RESULT_BACKEND = f'{REDIS_CLOUD_URL}/0'
-CELERY_TIMEZONE = 'Europe/Kiev'
+CELERY_TIMEZONE = os.getenv('TIME_ZONE')
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CACHES = {
