@@ -74,7 +74,7 @@ class ApiAnimeVostClient:
             screen_image=screen_image,
             rating=data.get('rating'),
             votes=data.get('votes'),
-            description=data.get('description'),
+            description=data.get('description', '').replace('<br />', ''),
             director=data.get('director'),
             url_image_preview=url_image_preview,
             year=data.get('year'),
