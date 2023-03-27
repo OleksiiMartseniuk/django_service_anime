@@ -68,13 +68,18 @@ class ApiAnimeVostClient:
             else:
                 screen_image.append(img)
 
+        remove_list = ['\n', '\r', '<br>', '<br />']
+        description = data.get('description', '')
+        for sub in remove_list:
+            description = description.replace(sub, '')
+
         anime = Anime(
             id=data.get('id'),
             title=data.get('title'),
             screen_image=screen_image,
             rating=data.get('rating'),
             votes=data.get('votes'),
-            description=data.get('description', '').replace('<br />', ''),
+            description=description,
             director=data.get('director'),
             url_image_preview=url_image_preview,
             year=data.get('year'),
