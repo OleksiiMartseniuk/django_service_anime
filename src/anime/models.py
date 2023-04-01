@@ -14,8 +14,7 @@ class Genre(models.Model):
 
 class ScreenImages(models.Model):
     """Набор кадров"""
-    images = models.CharField('Скрин', max_length=255)
-    images_s = models.ImageField(
+    images = models.ImageField(
         'Скрин [сервер]',
         upload_to='screen_images/',
         blank=True,
@@ -72,8 +71,7 @@ class Anime(models.Model):
         blank=True,
         null=True
     )
-    url_image_preview = models.CharField('Preview изображения', max_length=255)
-    url_image_preview_s = models.ImageField(
+    url_image_preview = models.ImageField(
         'Preview изображения [сервер]',
         upload_to='preview/',
         blank=True,
