@@ -548,29 +548,29 @@ anime_schemas_data = Anime(
 
 play_list_json = [
     {
-        'std': 'http://video.animetop.info/2147394716.mp4',
-        'preview': 'http://media.aniland.org/img/2147394716.jpg',
+        'std': 'http://video.animetop.info/2147423318.mp4',
+        'preview': 'http://media.aniland.org/img/2147423318.jpg',
         'name': 'Фильм',
-        'hd': 'http://video.animetop.info/720/2147394716.mp4'
+        'hd': 'http://video.animetop.info/720/2147423318.mp4'
     },
     {
-        'std': 'http://video.animetop.info/2147394728.mp4',
-        'preview': 'http://media.aniland.org/img/2147394728.jpg',
+        'std': 'http://video.animetop.info/640454801.mp4',
+        'preview': 'http://media.aniland.org/img/2147423318.jpg',
         'name': '27 серия',
-        'hd': 'http://video.animetop.info/720/2147394728.mp4'
+        'hd': 'http://video.animetop.info/720/640454801.mp4'
     }
 ]
 
 play_list_data = [
     Series(
         name='Фильм',
-        std='http://video.animetop.info/2147394716.mp4',
-        hd='http://video.animetop.info/720/2147394716.mp4'
+        serial='2147423318',
+        preview='http://media.aniland.org/img/2147423318.jpg'
     ),
     Series(
         name='27 серия',
-        std='http://video.animetop.info/2147394728.mp4',
-        hd='http://video.animetop.info/720/2147394728.mp4'
+        serial='640454801',
+        preview='http://media.aniland.org/img/2147423318.jpg'
     )
 ]
 
