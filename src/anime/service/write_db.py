@@ -4,7 +4,7 @@ from typing import List
 
 from django.db.models import Q
 
-from src.anime.service.utils import get_number, download_image
+from src.anime.service.utils import get_number, download_image, get_series_link
 from src.base.animevost import schemas
 from src.anime import models
 
@@ -152,7 +152,8 @@ class WriteDB:
                 models.Series(
                     id_anime=id,
                     **date.dict(),
-                    number=get_number(date.name)
+                    number=get_number(date.name),
+                    link=get_series_link(date.serial)
                 )
             )
         models.Series.objects.bulk_create(objs)
