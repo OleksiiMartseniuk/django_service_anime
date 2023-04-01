@@ -119,7 +119,7 @@ class TestServiceAnime(APITestCase):
         mock_update_series.assert_called_once()
 
     def test_delete_series(self):
-        Series.objects.create(id_anime=1, name='name', std='std', hd='hd')
+        Series.objects.create(id_anime=1, name='name')
         self.assertEqual(Series.objects.count(), 1)
         ServiceAnime().delete_series()
         self.assertEqual(Series.objects.count(), 0)

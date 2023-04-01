@@ -4,7 +4,7 @@ import re
 from dataclasses import dataclass
 from typing import List
 
-from src.anime.service.utils import get_number
+from src.anime.service.utils import get_number, get_series_link
 from src.base.animevost import schemas
 from src.anime.models import Anime, Series
 
@@ -106,9 +106,10 @@ class UpdateDataParser:
                 Series.objects.create(
                     id_anime=id,
                     name=data.name,
-                    std=data.std,
-                    hd=data.hd,
-                    number=get_number(data.name)
+                    serial=data.serial,
+                    preview=data.preview,
+                    number=get_number(data.name),
+                    link=get_series_link(data.serial),
                 )
 
     def update_indefinite_exit(

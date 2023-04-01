@@ -148,9 +148,7 @@ class TestUpdateDataParser(APITestCase):
     def test_update_series(self):
         Series.objects.create(
             id_anime=1,
-            name='350 серия',
-            std='http://video.animetop.info/1703961250.mp4',
-            hd='http://video.animetop.info/720/1703961250.mp4'
+            name='350 серия'
         )
         self.assertEqual(Series.objects.count(), 1)
         UpdateDataParser().update_series(1, config_data.write_series_data)
