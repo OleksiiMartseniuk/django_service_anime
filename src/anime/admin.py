@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import admin
 from django.urls import path, reverse
 from django.shortcuts import redirect
@@ -14,6 +16,9 @@ from .models import (
 )
 from .constants import ACTIONS_ADMIN
 from .service.admin.parser_control import ParserControl
+
+
+logger = logging.getLogger('db')
 
 
 @admin.register(AnimeSettings)
@@ -99,9 +104,23 @@ class GenreAdmin(admin.ModelAdmin):
 
 @admin.register(Series)
 class SeriesAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id_anime')
+    list_display = ('name', 'get_title_anime')
     list_filter = ('id_anime',)
     search_fields = ('id_anime',)
+
+    def get_title_anime(self, instance: Series):
+        try:
+            anime = Anime.objects.get(id_anime=instance.id_anime)
+            title = anime.title.split('/')[0]
+        except Anime.DoesNotExist:
+            title = ''
+            logger.error(f"Нет аниме с id_anime_vost {instance.id_anime}")
+        except IndexError:
+            title = ''
+            logger.error(f"Невозможно розбить названия Anime[{anime.id}]")
+        return title
+
+    get_title_anime.short_description = "title"
 
 
 @admin.register(ScreenImages)
