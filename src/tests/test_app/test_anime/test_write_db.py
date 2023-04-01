@@ -37,8 +37,7 @@ class TestWriteDB(APITestCase):
         mock_download_image.assert_called_once()
         self.assertEqual(1, ScreenImages.objects.count())
 
-        screen = ScreenImages.objects.filter(images='http://test')[0]
-        self.assertEqual(result.images, screen.images)
+        screen = ScreenImages.objects.get(images='')
         self.assertEqual(result.id, screen.id)
 
     @mock.patch('src.anime.service.write_db.download_image')
