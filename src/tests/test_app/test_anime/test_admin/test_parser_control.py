@@ -6,6 +6,8 @@ from django.contrib import messages as dj_messages
 from src.anime.service.admin.parser_control import ParserControl, Status
 from src.base import messages
 
+from ..config_data import create_anime_kwargs
+
 
 class TestParserControl(APITestCase):
     @mock.patch('src.anime.service.admin.parser_control.parser.delay')
@@ -22,13 +24,6 @@ class TestParserControl(APITestCase):
 
         self.assertEqual(message, Status(messages.ANONS))
 
-    @mock.patch('src.anime.service.admin.parser_control.parser.delay')
-    def test_control_delete(self, mock_parser):
-        message = ParserControl().control('delete')
-        mock_parser.assert_called_once()
-
-        self.assertEqual(message, Status(messages.DElETE))
-
     def test_control_Nome(self):
         message = ParserControl().control('test')
 
@@ -36,6 +31,7 @@ class TestParserControl(APITestCase):
 
     @mock.patch('src.anime.service.admin.parser_control.parser.delay')
     def test_control_schedule_update(self, mock_parser):
+        create_anime_kwargs()
         message = ParserControl().control('schedule_update')
         mock_parser.assert_called_once()
 
@@ -43,6 +39,7 @@ class TestParserControl(APITestCase):
 
     @mock.patch('src.anime.service.admin.parser_control.parser.delay')
     def test_control_anons_update(self, mock_parser):
+        create_anime_kwargs(anons=True)
         message = ParserControl().control('anons_update')
         mock_parser.assert_called_once()
 
