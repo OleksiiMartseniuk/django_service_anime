@@ -29,9 +29,20 @@ class Series(models.Model):
     """Серии"""
     id_anime = models.IntegerField('ID animevost')
     name = models.CharField('Названия', max_length=50)
-    std = models.CharField('sd качество', max_length=255)
-    hd = models.CharField('hd качество', max_length=255)
     number = models.IntegerField('Номер серии', blank=True, null=True)
+    serial = models.CharField('Серийный номер', max_length=255, blank=True, null=True)
+    preview = models.CharField(
+        'Изображения предпросмотра',
+        max_length=255,
+        blank=True,
+        null=True
+    )
+    link = models.CharField(
+        'Ссылка на серию',
+        max_length=255,
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.name
