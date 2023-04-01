@@ -211,13 +211,13 @@ def create_anime():
 write_series_data = [
     Series(
         name='350 серия',
-        std='http://video.animetop.info/1703961250.mp4',
-        hd='http://video.animetop.info/720/1703961250.mp4'
+        serial='2147423318',
+        preview='http://media.aniland.org/img/2147423318.jpg'
     ),
     Series(
         name='937 серия',
-        std='http://video.animetop.info/2147416130.mp4',
-        hd='http://video.animetop.info/720/2147416130.mp4'
+        serial='640454801',
+        preview='http://media.aniland.org/img/2147423318.jpg'
     )
 ]
 
