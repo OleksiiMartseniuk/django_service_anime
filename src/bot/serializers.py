@@ -46,6 +46,6 @@ class TrackedUserSerializer(serializers.Serializer):
 class AnimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Anime
-        fields = ['id', 'title', 'url_image_preview_s', 'anons', 'link',
+        fields = ['id', 'title', 'anons', 'link',
                   'timer', 'rating', 'votes', 'url_image_preview',
                   'telegram_id_file', 'day_week']
