@@ -41,8 +41,8 @@ class Anime(BaseModel):
 
 class Series(BaseModel):
     name: str
-    std: str
-    hd: str
+    serial: str
+    preview: str
 
 
 class AnimeData(Anime):

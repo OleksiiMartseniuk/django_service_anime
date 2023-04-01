@@ -45,10 +45,12 @@ class ApiAnimeVostClient:
 
     def _create_anime_series(self, data: dict) -> Series:
         """Создания Series схемы"""
+        serial = data.get('hd') or data.get('std', '')
+
         return Series(
             name=data.get('name'),
-            std=data.get('std'),
-            hd=data.get('hd')
+            serial=serial.split('/')[-1].split('.')[0],
+            preview=data.get('preview')
         )
 
     def _create_anime_schemas(self, data: dict) -> Anime:
