@@ -37,9 +37,11 @@ class AnimeSeriesListView(generics.ListAPIView):
     """
     serializer_class = SeriesSerializers
     pagination_class = service.LargeResultsSetPagination
-    filterset_fields = ['id_anime']
-    queryset = Series.objects.values('id', 'name', 'std', 'hd').\
-        order_by('number')
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = service.SeriesFilter
+    queryset = Series.objects.values(
+        'id', 'name', 'serial', 'preview', 'link', 'number'
+    ).order_by('number')
 
 
 class AnimeListView(generics.ListAPIView):
