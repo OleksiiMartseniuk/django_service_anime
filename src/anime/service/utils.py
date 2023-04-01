@@ -45,3 +45,8 @@ def get_link(id_anime: int, title: str) -> str | None:
         logger.error(
             f'Неверный формат в названии - [{title}] ссылка не сформирована'
         )
+
+
+def get_series_link(serial: str) -> str:
+    """Получения силки на серию"""
+    return f'https://animevost.org/frame5.php?play={serial}&old=1'
