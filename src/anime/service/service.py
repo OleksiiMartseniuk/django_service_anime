@@ -36,7 +36,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 def write_images_telegram() -> None:
     """Запись картинки на сервер telegram"""
     anime_list = Anime.objects.filter(telegram_id_file=None).\
-        only('url_image_preview_s', 'telegram_id_file')
+        only('url_image_preview', 'telegram_id_file')
     logger.info('Количество %s картинок для отправки на сервер телеграм',
                 anime_list.count())
     telegram_client = TelegramApiClient()
