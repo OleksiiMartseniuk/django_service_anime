@@ -84,9 +84,9 @@ class AnimeAdmin(admin.ModelAdmin):
     exclude = ["genre", "screen_image", "anime_composed"]
 
     def get_image(self, instance: Anime):
-        if instance.url_image_preview_s:
+        if instance.url_image_preview:
             return mark_safe(
-                f"<img src='{instance.url_image_preview_s.url}' width=50>"
+                f"<img src='{instance.url_image_preview.url}' width=50>"
             )
 
     get_image.short_description = "image"
