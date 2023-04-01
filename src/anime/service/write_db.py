@@ -18,9 +18,9 @@ class WriteDB:
 
     def _write_screen_images(self, screen_images: str) -> models.ScreenImages:
         """Запись в таблицу ScreenImages"""
-        obj = models.ScreenImages.objects.create(images=screen_images)
+        obj = models.ScreenImages.objects.create()
         # Скачивания изображения
-        download_image(obj.images_s, screen_images)
+        download_image(obj.images, screen_images)
         return obj
 
     def _write_anime(
@@ -39,7 +39,6 @@ class WriteDB:
             votes=anime_data.votes,
             description=anime_data.description,
             director=anime_data.director,
-            url_image_preview=anime_data.url_image_preview,
             year=anime_data.year,
             timer=anime_data.timer,
             type=anime_data.type,
@@ -48,9 +47,9 @@ class WriteDB:
             indefinite_exit=indefinite_exit
         )
         # Скачивания изображения
-        if anime.url_image_preview:
+        if not anime.url_image_preview:
             download_image(
-                anime.url_image_preview_s,
+                anime.url_image_preview,
                 anime_data.url_image_preview
             )
         return anime
