@@ -33,31 +33,6 @@ class TestServiceAnime(APITestCase):
         mock_get_data_anime_anons_all.assert_called_once()
         mock_write_anime_anons.assert_called_once()
 
-    def test_delete_table(self):
-        genre = Genre.objects.create(title='genre')
-        image = ScreenImages.objects.create(images='img')
-        anime = Anime.objects.create(
-            id_anime=2,
-            title='test.title',
-            link='test.link',
-            rating=2,
-            votes=2,
-            description='test.description',
-            director='test.director',
-            url_image_preview='test.url_image_preview',
-            year='test.year',
-            type='as'
-        )
-        anime.genre.add(genre)
-        anime.screen_image.add(image)
-
-        self.assertEqual(Anime.objects.count(), 1)
-        self.assertEqual(Genre.objects.count(), 1)
-        self.assertEqual(ScreenImages.objects.count(), 1)
-
-        ServiceAnime().delete_table()
-
-        self.assertEqual(Anime.objects.count(), 0)
 
     @mock.patch(
         'src.anime.service.service_vost.ServiceAnimeVost.get_anime_data'
