@@ -35,7 +35,9 @@ class TestEndPoint(APITestCase):
         self.assertEqual(data['votes'], anime.votes)
         self.assertEqual(data['description'], anime.description)
         self.assertEqual(data['director'], anime.director)
-        self.assertEqual(data['url_image_preview'], anime.url_image_preview)
+        self.assertEqual(
+            data['url_image_preview'],
+            f"http://testserver{anime.url_image_preview.url}")
         self.assertEqual(data['year'], anime.year)
         self.assertEqual(data['timer'], anime.timer)
         self.assertEqual(data['type'], anime.type)
