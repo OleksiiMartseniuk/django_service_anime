@@ -10,7 +10,7 @@ from src.bot.services.service import write_id_images
 from src.bot.services.telegram import TelegramApiClient
 
 
-logger = logging.getLogger('db')
+logger = logging.getLogger('main')
 
 
 class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
@@ -39,7 +39,7 @@ class SeriesFilter(filters.FilterSet):
         except Anime.DoesNotExist:
             logger.error(f"Аниме с таки id[{value}] не существует")
             raise ValidationError(
-                detail={'massage_error': 'Not data anime'},
+                detail={'massage_error': 'Not found anime'},
                 code=status.HTTP_404_NOT_FOUND
             )
 
