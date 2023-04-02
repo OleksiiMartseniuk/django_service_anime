@@ -44,9 +44,9 @@ class TestEndPoint(APITestCase):
 
     def test_anime_series_list_view(self):
         objs = Series.objects.bulk_create([
-            Series(id_anime=1, name='12 t', std='test', hd='test', number=12),
-            Series(id_anime=1, name='5 t', std='test', hd='test', number=5),
-            Series(id_anime=1, name='OVA', std='test', hd='test', number=None),
+            Series(id_anime=1, name='12 t', number=12),
+            Series(id_anime=1, name='5 t', number=5),
+            Series(id_anime=1, name='OVA', number=None),
         ])
         url = reverse('series')
         response = self.client.get(url)
@@ -59,9 +59,9 @@ class TestEndPoint(APITestCase):
 
     def test_anime_series_list_view_id_anime(self):
         objs = Series.objects.bulk_create([
-            Series(id_anime=1, name='12 t', std='test', hd='test', number=12),
-            Series(id_anime=1, name='5 t', std='test', hd='test', number=5),
-            Series(id_anime=1, name='OVA', std='test', hd='test', number=None),
+            Series(id_anime=1, name='12 t', number=12),
+            Series(id_anime=1, name='5 t', number=5),
+            Series(id_anime=1, name='OVA', number=None),
         ])
         url = reverse('series')
         response = self.client.get(url, {'id_anime': 1})
