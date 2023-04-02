@@ -1,6 +1,7 @@
 import re
 import requests
 import logging
+import json
 
 from .setting import HEADERS
 from .schemas import Anime, Series
@@ -30,8 +31,10 @@ class ApiAnimeVostClient:
                 raise ApiAnimeVostClientAttributeError
             return response.json()
         else:
-            logger.error(f'Неверный статус код {response.status_code} '
-                         f'url-"{url}"')
+            logger.error(
+                'Неверный статус код %s url-"%s" params[%s]',
+                response.status_code, url, json.dumps(params)
+            )
             raise ApiAnimeVostClientStatusCodeError
 
     def _post(self, url: str, data: dict = {}) -> dict | None:
@@ -39,8 +42,10 @@ class ApiAnimeVostClient:
         if response.status_code == 200:
             return response.json()
         else:
-            logger.error(f'Неверный статус код {response.status_code} '
-                         f'и нет данных на запрос "{url}"')
+            logger.error(
+                'Неверный статус код %s и нет данных на запрос %s data[%s]',
+                response.status_code, url, json.dumps(data)
+            )
             raise ApiAnimeVostClientStatusCodeError
 
     def _create_anime_series(self, data: dict) -> Series:
