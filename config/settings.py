@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django_db_logger',
 
     'src.anime',
-    'src.bot',
 ]
 
 MIDDLEWARE = [

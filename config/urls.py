@@ -39,8 +39,6 @@ urlpatterns = [
     path('api/v1/api-token-auth/', views.obtain_auth_token, name='auth'),
     # app anime
     path('api/v1/anime/', include('src.anime.urls')),
-    # app bot
-    path('api/v1/bot/', include('src.bot.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
