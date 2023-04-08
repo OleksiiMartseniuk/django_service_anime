@@ -24,7 +24,7 @@ logger = logging.getLogger('db')
 @admin.register(AnimeSettings)
 class AnimeSettingsAdmin(SingletonModelAdmin):
     fieldsets = (
-        ("Status", {"fields": ("status_task", "send_images_telegram")}),
+        ("Status", {"fields": ("status_task",)}),
         ("Action", {"fields": ("authorize",)})
     )
     readonly_fields = ("authorize",)
