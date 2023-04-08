@@ -23,16 +23,17 @@ class TestUpdateDataParser(APITestCase):
         )
 
         self.assertEqual(Anime.objects.count(), 1)
+        data = config_data.update_anime_data.copy()
+        data.screen_image = []
 
         result = UpdateDataParser()._update_anime(
-            config_data.update_anime_data,
-            'test'
+            anime_data=data,
+            day='test',
         )
         self.assertTrue(result)
 
         self.assertEqual(Anime.objects.count(), 1)
 
-        data = config_data.update_anime_data
         anime = Anime.objects.filter(id_anime=data.id).first()
 
         self.assertEqual(anime.title, data.title)
@@ -110,7 +111,11 @@ class TestUpdateDataParser(APITestCase):
             type='as',
             day_week='monday'
         )
-        data = config_data.update_anime_schedule_data
+        data = config_data.update_anime_schedule_data.copy()
+        for _, value in data.items():
+            for anime_full in value:
+                anime_full.screen_image = []
+
         self.assertEqual(Anime.objects.count(), 2)
         self.assertEqual(anime.day_week, 'monday')
         self.assertEqual(anime1.day_week, 'monday')

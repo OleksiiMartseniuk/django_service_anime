@@ -11,6 +11,11 @@ from src.anime.models import Anime, Series
 from django.db.models import Q
 from django.utils import timezone
 
+from .write_db import WriteDB
+
+
+logger = logging.getLogger('main')
+
 
 @dataclass
 class AnimeMini:
@@ -38,15 +43,28 @@ class UpdateDataParser:
     ) -> bool:
         """Обновления данных anime"""
         anons = True if re.search(r'Анонс', anime_data.title) else False
-        return Anime.objects.filter(id_anime=anime_data.id).update(
-            title=anime_data.title,
-            rating=anime_data.rating,
-            votes=anime_data.votes,
-            timer=anime_data.timer,
-            day_week=day,
-            anons=anons,
-            updated=timezone.now()
-        )
+        try:
+            anime = Anime.objects.get(id_anime=anime_data.id)
+            anime.title = anime_data.title
+            anime.rating = anime_data.rating
+            anime.votes = anime_data.votes
+            anime.timer = anime_data.timer
+            anime.day_week = day
+            anime.anons = anons
+            anime.updated = timezone.now()
+            anime.save()
+
+            # обновления скриншотов (если их не было)
+            if not anime.screen_image.count() and anime_data.screen_image:
+                for screen in anime_data.screen_image:
+                    screen_db = WriteDB()._write_screen_images(screen)
+                    anime.screen_image.add(screen_db)
+            return True
+        except Anime.DoesNotExist:
+            logger.debug(
+                f"Новое аниме id_anime[{anime_data.id}] нужно записать."
+            )
+            return False
 
     def update_anime_schedule(
             self,
