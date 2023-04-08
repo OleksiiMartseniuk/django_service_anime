@@ -6,8 +6,6 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters import rest_framework as filters
 
 from src.anime.models import Anime, Series
-from src.bot.services.service import write_id_images
-from src.bot.services.telegram import TelegramApiClient
 
 
 logger = logging.getLogger('main')
@@ -54,15 +52,3 @@ class LargeResultsSetPagination(PageNumberPagination):
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 20
-
-
-def write_images_telegram() -> None:
-    """Запись картинки на сервер telegram"""
-    anime_list = Anime.objects.filter(telegram_id_file=None).\
-        only('url_image_preview', 'telegram_id_file')
-    logger.info('Количество %s картинок для отправки на сервер телеграм',
-                anime_list.count())
-    telegram_client = TelegramApiClient()
-    for anime in anime_list:
-        write_id_images(anime=anime, telegram_client=telegram_client)
-    logger.info('Запись картинки на сервер telegram завершено.')
