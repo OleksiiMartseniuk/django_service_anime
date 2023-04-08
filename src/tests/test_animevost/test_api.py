@@ -1,9 +1,10 @@
 import pytest
 from unittest import mock
 
+from src.base.animevost.schemas import create_anime_schemas, create_anime_series
 from src.base.animevost.exception import (
-    ApiAnimeVostClientStatusCodeError,
-    ApiAnimeVostClientAttributeError
+    AnimeVostStatusCodeError,
+    AnimeVostDataError
 )
 from . import config_data
 
@@ -23,7 +24,7 @@ class TestApiAnimeVostClient:
     def test__get_error(self, mock_get, status_code, client_api):
         mock_get.return_value.status_code = status_code
 
-        with pytest.raises(ApiAnimeVostClientStatusCodeError):
+        with pytest.raises(AnimeVostStatusCodeError):
             client_api._get('https://test')
 
     @mock.patch('src.base.animevost.api.requests.get')
@@ -39,7 +40,7 @@ class TestApiAnimeVostClient:
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = {'data': []}
 
-        with pytest.raises(ApiAnimeVostClientAttributeError):
+        with pytest.raises(AnimeVostDataError):
             client_api.get_anime(1)
 
     @mock.patch('src.base.animevost.api.requests.post')
@@ -55,7 +56,7 @@ class TestApiAnimeVostClient:
     def test_post_status(self, mock_post, status_code, client_api):
         mock_post.return_value.status_code = status_code
 
-        with pytest.raises(ApiAnimeVostClientStatusCodeError):
+        with pytest.raises(AnimeVostStatusCodeError):
             client_api._post('https://test')
 
     @mock.patch('src.base.animevost.api.requests.post')
@@ -63,7 +64,7 @@ class TestApiAnimeVostClient:
         mock_post.return_value.status_code = 404
         mock_post.return_value.json.return_value = {'status': 'test'}
 
-        with pytest.raises(ApiAnimeVostClientStatusCodeError):
+        with pytest.raises(AnimeVostStatusCodeError):
             client_api._post('https://test')
 
     @mock.patch('src.base.animevost.api.requests.get')
@@ -79,7 +80,7 @@ class TestApiAnimeVostClient:
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = {'status': 'false'}
 
-        with pytest.raises(ApiAnimeVostClientAttributeError):
+        with pytest.raises(AnimeVostDataError):
             client_api.get_last_anime(1)
 
     @mock.patch('src.base.animevost.api.requests.post')
@@ -96,12 +97,14 @@ class TestApiAnimeVostClient:
         mock_post.return_value.json.return_value = {'error': 'Not'}
 
         mock_post.return_value.json.return_value = {'data': 'Not'}
-        with pytest.raises(ApiAnimeVostClientStatusCodeError):
+        with pytest.raises(AnimeVostStatusCodeError):
             client_api.search('test')
 
     def test__create_anime_schemas(self, client_api):
-        result = client_api._create_anime_schemas(
-            config_data.anime_schemas_dict
+        base_url = client_api.base_url
+        result = create_anime_schemas(
+            base_url=base_url,
+            data=config_data.anime_schemas_dict
         )
         assert result == config_data.anime_schemas_data
 
@@ -110,8 +113,9 @@ class TestApiAnimeVostClient:
             'urlImagePreview': "http://uploads/posts/2022-01/1641826763_1.jpg"
         })
 
-        result = client_api._create_anime_schemas(
-            config_data.anime_schemas_dict
+        result = create_anime_schemas(
+            base_url=base_url,
+            data=config_data.anime_schemas_dict
         )
         config_data.anime_schemas_data.screen_image = []
         new_preview = 'http://uploads/posts/2022-01/1641826763_1.jpg'
@@ -121,8 +125,9 @@ class TestApiAnimeVostClient:
         config_data.anime_schemas_dict.update({
             'screenImage': ['img', 'img', 'img']
         })
-        result = client_api._create_anime_schemas(
-            config_data.anime_schemas_dict
+        result = create_anime_schemas(
+            base_url=base_url,
+            data=config_data.anime_schemas_dict
         )
         config_data.anime_schemas_data.screen_image = ['img', 'img', 'img']
         assert result == config_data.anime_schemas_data
