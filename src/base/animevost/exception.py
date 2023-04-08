@@ -1,17 +1,13 @@
 from requests.exceptions import HTTPError
 
 
-class ParserClientStatusCodeError(HTTPError):
-    """Неверный статус код ответа"""
+class AnimeVostStatusCodeError(HTTPError):
+    """Error status code"""
 
 
-class ApiAnimeVostClientStatusCodeError(HTTPError):
-    """Неверный статус код ответа"""
+class AnimeVostAttributeError(AttributeError):
+    """No attribute"""
 
 
-class ApiAnimeVostClientAttributeError(AttributeError):
-    """Пришедшие дынные с api animevost не верны"""
-
-
-class NotDataError(Exception):
-    """Нет данных"""
+class AnimeVostDataError(Exception):
+    """No data"""
