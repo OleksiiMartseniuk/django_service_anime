@@ -3,8 +3,8 @@ from unittest import mock
 
 from . import config_data
 from src.base.animevost.exception import (
-    ParserClientStatusCodeError,
-    NotDataError
+    AnimeVostStatusCodeError,
+    AnimeVostAttributeError
 )
 
 
@@ -23,7 +23,7 @@ class TestParseClient:
     def test__get_error(self, mock_get, status_code, client_parser):
         mock_get.return_value.status_code = status_code
 
-        with pytest.raises(ParserClientStatusCodeError):
+        with pytest.raises(AnimeVostStatusCodeError):
             client_parser._get('https://test')
 
     @mock.patch('src.base.animevost.parser.ParserClient.get_composed')
@@ -124,7 +124,7 @@ class TestParseClient:
         _get_count_page.return_value = 1
         get_composed.return_value = []
 
-        with pytest.raises(NotDataError):
+        with pytest.raises(AnimeVostAttributeError):
             client_parser.get_anons(full=True)
 
     @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
