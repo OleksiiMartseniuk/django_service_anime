@@ -1,131 +1,96 @@
-import re
 import requests
 import logging
 import json
 
 from .setting import HEADERS
-from .schemas import Anime, Series
-from .exception import (
-    ApiAnimeVostClientStatusCodeError,
-    ApiAnimeVostClientAttributeError
+from .schemas import (
+    Anime,
+    Series,
+    create_anime_series,
+    create_anime_schemas,
 )
+from .exception import AnimeVostDataError, AnimeVostStatusCodeError
 
 
-logger = logging.getLogger('db')
+logger = logging.getLogger('anime_vost')
 
 
 class ApiAnimeVostClient:
-    """
-    Api клиент animevost
-    """
+
     def __init__(self):
         self.url_v1 = 'https://api.animevost.org/v1'
         self.url_v2 = 'https://api.animevost.org/animevost/api/v0.2'
         self.base_url = 'https://animevost.org'
 
-    def _get(self, url: str, params: dict = {}) -> dict | None:
-        response = requests.get(url=url, params=params, headers=HEADERS)
+    def _get(self, url: str, **kwargs) -> dict | None:
+        response = requests.get(url=url, headers=HEADERS, **kwargs)
         if response.status_code == 200:
+            print(response.json())
             if not response.json().get('data'):
-                logger.error(f'Нет данных на запрос "{url}"')
-                raise ApiAnimeVostClientAttributeError
+                logger.error(
+                    'No data in request "%s" kwargs [%s]',
+                    url, json.dumps(kwargs)
+                )
+                raise AnimeVostDataError
             return response.json()
         else:
             logger.error(
-                'Неверный статус код %s url-"%s" params[%s]',
-                response.status_code, url, json.dumps(params)
+                'Status code %s request "%s" params[%s]',
+                response.status_code, url, json.dumps(kwargs)
             )
-            raise ApiAnimeVostClientStatusCodeError
+            raise AnimeVostStatusCodeError
 
-    def _post(self, url: str, data: dict = {}) -> dict | None:
-        response = requests.post(url=url, data=data)
+    def _post(self, url: str, **kwargs) -> dict | None:
+        response = requests.post(url=url, **kwargs)
         if response.status_code == 200:
             return response.json()
         else:
             logger.error(
-                'Неверный статус код %s и нет данных на запрос %s data[%s]',
-                response.status_code, url, json.dumps(data)
+                'Status code %s request %s kwargs[%s]',
+                response.status_code, url, json.dumps(kwargs)
             )
-            raise ApiAnimeVostClientStatusCodeError
-
-    def _create_anime_series(self, data: dict) -> Series:
-        """Создания Series схемы"""
-        serial = data.get('hd') or data.get('std', '')
-
-        return Series(
-            name=data.get('name'),
-            serial=serial.split('/')[-1].split('.')[0],
-            preview=data.get('preview')
-        )
-
-    def _create_anime_schemas(self, data: dict) -> Anime:
-        """ Создания Anime схемы """
-        if re.search(r'^/', data.get('urlImagePreview')):
-            url_image_preview = self.base_url + data.get('urlImagePreview')
-        else:
-            url_image_preview = data.get('urlImagePreview')
-
-        screen_image = []
-
-        for img in data.get('screenImage'):
-            if re.search(r'^/', img):
-                screen_image.append(self.base_url + img)
-            elif not img:
-                pass
-            else:
-                screen_image.append(img)
-
-        remove_list = ['\n', '\r', '<br>', '<br />']
-        description = data.get('description', '')
-        for sub in remove_list:
-            description = description.replace(sub, '')
-
-        anime = Anime(
-            id=data.get('id'),
-            title=data.get('title'),
-            screen_image=screen_image,
-            rating=data.get('rating'),
-            votes=data.get('votes'),
-            description=description,
-            director=data.get('director'),
-            url_image_preview=url_image_preview,
-            year=data.get('year'),
-            genre=data.get('genre'),
-            timer=data.get('timer'),
-            type=data.get('type')
-        )
-        return anime
+            raise AnimeVostStatusCodeError
 
     def get_anime(self, id: int) -> None | Anime:
-        """ Получения аниме по id"""
         url = self.url_v2 + '/GetInfo/' + str(id)
         data_json = self._get(url)
         data = data_json.get('data')
-        return self._create_anime_schemas(data[0])
+        return create_anime_schemas(self.base_url, data[0])
 
     def get_last_anime(
-            self,
-            page: int = 1,
-            quantity: int = 30
+        self,
+        page: int = 1,
+        quantity: int = 30
     ) -> list[Anime]:
-        """ Получения последних обновленных аниме"""
+        """Get last update anime"""
         url = self.url_v2 + '/last'
         params = {'page': page, 'quantity': quantity}
         data_json = self._get(url, params=params)
-        return list(map(self._create_anime_schemas, data_json['data']))
+
+        return list(
+            map(
+                create_anime_schemas,
+                [self.base_url for _ in range(len(data_json['data']))],
+                data_json['data']
+            )
+        )
 
     def get_play_list(self, id: int) -> list[Series]:
-        """Play list аниме по id"""
         url = self.url_v1 + '/playlist'
         data = {'id': id}
         data_json = self._post(url, data=data)
         if isinstance(data_json, dict) and data_json.get('error'):
-            raise ApiAnimeVostClientAttributeError
-        return list(map(self._create_anime_series, data_json))
+            raise AnimeVostDataError
+        return list(map(create_anime_series, data_json))
 
     def search(self, name: str) -> list[Anime]:
-        """ Поиск """
         url = self.url_v1 + '/search'
         data = {'name': name}
         data_json = self._post(url, data=data)
-        return list(map(self._create_anime_schemas, data_json['data']))
+        return list(
+            map(
+                create_anime_schemas,
+                [self.base_url for _ in range(len(data_json['data']))],
+                data_json['data']
+            )
+        )
