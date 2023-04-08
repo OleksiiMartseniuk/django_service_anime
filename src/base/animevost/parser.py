@@ -6,16 +6,17 @@ from bs4 import BeautifulSoup
 
 from .setting import HEADERS
 from .schemas import Week, AnimeMin, AnimeComposed
-from .exception import ParserClientStatusCodeError, NotDataError
+from .exception import (
+    AnimeVostStatusCodeError,
+    AnimeVostAttributeError
+)
 
 
-logger = logging.getLogger('db')
+logger = logging.getLogger('anime_vost')
 
 
 class ParserClient:
-    """
-    Parser клиент animevost.org
-    """
+
     def __init__(self) -> None:
         self.url = 'https://animevost.org'
 
@@ -24,11 +25,14 @@ class ParserClient:
         if response.status_code == 200:
             return response.text
         else:
-            logger.error(f'Статус код {response.status_code}')
-            raise ParserClientStatusCodeError
+            logger.error(
+                'Status code %s request %s',
+                response.status_code, url
+            )
+            raise AnimeVostStatusCodeError
 
-    def get_composed(self, link: str, id: str) -> list[AnimeComposed]:
-        """ Аниме состоит из """
+    def get_composed(self, link: str, id: str) -> list[AnimeComposed | None]:
+        """Get list anime composed"""
         text_page = self._get(link)
 
         soup = BeautifulSoup(text_page, 'lxml')
@@ -56,7 +60,6 @@ class ParserClient:
             self,
             full: bool = False
     ) -> dict[str: list[AnimeMin]]:
-        """ Получения расписания """
         text_page = self._get(self.url)
         soup = BeautifulSoup(text_page, 'lxml')
         anime_week = {}
@@ -65,8 +68,8 @@ class ParserClient:
             try:
                 link_list = soup.find(id=day.value).find_all('a')
             except AttributeError:
-                logger.error('Не найдены ссылки на аниме')
-                raise NotDataError
+                logger.error('Not found link anime.')
+                raise AnimeVostAttributeError
 
             list_anime = []
 
@@ -77,8 +80,10 @@ class ParserClient:
                         link.get('href')
                     ).group()[1:-1]
                 except AttributeError:
-                    logger.warning(f'Не найдено id_anime в '
-                                   f'ссылке-[{link.text}] день-{day.name} ')
+                    logger.warning(
+                        'Not found link-[%s] day-%s',
+                        link.text, day.name
+                    )
                     id_anime = None
 
                 if full and id_anime:
@@ -99,23 +104,19 @@ class ParserClient:
             anime_week[day.name] = list_anime
         return anime_week
 
-    def _get_count_page(self) -> int | None:
-        """ Получения количество страниц """
+    def _get_count_page(self) -> int:
         data = self._get(self.url + '/preview/')
         soup = BeautifulSoup(data, 'lxml')
         try:
             count_page = soup.find(class_='block_4').find_all('a')[-1].text
             count_page = int(count_page)
         except ValueError:
-            logger.warning('Не преобразован в int count_page')
             count_page = 1
         except AttributeError:
-            logger.info('Аниме анонсов нет')
             count_page = 1
         return count_page
 
     def get_anons(self, full: bool = False) -> list[AnimeMin] | None:
-        """ Получения аниме анонс """
         list_anime = []
         for page in range(1, self._get_count_page() + 1):
             page_html = self._get(self.url + '/preview/' + f'page/{page}/')
@@ -141,11 +142,10 @@ class ParserClient:
                         )
                     )
             except AttributeError:
-                logger.warning('Значения не найдено')
-                raise NotDataError
+                logger.warning('Not found anons page [%s]', page)
+                raise AnimeVostAttributeError
         return list_anime
 
     def get_anime_one(self, id: int, link: str) -> AnimeMin:
-        """Получения одного аниме"""
         anime_composed = self.get_composed(link, str(id))
         return AnimeMin(id_anime=id, link=link, anime_composed=anime_composed)
