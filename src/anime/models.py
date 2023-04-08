@@ -30,7 +30,12 @@ class Series(models.Model):
     id_anime = models.IntegerField('ID animevost')
     name = models.CharField('Названия', max_length=50)
     number = models.IntegerField('Номер серии', blank=True, null=True)
-    serial = models.CharField('Серийный номер', max_length=255, blank=True, null=True)
+    serial = models.CharField(
+        'Серийный номер',
+        max_length=255,
+        blank=True,
+        null=True
+    )
     preview = models.CharField(
         'Изображения предпросмотра',
         max_length=255,
@@ -117,10 +122,6 @@ class Anime(models.Model):
 
 class AnimeSettings(SingletonModel):
     status_task = models.BooleanField("Авто обновления", default=True)
-    send_images_telegram = models.BooleanField(
-        "Отправлять изображения на сервер telegram",
-        default=False
-    )
 
     def set_status_task(self):
         task = PeriodicTask.objects.get(name='add-every-day-morning')

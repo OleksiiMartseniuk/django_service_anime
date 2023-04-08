@@ -5,10 +5,7 @@ import time
 from config.celery import app
 
 from .service.service_vost import ServiceAnime
-from .service import service
-from .models import Anime, Series, AnimeSettings
-
-from src.bot.services.service import update_user_tracked
+from .models import Anime, Series
 
 
 logger = logging.getLogger('db')
@@ -34,9 +31,6 @@ def parser(action: str) -> None:
                 ServiceAnime().delete_series()
             case 'update_indefinite_exit':
                 ServiceAnime().update_indefinite_exit()
-            case 'write_telegram':
-                service.write_images_telegram()
-
     except requests.exceptions.RequestException as exr:
         logger.error(f"{exr.__class__}")
     except Exception as ex:
@@ -62,10 +56,6 @@ def auto_update(auth: bool = True):
 
         # Обновления аниме с неопределенным сроком выхода
         ServiceAnime().update_indefinite_exit()
-        # Запись картинок на сервер telegram
-        settings_anime = AnimeSettings.get_solo()
-        if settings_anime.send_images_telegram:
-            service.write_images_telegram()
 
         # Обновления серий
         if Series.objects.count():
@@ -73,8 +63,6 @@ def auto_update(auth: bool = True):
         else:
             logger.error('Не данных для обновления [series]')
 
-        # Обновить список подписок telegram пользователя
-        update_user_tracked()
         finish = time.time() - start_time
         logger.info(f"Полное обновления данных закончено. Время [{finish}]")
     except requests.exceptions.RequestException as exr:

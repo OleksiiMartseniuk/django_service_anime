@@ -64,15 +64,6 @@ class ParserControl:
             case 'update_indefinite_exit':
                 parser.delay('update_indefinite_exit')
                 status = Status(message=ex_massages.UPDATE_INDEFINITE_EXIT)
-            case 'write_telegram':
-                is_valid = self._write_telegram_valid()
-                if is_valid:
-                    status = is_valid
-                else:
-                    parser.delay('write_telegram')
-                    status = Status(
-                        message=ex_massages.WRITE_TELEGRAM_BOT_FORM
-                    )
             case 'full_update':
                 auto_update.delay(False)
                 status = Status(message=ex_massages.FULL_UPDATE)
@@ -129,12 +120,5 @@ class ParserControl:
         if not Series.objects.count():
             return Status(
                 message=ex_massages.VALID_DATA_DELETE_NOT_EXISTS,
-                level=messages.ERROR
-            )
-
-    def _write_telegram_valid(self) -> Status | None:
-        if not Anime.objects.filter(telegram_id_file=None).count():
-            return Status(
-                message=ex_massages.VALID_DATA_WRITE_EXISTS,
                 level=messages.ERROR
             )
