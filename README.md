@@ -148,3 +148,9 @@ python manage.py test src/tests/test_app
 ## License
 
 Project DjangoServiceAnime is distributed under the MIT license.
+
+* доп.зад скриншоты и привю могут изменятся с временем (возможно как нибуть проверать актуальность изображений старые удалять новые загружать)
+* возможно после визова изклучения загруска серий выходит с цикла проверить отлов исключений в tasks.py
+* избавится от exceptions in tasks.py
+* удалить app bot
+* перенисти на heroku
