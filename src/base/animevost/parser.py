@@ -110,7 +110,7 @@ class ParserClient:
             logger.warning('Не преобразован в int count_page')
             count_page = 1
         except AttributeError:
-            logger.info('count_page не найден атрибут')
+            logger.info('Аниме анонсов нет')
             count_page = 1
         return count_page
 
