@@ -100,3 +100,8 @@ class TestServiceAnimeVost:
         ServiceAnimeVost().get_anime_data(1, 'test')
         mock_get_anime_one.assert_called_once()
         mock_get_anons.assert_called_once()
+
+    @mock.patch('src.base.animevost.service.ApiAnimeVostClient.get_play_list')
+    def test_get_list_series(self, mock_get_play_list):
+        ServiceAnimeVost().get_list_series(1)
+        mock_get_play_list.assert_called_once()
