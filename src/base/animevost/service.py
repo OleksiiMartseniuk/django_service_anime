@@ -1,21 +1,26 @@
 from .api import ApiAnimeVostClient
 from .parser import ParserClient
-from .schemas import AnimeData, AnimeFull, AnimeMin
+from .schemas import AnimeData, AnimeFull, AnimeMin, Series
+from .utils import exception_check
 
 
 class ServiceAnimeVost:
+
     def _create_anime_full_list(
             self,
-            list_anime_shem: list[AnimeMin]
-    ) -> list[AnimeFull]:
+            anime_min_list: list[AnimeMin]
+    ) -> list[AnimeFull | None]:
         """Создания списка схемы AnimeFull"""
         list_anime = []
-        for anime in list_anime_shem:
-            list_anime.append(self.get_anime(anime))
+        for anime in anime_min_list:
+            anime_full = self.get_anime(anime)
+            if anime_full:
+                list_anime.append(anime_full)
         return list_anime
 
-    def get_anime(self, anime: AnimeMin) -> AnimeFull:
-        """Создания схему AnimeFull"""
+    @exception_check
+    def get_anime(self, anime: AnimeMin) -> AnimeFull | None:
+        """Get schemas AnimeFull"""
         anime_schem = ApiAnimeVostClient().get_anime(anime.id_anime)
         anime_link = anime.link
         list_anime_composed = []
@@ -41,15 +46,8 @@ class ServiceAnimeVost:
     def get_data_anime_all(
             self,
             full: bool = False
-    ) -> dict[str: list[AnimeFull]]:
-        """
-        Получения данных аниме
-        :arg full: флаг для полного или частичного сбора данных
-        Полный сбор ~72с
-        Частичный сбор ~15с
-        """
+    ) -> dict[str, list[AnimeFull | None]]:
         anime_week = {}
-        # Получения данных парсера
         data_parser = ParserClient().get_schedule(full)
         for key, value in data_parser.items():
             anime_week[key] = self._create_anime_full_list(value)
@@ -58,17 +56,15 @@ class ServiceAnimeVost:
     def get_data_anime_anons_all(
             self,
             full: bool = False
-    ) -> list[AnimeFull]:
-        """
-        Получения данных аниме Anons
-        :arg full: флаг для полного или частичного сбора данных
-        Полный сбор ~28с
-        Частичный сбор ~8c
-        """
+    ) -> list[AnimeFull | None]:
         data_parser = ParserClient().get_anons(full)
         return self._create_anime_full_list(data_parser)
 
-    def get_anime_data(self, id: int, link: str) -> AnimeFull:
-        """Создания схему AnimeFull через аргументы"""
+    def get_anime_data(self, id: int, link: str) -> AnimeFull | None:
+        """Get one anime"""
         data = ParserClient().get_anime_one(id, link)
         return self.get_anime(data)
+
+    @exception_check
+    def get_list_series(self, anime_id: int) -> list[Series] | None:
+        return ApiAnimeVostClient().get_play_list(id=anime_id)
