@@ -6,10 +6,7 @@ from bs4 import BeautifulSoup
 
 from .setting import HEADERS
 from .schemas import Week, AnimeMin, AnimeComposed
-from .exception import (
-    AnimeVostStatusCodeError,
-    AnimeVostAttributeError
-)
+from .exception import AnimeVostStatusCodeError
 
 
 logger = logging.getLogger('anime_vost')
@@ -59,7 +56,7 @@ class ParserClient:
     def get_schedule(
             self,
             full: bool = False
-    ) -> dict[str: list[AnimeMin]]:
+    ) -> dict[str, list[AnimeMin] | None]:
         text_page = self._get(self.url)
         soup = BeautifulSoup(text_page, 'lxml')
         anime_week = {}
@@ -69,7 +66,7 @@ class ParserClient:
                 link_list = soup.find(id=day.value).find_all('a')
             except AttributeError:
                 logger.error('Not found link anime.')
-                raise AnimeVostAttributeError
+                continue
 
             list_anime = []
 
@@ -143,7 +140,7 @@ class ParserClient:
                     )
             except AttributeError:
                 logger.warning('Not found anons page [%s]', page)
-                raise AnimeVostAttributeError
+                continue
         return list_anime
 
     def get_anime_one(self, id: int, link: str) -> AnimeMin:
