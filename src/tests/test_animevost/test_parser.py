@@ -124,8 +124,7 @@ class TestParseClient:
         _get_count_page.return_value = 1
         get_composed.return_value = []
 
-        with pytest.raises(AnimeVostAttributeError):
-            client_parser.get_anons(full=True)
+        assert client_parser.get_anons(full=True) == []
 
     @mock.patch('src.base.animevost.parser.ParserClient._get_count_page')
     @mock.patch('src.base.animevost.parser.requests.get')

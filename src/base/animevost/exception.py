@@ -2,12 +2,12 @@ from requests.exceptions import HTTPError
 
 
 class AnimeVostStatusCodeError(HTTPError):
-    """Error status code"""
+    pass
 
 
 class AnimeVostAttributeError(AttributeError):
-    """No attribute"""
+    pass
 
 
 class AnimeVostDataError(Exception):
-    """No data"""
+    pass
