@@ -12,5 +12,5 @@ def exception_check(func):
         try:
             return func(*args, **kwargs)
         except Exception as ex:
-            logger.error(exc_info=ex)
+            logger.error("ExceptionCheckAnimeVost", exc_info=ex)
     return wrapper
