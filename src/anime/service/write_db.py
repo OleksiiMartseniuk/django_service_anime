@@ -24,10 +24,10 @@ class WriteDB:
         return obj
 
     def _write_anime(
-            self,
-            anime_data: schemas.AnimeData,
-            day: str = None,
-            indefinite_exit: bool = False
+        self,
+        anime_data: schemas.AnimeData,
+        day: str | None = None,
+        indefinite_exit: bool = False
     ) -> models.Anime:
         """Запись в таблицу Anime"""
         anons = True if re.search(r'Анонс', anime_data.title) else False
@@ -55,10 +55,10 @@ class WriteDB:
         return anime
 
     def _write_anime_composed(
-            self,
-            base_anime: models.Anime,
-            anime_list: List[schemas.AnimeData],
-            update: bool = False
+        self,
+        base_anime: models.Anime,
+        anime_list: List[schemas.AnimeData],
+        update: bool = False
     ) -> None:
         """Запись в поле Anime.anime_composed"""
         if anime_list:
@@ -72,11 +72,11 @@ class WriteDB:
                         obj_main.anime_composed.add(obj1_composed)
 
     def write_anime(
-            self,
-            anime_data: schemas.AnimeData,
-            day: str = None,
-            update: bool = False,
-            indefinite_exit: bool = False
+        self,
+        anime_data: schemas.AnimeData,
+        day: str | None = None,
+        update: bool = False,
+        indefinite_exit: bool = False
     ) -> models.Anime:
         """Запись дынных аниме"""
         # При обновлении Anime.anime_composed сначала ищем в db на совпадения
@@ -100,8 +100,8 @@ class WriteDB:
         return anime_db
 
     def write_anime_schedule(
-            self,
-            anime_data: dict[str: List[schemas.AnimeFull]]
+        self,
+        anime_data: dict[str, List[schemas.AnimeFull]]
     ) -> None:
         """Запись дынных аниме расписание"""
         anons_list = models.Anime.objects.filter(~Q(day_week=None)).\
@@ -126,10 +126,10 @@ class WriteDB:
                 self._write_anime_composed(anime, anime_schemas.anime_composed)
 
     def write_anime_full(
-            self,
-            anime_data: schemas.AnimeFull,
-            day: str = None,
-            indefinite_exit: bool = False
+        self,
+        anime_data: schemas.AnimeFull,
+        day: str | None = None,
+        indefinite_exit: bool = False
     ) -> None:
         """Запись аниме с Anime.anime_composed"""
         if not models.Anime.objects.filter(id_anime=anime_data.id).exists():

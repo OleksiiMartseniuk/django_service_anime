@@ -22,7 +22,7 @@ class AnimeMini:
     """Мини описания аниме"""
     id: int
     link: str
-    day: str = None
+    day: str | None = None
 
 
 class UpdateDataParser:
@@ -31,7 +31,7 @@ class UpdateDataParser:
         self,
         id: int,
         link: str,
-        day: str = None
+        day: str | None = None
     ) -> AnimeMini:
         """Создать схему AnimeComposed"""
         return AnimeMini(id=id, link=link, day=day)
@@ -39,7 +39,7 @@ class UpdateDataParser:
     def _update_anime(
             self,
             anime_data: schemas.AnimeData | schemas.Anime,
-            day: str = None
+            day: str | None = None
     ) -> bool:
         """Обновления данных anime"""
         anons = True if re.search(r'Анонс', anime_data.title) else False
@@ -67,8 +67,8 @@ class UpdateDataParser:
             return False
 
     def update_anime_schedule(
-            self,
-            anime_data: dict[str: List[schemas.AnimeFull]]
+        self,
+        anime_data: dict[str, List[schemas.AnimeFull]]
     ) -> None | List[AnimeMini]:
         """Обновления данных schedule"""
         # Список до записи
@@ -96,8 +96,8 @@ class UpdateDataParser:
             return write_list
 
     def update_anime_anons(
-            self,
-            anime_data: List[schemas.AnimeFull]
+        self,
+        anime_data: List[schemas.AnimeFull]
     ) -> None | List[AnimeMini]:
         """Обновления данных anons"""
         write_list = []
@@ -112,9 +112,9 @@ class UpdateDataParser:
             return write_list
 
     def update_series(
-            self,
-            id: int,
-            series_data: List[schemas.Series]
+        self,
+        id: int,
+        series_data: List[schemas.Series]
     ) -> None:
         """Обновления серий"""
         list_name_series = Series.objects.filter(id_anime=id).\
@@ -131,8 +131,8 @@ class UpdateDataParser:
                 )
 
     def update_indefinite_exit(
-            self,
-            anime_list: List[schemas.Anime]
+        self,
+        anime_list: List[schemas.Anime]
     ) -> list | None:
         """Обновления аниме с неопределенным сроком выхода"""
         list_id_anime = Anime.objects.filter(indefinite_exit=False).\
