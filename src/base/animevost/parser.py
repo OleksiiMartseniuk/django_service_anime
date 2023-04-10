@@ -17,7 +17,7 @@ class ParserClient:
     def __init__(self) -> None:
         self.url = 'https://animevost.org'
 
-    def _get(self, url) -> str | None:
+    def _get(self, url) -> str:
         response = requests.get(url=url, headers=HEADERS)
         if response.status_code == 200:
             return response.text
@@ -26,7 +26,9 @@ class ParserClient:
                 'Status code %s request %s',
                 response.status_code, url
             )
-            raise AnimeVostStatusCodeError
+            raise AnimeVostStatusCodeError(
+                f"Request {url} status code [{response.status_code}] "
+            )
 
     def get_composed(self, link: str, id: str) -> list[AnimeComposed | None]:
         """Get list anime composed"""
@@ -54,8 +56,8 @@ class ParserClient:
         return anime_composed
 
     def get_schedule(
-            self,
-            full: bool = False
+        self,
+        full: bool = False
     ) -> dict[str, list[AnimeMin] | None]:
         text_page = self._get(self.url)
         soup = BeautifulSoup(text_page, 'lxml')
