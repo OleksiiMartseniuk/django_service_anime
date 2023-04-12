@@ -52,7 +52,7 @@ class AnimeListView(generics.ListAPIView):
     queryset = Anime.objects.only('id', 'title', 'rating',
                                   'url_image_preview', 'votes',
                                   'timer', 'anons', 'link',
-                                  'telegram_id_file').order_by('-id')
+                                  ).order_by('-updated')
     serializer_class = AnimeMinSerializers
     filter_backends = [DjangoFilterBackend, filters.SearchFilter,
                        filters.OrderingFilter]

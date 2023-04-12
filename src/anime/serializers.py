@@ -40,7 +40,7 @@ class AnimeMinSerializers(serializers.ModelSerializer):
     class Meta:
         model = Anime
         fields = ['id', 'title', 'url_image_preview', 'anons', 'link',
-                  'timer', 'rating', 'votes', 'telegram_id_file']
+                  'timer', 'rating', 'votes']
 
 
 class SeriesSerializers(serializers.ModelSerializer):

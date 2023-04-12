@@ -93,12 +93,6 @@ class Anime(models.Model):
         blank=True,
         null=True
     )
-    telegram_id_file = models.CharField(
-        'ID картинки на сервере телеграм',
-        max_length=255,
-        blank=True,
-        null=True
-    )
     year = models.CharField('Год выпуска', max_length=20)
     timer = models.IntegerField('Время выхода серии', default=0)
     type = models.CharField('Тип', max_length=30)
