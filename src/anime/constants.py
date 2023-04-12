@@ -7,7 +7,6 @@ ACTIONS_ADMIN = [
     ('schedule_update', messages.SCHEDULE_UPDATE_FORM),
     ('anons_update', messages.ANONS_UPDATE_FORM),
     ('series', messages.SERIES_FORM),
-    ('series_update', messages.SERIES_UPDATE_FORM),
     ('delete_series', messages.DElETE_SERIES_FORM),
     ('update_indefinite_exit', messages.UPDATE_INDEFINITE_EXIT),
     ('full_update', messages.FULL_UPDATE),
