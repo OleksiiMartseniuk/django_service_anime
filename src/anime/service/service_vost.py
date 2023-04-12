@@ -5,7 +5,6 @@ from typing import List
 from django.db.models import Q
 
 from src.base.animevost.service import ServiceAnimeVost
-from src.base.animevost.service import ApiAnimeVostClient
 
 from src.anime.service.write_db import WriteDB
 from src.anime.service.update_db import UpdateDataParser, AnimeMini
@@ -26,14 +25,23 @@ class ServiceAnime:
                     anime.id,
                     anime.link
                 )
-                WriteDB().write_anime_full(anime_she, anime.day)
+                if anime_she:
+                    WriteDB().write_anime_full(anime_she, anime.day)
+                else:
+                    logger.error(
+                        "Anime with id_animevost [%s] not found",
+                        anime.id
+                    )
 
     def anime_schedule(self) -> None:
         """Запись аниме расписания"""
         logger.info('Запись аниме расписания запущено.')
         start_time = time.time()
         data_anime_parser = ServiceAnimeVost().get_data_anime_all(full=True)
-        WriteDB().write_anime_schedule(data_anime_parser)
+        if data_anime_parser:
+            WriteDB().write_anime_schedule(data_anime_parser)
+        else:
+            logger.error("Data for writing anime_schedule not")
         finish = time.time() - start_time
         logger.info(f'Запись аниме расписания завершена. Время [{finish}]')
 
@@ -42,7 +50,10 @@ class ServiceAnime:
         logger.info('Запись аниме Анонс запущено.')
         start_time = time.time()
         data_anime = ServiceAnimeVost().get_data_anime_anons_all(full=True)
-        WriteDB().write_anime_anons(data_anime)
+        if data_anime and len(data_anime):
+            WriteDB().write_anime_anons(data_anime)
+        else:
+            logger.error("Data for writing anime_anons not")
         finish = time.time() - start_time
         logger.info(f'Запись аниме Анонс завершена. Время [{finish}]')
 
@@ -51,10 +62,12 @@ class ServiceAnime:
         logger.info('Обновления аниме расписания запущено.')
         start_time = time.time()
         data_anime_parser = ServiceAnimeVost().get_data_anime_all()
-        anime_list = UpdateDataParser().update_anime_schedule(
-            data_anime_parser
-        )
-        self._write_anime(anime_list)
+        if data_anime_parser:
+            anime_list = UpdateDataParser().update_anime_schedule(
+                data_anime_parser
+            )
+            if anime_list:
+                self._write_anime(anime_list)
         finish = time.time() - start_time
         logger.info(f'Обновления аниме расписания завершена. Время [{finish}]')
 
@@ -63,17 +76,14 @@ class ServiceAnime:
         logger.info('Обновления аниме Анонс запущено.')
         start_time = time.time()
         data_anime_parser = ServiceAnimeVost().get_data_anime_anons_all()
-        anime_list = UpdateDataParser().update_anime_anons(
-            data_anime_parser
-        )
-        self._write_anime(anime_list)
+        if data_anime_parser:
+            anime_list = UpdateDataParser().update_anime_anons(
+                data_anime_parser
+            )
+            if anime_list:
+                self._write_anime(anime_list)
         finish = time.time() - start_time
         logger.info(f'Обновления аниме Анонс завершено. Время [{finish}]')
-
-    def delete_series(self):
-        """Очистка данных таблицы Series"""
-        models.Series.objects.all().delete()
-        logger.info('Очистка данных таблицы Series')
 
     def series(self) -> None:
         """Запись серий"""
@@ -81,8 +91,11 @@ class ServiceAnime:
         start_time = time.time()
         list_id_anime = models.Anime.objects.values_list('id_anime', flat=True)
         for id in list_id_anime:
-            data_series = ApiAnimeVostClient().get_play_list(id)
-            WriteDB().write_series(id, data_series)
+            data_series = ServiceAnimeVost().get_list_series(id)
+            if data_series:
+                WriteDB().write_series(id, data_series)
+            else:
+                logger.error(f"Data write series not. id_animevost[{id}]")
         finish = time.time() - start_time
         logger.info(f'Запись серий завершена. Время [{finish}]')
 
@@ -93,8 +106,11 @@ class ServiceAnime:
         list_id_anime = models.Anime.objects.filter(~Q(day_week=None)).\
             values_list('id_anime', flat=True)
         for id in list_id_anime:
-            data_series = ApiAnimeVostClient().get_play_list(id)
-            UpdateDataParser().update_series(id, data_series)
+            data_series = ServiceAnimeVost().get_list_series(id)
+            if data_series:
+                UpdateDataParser().update_series(id, data_series)
+            else:
+                logger.error(f"Data write series not. id_animevost[{id}]")
         finish = time.time() - start_time
         logger.info(f'Обновления серий завершено. Время [{finish}]')
 
@@ -105,24 +121,38 @@ class ServiceAnime:
             'Сбор данных начат'
         )
         start_time = time.time()
-        data_anime = ApiAnimeVostClient().get_last_anime()
-        write_list = UpdateDataParser().update_indefinite_exit(data_anime)
-        if write_list:
-            for anime_shem in write_list:
-                link = get_link(anime_shem.id, anime_shem.title)
-                if not link:
-                    # Если силка не сформирована преходит
-                    # на следующую итерацию
-                    logger.info(
-                        f'Ссылка не сформирована anime[{anime_shem.title}]'
+        data_anime = ServiceAnimeVost().get_anime_indefinite_exit()
+        if data_anime:
+            write_list = UpdateDataParser().update_indefinite_exit(data_anime)
+            if write_list:
+                for anime_shem in write_list:
+                    link = get_link(anime_shem.id, anime_shem.title)
+                    if not link:
+                        # Если силка не сформирована преходит
+                        # на следующую итерацию
+                        logger.info(
+                            f'Ссылка не сформирована anime[{anime_shem.title}]'
+                        )
+                        continue
+                    # формирования схемы AnimeFull
+                    anime_full = ServiceAnimeVost().get_anime_data(
+                        anime_shem.id,
+                        link
                     )
-                    continue
-                # формирования схемы AnimeFull
-                anime_full = ServiceAnimeVost().get_anime_data(
-                    anime_shem.id,
-                    link
-                )
-                WriteDB().write_anime_full(anime_full, indefinite_exit=True)
+                    if anime_full:
+                        WriteDB().write_anime_full(
+                            anime_data=anime_full,
+                            indefinite_exit=True
+                        )
+                    else:
+                        logger.error(
+                            "Not data for write id_animevost [%s]",
+                            anime_shem.id
+                        )
+        else:
+            logger.error(
+                "Not data update update_indefinite_exit ServiceAnimeVost"
+            )
         finish = time.time() - start_time
         logger.info(
             'Обновления аниме с неопределенным сроком выхода. '
