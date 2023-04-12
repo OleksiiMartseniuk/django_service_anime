@@ -105,3 +105,8 @@ class TestServiceAnimeVost:
     def test_get_list_series(self, mock_get_play_list):
         ServiceAnimeVost().get_list_series(1)
         mock_get_play_list.assert_called_once()
+
+    @mock.patch('src.base.animevost.service.ApiAnimeVostClient.get_last_anime')
+    def test_get_anime_indefinite_exit(self, mock_get_last_anime):
+        ServiceAnimeVost().get_anime_indefinite_exit()
+        mock_get_last_anime.assert_called_once()
