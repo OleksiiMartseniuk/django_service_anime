@@ -16,7 +16,7 @@ class CharFilterInFilter(filters.BaseInFilter, filters.CharFilter):
 
 
 class AnimeFilter(filters.FilterSet):
-    genre = CharFilterInFilter(field_name='genre__title', lookup_expr='in')
+    genre = CharFilterInFilter(field_name='genre__id', lookup_expr='in')
     anons = filters.BooleanFilter()
     indefinite_exit = filters.BooleanFilter()
 
