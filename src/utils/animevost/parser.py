@@ -1,12 +1,13 @@
 import logging
 import requests
 import re
+from collections import defaultdict
 
 from bs4 import BeautifulSoup
 
-from .setting import HEADERS
-from .schemas import Week, AnimeMin, AnimeComposed
-from .exception import AnimeVostStatusCodeError
+from src.base.animevost.setting import HEADERS
+from src.base.animevost.schemas import Week, AnimeMin, AnimeComposed
+from src.utils.animevost.exception import AnimeVostStatusCodeError
 
 
 logger = logging.getLogger('anime_vost')
@@ -22,18 +23,17 @@ class ParserClient:
         if response.status_code == 200:
             return response.text
         else:
-            logger.error(
-                'Status code %s request %s',
-                response.status_code, url
-            )
             raise AnimeVostStatusCodeError(
                 f"Request {url} status code [{response.status_code}] "
             )
 
-    def get_composed(self, link: str, id: str) -> list[AnimeComposed | None]:
+    def get_composed(self, link: str, id: str) -> list[AnimeComposed] | None:
         """Get list anime composed"""
-        text_page = self._get(link)
-
+        try:
+            text_page = self._get(link)
+        except Exception as ex:
+            logger.error(f"Page {link} error anime_id[{id}]", exc_info=ex)
+            return None
         soup = BeautifulSoup(text_page, 'lxml')
         try:
             anime_composed = []
@@ -47,31 +47,23 @@ class ParserClient:
                     anime_composed.append(
                         AnimeComposed(
                             id_anime=id_anime,
-                            link=self.url + li.a.get('href')
+                            link=f'{self.url}{li.a.get("href")}',
                         )
                     )
         except AttributeError:
-            anime_composed = []
-
+            anime_composed = None
         return anime_composed
 
-    def get_schedule(
-        self,
-        full: bool = False
-    ) -> dict[str, list[AnimeMin] | None]:
+    def get_schedule(self) -> defaultdict[list]:
         text_page = self._get(self.url)
         soup = BeautifulSoup(text_page, 'lxml')
-        anime_week = {}
+        anime_week = defaultdict(list)
         for day in Week:
-
             try:
                 link_list = soup.find(id=day.value).find_all('a')
             except AttributeError:
-                logger.error('Not found link anime.')
+                logger.error(f'Not found link anime for day[{day}]')
                 continue
-
-            list_anime = []
-
             for link in link_list:
                 try:
                     id_anime = re.search(
@@ -85,22 +77,21 @@ class ParserClient:
                     )
                     id_anime = None
 
-                if full and id_anime:
+                if id_anime:
                     anime_composed = self.get_composed(
-                        self.url + link.get('href'),
+                        f'{self.url}{link.get("href")}',
                         id_anime
                     )
                 else:
                     anime_composed = None
                 if id_anime:
-                    list_anime.append(
+                    anime_week[day.name].append(
                         AnimeMin(
                             id_anime=id_anime,
-                            link=self.url + link.get('href'),
+                            link=f'{self.url}{link.get("href")}',
                             anime_composed=anime_composed
                         )
                     )
-            anime_week[day.name] = list_anime
         return anime_week
 
     def _get_count_page(self) -> int:
@@ -148,3 +139,8 @@ class ParserClient:
     def get_anime_one(self, id: int, link: str) -> AnimeMin:
         anime_composed = self.get_composed(link, str(id))
         return AnimeMin(id_anime=id, link=link, anime_composed=anime_composed)
+
+
+a = ParserClient()
+for day, anime in a.get_schedule().items():
+    print(day, len(anime), anime)
