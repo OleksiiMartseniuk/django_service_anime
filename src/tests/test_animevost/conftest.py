@@ -1,7 +1,7 @@
 import pytest
 
-from src.base.animevost.parser import ParserClient
-from src.base.animevost.api import ApiAnimeVostClient
+from src.utils.animevost.parser import ParserClient
+from src.utils.animevost.api import ApiAnimeVostClient
 
 
 @pytest.fixture()

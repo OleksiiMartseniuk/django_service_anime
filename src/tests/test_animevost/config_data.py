@@ -1,4 +1,4 @@
-from src.base.animevost.schemas import (
+from src.utils.animevost.schemas import (
     AnimeMin,
     AnimeComposed,
     Anime,

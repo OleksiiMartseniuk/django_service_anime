@@ -1,4 +1,4 @@
-from src.base.animevost.schemas import AnimeData, AnimeFull, Series, Anime
+from src.utils.animevost.schemas import AnimeData, AnimeFull, Series, Anime
 from src.anime.service.update_db import AnimeMini
 from src.anime import models
 
