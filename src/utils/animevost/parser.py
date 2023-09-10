@@ -5,12 +5,11 @@ from collections import defaultdict
 
 from bs4 import BeautifulSoup
 
-from src.base.animevost.setting import HEADERS
-from src.base.animevost.schemas import Week, AnimeMin, AnimeComposed
-from src.utils.animevost.exception import AnimeVostStatusCodeError
+from .schemas import Week, AnimeMin, AnimeComposed
+from .exception import AnimeVostStatusCodeError
 
 
-logger = logging.getLogger('anime_vost')
+logger = logging.getLogger(__name__)
 
 
 class ParserClient:
@@ -18,8 +17,8 @@ class ParserClient:
     def __init__(self) -> None:
         self.url = 'https://animevost.org'
 
-    def _get(self, url) -> str:
-        response = requests.get(url=url, headers=HEADERS)
+    def _get(self, url: str) -> str:
+        response = requests.get(url=url)
         if response.status_code == 200:
             return response.text
         else:
@@ -62,7 +61,7 @@ class ParserClient:
             try:
                 link_list = soup.find(id=day.value).find_all('a')
             except AttributeError:
-                logger.error(f'Not found link anime for day[{day}]')
+                logger.error(f'Not found link anime for day[{day.name}]')
                 continue
             for link in link_list:
                 try:
@@ -72,8 +71,7 @@ class ParserClient:
                     ).group()[1:-1]
                 except AttributeError:
                     logger.warning(
-                        'Not found link-[%s] day-%s',
-                        link.text, day.name
+                        f'Not found link-[{link.text}] day-{day.name}',
                     )
                     id_anime = None
 
@@ -106,10 +104,16 @@ class ParserClient:
             count_page = 1
         return count_page
 
-    def get_anons(self, full: bool = False) -> list[AnimeMin] | None:
+    def get_anons(self) -> list[AnimeMin | None]:
         list_anime = []
         for page in range(1, self._get_count_page() + 1):
-            page_html = self._get(self.url + '/preview/' + f'page/{page}/')
+            url = f'{self.url}/preview/page/{page}/'
+            try:
+                page_html = self._get(url)
+            except Exception as ex:
+                logger.error(f'Page for anons {url}', exc_info=ex)
+                continue
+
             soup = BeautifulSoup(page_html, 'lxml')
             try:
                 for div in soup.find_all(class_='shortstoryHead'):
@@ -117,7 +121,7 @@ class ParserClient:
                         r'[/]\d+[-]',
                         div.a.get('href')
                     ).group()[1:-1]
-                    if full:
+                    if id_anime:
                         anime_composed = self.get_composed(
                             div.a.get('href'),
                             id_anime
@@ -132,15 +136,6 @@ class ParserClient:
                         )
                     )
             except AttributeError:
-                logger.warning('Not found anons page [%s]', page)
+                logger.warning(f'Not found anons page [{page}]',)
                 continue
         return list_anime
-
-    def get_anime_one(self, id: int, link: str) -> AnimeMin:
-        anime_composed = self.get_composed(link, str(id))
-        return AnimeMin(id_anime=id, link=link, anime_composed=anime_composed)
-
-
-a = ParserClient()
-for day, anime in a.get_schedule().items():
-    print(day, len(anime), anime)
