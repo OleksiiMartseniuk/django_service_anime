@@ -5,7 +5,7 @@ from typing import List
 from django.db.models import Q
 
 from src.anime.service.utils import get_number, download_image, get_series_link
-from src.base.animevost import schemas
+from src.utils.animevost import schemas
 from src.anime import models
 
 

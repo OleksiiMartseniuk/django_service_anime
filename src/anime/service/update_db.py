@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import List
 
 from src.anime.service.utils import get_number, get_series_link
-from src.base.animevost import schemas
+from src.utils.animevost import schemas
 from src.anime.models import Anime, Series
 
 from django.db.models import Q
