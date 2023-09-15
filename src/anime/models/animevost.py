@@ -19,7 +19,7 @@ class AnimeVost(models.Model):
         (SUNDAY, 'Sunday'),
     )
 
-    id_anime = models.IntegerField(unique=True)
+    anime_id = models.IntegerField(unique=True)
     title_ru = models.CharField(
         max_length=255,
         blank=True,
