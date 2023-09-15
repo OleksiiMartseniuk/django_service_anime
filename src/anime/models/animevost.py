@@ -28,11 +28,6 @@ class AnimeVost(models.Model):
         max_length=255,
         blank=True,
     )
-    link = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True
-    )
     screen_image = models.ManyToManyField(
         'ScreenImages',
         related_name='screen_images',
