@@ -1,7 +1,5 @@
 from django.db import models
 
-# from ..models import Genre, ScreenImages, Series
-
 
 class AnimeVost(models.Model):
     MONDAY = 0
