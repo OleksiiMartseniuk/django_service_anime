@@ -41,7 +41,7 @@ class ApiAnimeVostClient:
                 f"kwargs[{json.dumps(kwargs)}]"
             )
 
-    def get_anime(self, anime_id: int) -> None | Anime:
+    def get_anime(self, anime_id: int) -> Anime:
         url = f'{self.url_v2}/GetInfo/{anime_id}'
         data_json = self._get(url)
         data = data_json.get('data')

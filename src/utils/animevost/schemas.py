@@ -28,7 +28,8 @@ class AnimeMin(BaseModel):
 
 class Anime(BaseModel):
     id: int
-    title: str
+    title_ru: str
+    title_en: str
     screen_image: list[str]
     rating: int
     votes: int
@@ -36,7 +37,7 @@ class Anime(BaseModel):
     director: str
     url_image_preview: str
     year: str
-    genre: str
+    genres: list
     timer: int
     type: str
 
@@ -84,9 +85,24 @@ def create_anime_schemas(base_url: str, data: dict) -> Anime:
     for sub in remove_list:
         description = description.replace(sub, '')
 
+    genres = []
+    for genre in re.split(r', |\. ', data.get('genre', '')):
+        genres.append(genre.lower().strip())
+
+    titles = data.get('title', '').split('/')
+    title_ru, title_en = '', ''
+    if len(titles) > 1:
+        title_ru = titles[0].strip()
+        tow_part = titles[1].split('[')
+        if len(tow_part) > 1:
+            title_en = tow_part[0].strip()
+        else:
+            title_en = titles[1].strip()
+
     return Anime(
         id=data.get('id'),
-        title=data.get('title'),
+        title_ru=title_ru,
+        title_en=title_en,
         screen_image=screen_image,
         rating=data.get('rating'),
         votes=data.get('votes'),
@@ -94,7 +110,7 @@ def create_anime_schemas(base_url: str, data: dict) -> Anime:
         director=data.get('director'),
         url_image_preview=url_image_preview,
         year=data.get('year'),
-        genre=data.get('genre'),
+        genres=genres,
         timer=data.get('timer'),
         type=data.get('type')
     )
