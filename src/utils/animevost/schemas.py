@@ -1,6 +1,7 @@
 import re
 
 from enum import Enum
+from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -40,6 +41,8 @@ class Anime(BaseModel):
     genres: list
     timer: int
     type: str
+    anons: bool
+    day: int | None
 
 
 class Series(BaseModel):
@@ -89,6 +92,10 @@ def create_anime_schemas(base_url: str, data: dict) -> Anime:
     for genre in re.split(r', |\. ', data.get('genre', '')):
         genres.append(genre.lower().strip())
 
+    anons = False
+    if re.search(r'Анонс', data.get('title', '')):
+        anons = True
+
     titles = data.get('title', '').split('/')
     title_ru, title_en = '', ''
     if len(titles) > 1:
@@ -98,6 +105,11 @@ def create_anime_schemas(base_url: str, data: dict) -> Anime:
             title_en = tow_part[0].strip()
         else:
             title_en = titles[1].strip()
+
+    timer = data.get('timer')
+    day = None
+    if timer and timer != '0':
+        day = datetime.utcfromtimestamp(int(timer)).weekday()
 
     return Anime(
         id=data.get('id'),
@@ -112,5 +124,7 @@ def create_anime_schemas(base_url: str, data: dict) -> Anime:
         year=data.get('year'),
         genres=genres,
         timer=data.get('timer'),
-        type=data.get('type')
+        type=data.get('type'),
+        anons=anons,
+        day=day,
     )
