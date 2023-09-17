@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'cachalot',
     'solo',
     'django_db_logger',
+    'django_extensions',
 
     'src.anime',
     'src.utils',
