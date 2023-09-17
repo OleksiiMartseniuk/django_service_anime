@@ -1,5 +1,4 @@
 import logging
-from collections import defaultdict
 
 from django.db import transaction
 
@@ -20,7 +19,7 @@ class AnimeVostSync:
         self.report_created = []
 
     def sync(self):
-        parser = ParserClient()
+        parser = ParserClient(logger=logger)
         self.sync_schedule(parser=parser)
         # parser.get_schedule()
         # anime_exists_ids = self.get_anime_exists(anime_ids)
@@ -36,28 +35,39 @@ class AnimeVostSync:
                     for anime_c in anime.anime_composed:
                         anime_ids.append(anime_c.id_anime)
         anime_exists_ids = self.get_anime_exists(anime_ids)
-        # TODO: think about it
-        anime_create_ids = defaultdict(list)
-        anime_update_ids = list()
+
+        anime_create_ids, anime_update_ids = [], []
         for day_name, anime_week in anime_schedule_data.items():
             for anime in anime_week:
+                anime_composed_create_list = []
                 if anime.id_anime in anime_exists_ids:
                     anime_update_ids.append(anime.id_anime)
                 else:
-                    anime_create_ids[anime.id_anime]
+                    anime_composed_create_list.append(anime.id_anime)
                 if anime.anime_composed:
                     for anime_c in anime.anime_composed:
                         if anime_c.id_anime in anime_exists_ids:
                             anime_update_ids.append(anime_c.id_anime)
                         else:
-                            anime_create_ids[anime.id_anime].append(
-                                anime_c.id_anime,
-                            )
-        for anime_base_id, anime_consists in anime_create_ids.items():
-            self.__create_anime_composed(
-                anime_base=anime_base_id,
-                anime_consists=anime_consists,
-            )
+                            anime_composed_create_list.append(anime_c.id_anime)
+                anime_create_ids.append(anime_composed_create_list)
+
+        for anime_composed_create_list in anime_create_ids:
+            anime_list_objs = []
+            for anime_id in anime_composed_create_list:
+                try:
+                    anime = self.create_anime(anime_id=anime_id)
+                except Exception as ex:
+                    logger.error(
+                        f'Anime [{anime_id}] was not created',
+                        exc_info=ex,
+                    )
+                else:
+                    anime_list_objs.append(anime)
+            for anime_base in anime_list_objs:
+                for anime_clone in anime_list_objs:
+                    if anime_base.id != anime_clone.id:
+                        anime_base.anime_composed.add(anime_clone)
 
     @staticmethod
     def get_anime_exists(anime_ids: list) -> list:
@@ -65,37 +75,6 @@ class AnimeVostSync:
             anime_id__in=anime_ids,
         ).values_list('anime_id', flat=True)
         return list(anime_exists_ids)
-
-    def __create_anime_composed(
-        self,
-        anime_base: int,
-        anime_consists: list[int | None]
-    ) -> None:
-        # нужно сделать так чтобы в каждом аниме были ссылки остальные в другое которое в ходит в него
-        # переделать этот метод (возможен кей в котором мы передайом лист котором все анеме которые нужно обеденить)
-        anime_list = []
-        try:
-            anime = self.create_anime(anime_id=anime_base)
-        except Exception as ex:
-            logger.error(
-                f'Anime_Base[{anime_base}] Anime_Compose'
-                f'[{anime_consists}] [BASE]',
-                exc_info=ex,
-            )
-        else:
-            if anime_consists:
-                for anime_composed_id in anime_consists:
-                    try:
-                        anime_composed = self.create_anime(
-                            anime_id=anime_composed_id,
-                        )
-                    except Exception as ex:
-                        logger.error(
-                            f'Anime [{anime_composed_id}] [COMPOSED]',
-                            exc_info=ex,
-                        )
-                    else:
-                        anime.anime_composed.add(anime_composed)
 
     @transaction.atomic
     def create_anime(
