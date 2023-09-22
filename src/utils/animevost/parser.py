@@ -9,13 +9,14 @@ from .schemas import Week, AnimeMin, AnimeComposed
 from .exception import AnimeVostStatusCodeError
 
 
-logger = logging.getLogger(__name__)
-
-
 class ParserClient:
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        logger: logging.Logger = logging.getLogger(__name__),
+    ) -> None:
         self.url = 'https://animevost.org'
+        self.logger = logger
 
     def _get(self, url: str) -> str:
         response = requests.get(url=url)
@@ -31,7 +32,7 @@ class ParserClient:
         try:
             text_page = self._get(link)
         except Exception as ex:
-            logger.error(f"Page {link} error anime_id[{id}]", exc_info=ex)
+            self.logger.error(f"Page {link} error anime_id[{id}]", exc_info=ex)
             return None
         soup = BeautifulSoup(text_page, 'lxml')
         try:
@@ -61,7 +62,7 @@ class ParserClient:
             try:
                 link_list = soup.find(id=day.value).find_all('a')
             except AttributeError:
-                logger.error(f'Not found link anime for day[{day.name}]')
+                self.logger.error(f'Not found link anime for day[{day.name}]')
                 continue
             for link in link_list:
                 try:
@@ -70,7 +71,7 @@ class ParserClient:
                         link.get('href')
                     ).group()[1:-1]
                 except AttributeError:
-                    logger.warning(
+                    self.logger.warning(
                         f'Not found link-[{link.text}] day-{day.name}',
                     )
                     id_anime = None
@@ -111,7 +112,7 @@ class ParserClient:
             try:
                 page_html = self._get(url)
             except Exception as ex:
-                logger.error(f'Page for anons {url}', exc_info=ex)
+                self.logger.error(f'Page for anons {url}', exc_info=ex)
                 continue
 
             soup = BeautifulSoup(page_html, 'lxml')
@@ -136,6 +137,6 @@ class ParserClient:
                         )
                     )
             except AttributeError:
-                logger.warning(f'Not found anons page [{page}]',)
+                self.logger.warning(f'Not found anons page [{page}]',)
                 continue
         return list_anime
