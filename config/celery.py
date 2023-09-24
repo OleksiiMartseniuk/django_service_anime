@@ -14,7 +14,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'add-every-day-morning': {
         'task': 'src.anime.tasks.sync_anime_vost',
-        # 'schedule': crontab(minute=0, hour='*/3'),
-        'schedule': crontab(minute="*/4"),
+        'schedule': crontab(minute=0, hour='*/1'),
     }
 }
