@@ -2,6 +2,7 @@ import re
 
 from enum import Enum
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from pydantic import BaseModel
 
@@ -42,6 +43,7 @@ class Anime(BaseModel):
     timer: int
     type: str
     anons: bool
+    anons_date: None | datetime
     day: int | None
 
 
@@ -93,8 +95,22 @@ def create_anime_schemas(base_url: str, data: dict) -> Anime:
         genres.append(genre.lower().strip())
 
     anons = False
+    anons_date = None
     if re.search(r'Анонс', data.get('title', '')):
         anons = True
+        data_str = data.get('title', '').split("Анонс")[-1]
+        result = re.search("\s\d+", data_str)
+        try:
+            numbers = int(result.group(0))
+        except ValueError:
+            pass
+        else:
+            now = datetime.now()
+            if now.day > numbers:
+                new = now + relativedelta(months=1)
+                anons_date = new.replace(day=numbers)
+            else:
+                anons_date = now.replace(day=numbers)
 
     titles = data.get('title', '').split('/')
     title_ru, title_en = '', ''
@@ -127,4 +143,5 @@ def create_anime_schemas(base_url: str, data: dict) -> Anime:
         type=data.get('type'),
         anons=anons,
         day=day,
+        anons_date=anons_date,
     )
