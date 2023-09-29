@@ -1,8 +1,6 @@
 import logging
-import time
 
 from config.celery import app
-
 from src.anime.sync.animevost.sync import AnimeVostSync
 
 
