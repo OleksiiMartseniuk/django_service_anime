@@ -76,6 +76,10 @@ class AnimeVost(models.Model):
         null=True,
     )
     anons = models.BooleanField(default=False)
+    anons_date = models.DateField(
+        blank=True,
+        null=True,
+    )
     indefinite_exit = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
