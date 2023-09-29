@@ -171,16 +171,16 @@ class AnimeVostSync:
         if report.created_quantity:
             msg += (
                 f"{'=' * 40}\n"
-                f"- Anime created {report.created_success}/"
+                f"- Created {report.created_success}/"
                 f"{report.created_quantity}\n"
-                f"- Anime create error {report.created_errors}\n"
+                f"- Create error {report.created_errors}\n"
             )
         if report.updated_quantity:
             msg += (
                 f"{'=' * 40}\n"
-                f"- Anime updated {report.updated_success}/"
+                f"- Updated {report.updated_success}/"
                 f"{report.updated_quantity}\n"
-                f"- Anime update error {report.updated_errors}\n"
+                f"- Update error {report.updated_errors}\n"
             )
         return msg
 
