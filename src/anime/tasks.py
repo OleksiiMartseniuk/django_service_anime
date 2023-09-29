@@ -44,6 +44,6 @@ def update_anime(anime_ids: list[int]):
     StatusLog.objects.create(
         logger_name="db",
         level=logging.INFO,
-        msg="Report Sync",
+        msg="Update admin site",
         trace=msg,
     )
