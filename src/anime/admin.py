@@ -1,6 +1,13 @@
-from django.contrib import admin
+import logging
+
+from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
+
 from .models import AnimeVost, Series, ScreenImages, Genre
+from .tasks import update_anime
+
+
+logger = logging.getLogger("db")
 
 
 admin.site.register(Series)
@@ -39,6 +46,7 @@ class AnimeVostAdmin(admin.ModelAdmin):
     readonly_fields = ['updated', 'created']
     inlines = [AnimeComposedInline, GenreInline, ScreenImagesInline]
     exclude = ["genre", "screen_image", "anime_composed", "series"]
+    actions = ["update_anime"]
 
     def get_image(self, instance: AnimeVost):
         if instance.url_image_preview:
@@ -47,3 +55,13 @@ class AnimeVostAdmin(admin.ModelAdmin):
             )
 
     get_image.short_description = "image"
+
+    @admin.action(description="Update anime")
+    def update_anime(self, request, queryset):
+        anime_ids = list(queryset.values_list("anime_id", flat=True))
+        update_anime.apply_async(kwargs={"anime_ids": anime_ids})
+        self.message_user(
+            request,
+            f"{len(anime_ids)} in progress",
+            messages.SUCCESS,
+        )
