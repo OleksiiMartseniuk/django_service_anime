@@ -12,6 +12,7 @@ from src.utils.animevost.parser import ParserClient
 from src.utils.animevost.schemas import AnimeMin
 
 from .exception import AnimeVostExists
+from .utils import ReportAnime
 
 
 logger = logging.getLogger("db")
@@ -25,9 +26,11 @@ class AnimeVostSync:
         self.parser = ParserClient(logger=logger)
 
     def sync(self):
+        report_schedule = ReportAnime()
+        report_anons = ReportAnime()
         start_sync_time = time.time()
-        report_sync_schedule = self.sync_schedule()
-        report_sync_anons = self.sync_anons()
+        report_sync_schedule = self.sync_schedule(report=report_schedule)
+        report_sync_anons = self.sync_anons(report=report_anons)
         end_sync_time = time.time() - start_sync_time
         msg = (
             "Report Sync AnimeVost\n"
@@ -40,12 +43,12 @@ class AnimeVostSync:
         if self.report_created:
             msg += (
                 f"\n- Anime create list:\n"
-                f"{self.get_report_items_list(self.report_created)}\n"
+                f"{ReportAnime.get_items_list(self.report_created)}\n"
             )
         if self.report_updated:
             msg += (
                 f"\n- Anime update list:\n"
-                f"{self.get_report_items_list(self.report_updated)}\n"
+                f"{ReportAnime.get_items_list(self.report_updated)}\n"
             )
         StatusLog.objects.create(
             logger_name="db",
@@ -54,7 +57,7 @@ class AnimeVostSync:
             trace=msg,
         )
 
-    def sync_anons(self):
+    def sync_anons(self, report: ReportAnime):
         try:
             anime_anons_data = self.parser.get_anons()
         except Exception as ex:
@@ -74,49 +77,37 @@ class AnimeVostSync:
                 anime_exists_ids=anime_exists_ids,
             )
         )
-        anime_created_quantity = len(anime_create_ids)
-        anime_created_success = 0
-        anime_create_errors = 0
+        report.created_quantity = len(anime_create_ids)
         for anime_id in anime_create_ids:
             try:
                 self.create_anime(anime_id=anime_id)
             except Exception as ex:
-                anime_create_errors += 1
+                report.created_errors += 1
                 logger.error(
                     f"Anime [{anime_id}] was not created",
                     exc_info=ex,
                 )
             else:
-                anime_created_success += 1
+                report.created_success += 1
         self.__set_anime_composed(anime_ids_full_composition)
 
-        anime_updated_quantity = len(anime_update_ids)
-        anime_updated_success = 0
-        anime_update_errors = 0
+        report.updated_quantity = len(anime_update_ids)
         for anime_update_id in anime_update_ids:
             try:
                 self.update_anime(anime_id=anime_update_id)
             except Exception as ex:
-                anime_update_errors += 1
+                report.updated_errors += 1
                 logger.error(
                     f"Anime [{anime_update_id}] was not updated",
                     exc_info=ex
                 )
             else:
-                anime_updated_success += 1
+                report.updated_success += 1
 
-        report = self.get_report(
-            "Anons",
-            anime_created_quantity,
-            anime_created_success,
-            anime_create_errors,
-            anime_updated_quantity,
-            anime_updated_success,
-            anime_update_errors,
-        )
+        report = self.get_report("Anons", report=report)
         return report
 
-    def sync_schedule(self) -> str | None:
+    def sync_schedule(self, report: ReportAnime) -> str | None:
         try:
             anime_schedule_data = self.parser.get_schedule()
         except Exception as ex:
@@ -145,71 +136,51 @@ class AnimeVostSync:
                 day_week__isnull=False,
             ).update(day_week=None)
 
-        anime_created_quantity = len(anime_create_ids)
-        anime_created_success = 0
-        anime_create_errors = 0
+        report.created_quantity = len(anime_create_ids)
         for anime_id in anime_create_ids:
             try:
                 self.create_anime(anime_id=anime_id)
             except Exception as ex:
-                anime_create_errors += 1
+                report.created_errors += 1
                 logger.error(
                     f"Anime [{anime_id}] was not created",
                     exc_info=ex,
                 )
             else:
-                anime_created_success += 1
+                report.created_success += 1
         self.__set_anime_composed(anime_list=anime_ids_full_composition)
 
-        anime_updated_quantity = len(anime_update_ids)
-        anime_updated_success = 0
-        anime_update_errors = 0
+        report.updated_quantity = len(anime_update_ids)
         for anime_update_id in anime_update_ids:
             try:
                 self.update_anime(anime_id=anime_update_id)
             except Exception as ex:
-                anime_update_errors += 1
+                report.updated_errors += 1
                 logger.error(
                     f"Anime [{anime_update_id}] was not updated",
                     exc_info=ex
                 )
             else:
-                anime_updated_success += 1
-        report = self.get_report(
-            "Schedule",
-            anime_created_quantity,
-            anime_created_success,
-            anime_create_errors,
-            anime_updated_quantity,
-            anime_updated_success,
-            anime_update_errors,
-        )
+                report.updated_success += 1
+        report = self.get_report(title="Schedule", report=report)
         return report
 
     @staticmethod
-    def get_report(
-        title: str,
-        anime_created_quantity: int,
-        anime_created_success: int,
-        anime_create_errors: int,
-        anime_updated_quantity: int,
-        anime_updated_success: int,
-        anime_update_errors: int,
-    ):
+    def get_report(title: str, report: ReportAnime):
         msg = f"\nReport Sync {title}\n"
-        if anime_created_quantity:
+        if report.created_quantity:
             msg += (
                 f"{'=' * 40}\n"
-                f"- Anime created {anime_created_success}/"
-                f"{anime_created_quantity}\n"
-                f"- Anime create error {anime_create_errors}\n"
+                f"- Anime created {report.created_success}/"
+                f"{report.created_quantity}\n"
+                f"- Anime create error {report.created_errors}\n"
             )
-        if anime_updated_quantity:
+        if report.updated_quantity:
             msg += (
                 f"{'=' * 40}\n"
-                f"- Anime updated {anime_updated_success}/"
-                f"{anime_updated_quantity}\n"
-                f"- Anime update error {anime_update_errors}\n"
+                f"- Anime updated {report.updated_success}/"
+                f"{report.updated_quantity}\n"
+                f"- Anime update error {report.updated_errors}\n"
             )
         return msg
 
@@ -264,15 +235,6 @@ class AnimeVostSync:
             anime_ids_full_composition.append(anime_composed_ids)
             anime_ids += anime_composed_ids
         return anime_ids, anime_ids_full_composition
-
-    @staticmethod
-    def get_report_items_list(items: list) -> str:
-        str_items = ""
-        for i, w in enumerate(items, 1):
-            if not i % 10:
-                str_items += "\n"
-            str_items += f"{w}, "
-        return str_items
 
     @staticmethod
     def get_anime_exists(anime_ids: list) -> list:
