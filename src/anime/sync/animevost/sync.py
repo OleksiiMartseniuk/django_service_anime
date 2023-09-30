@@ -104,8 +104,8 @@ class AnimeVostSync:
             else:
                 report.updated_success += 1
 
-        report = self.get_report("Anons", report=report)
-        return report
+        report_msg = self.get_report("Anons", report=report)
+        return report_msg
 
     def sync_schedule(self, report: ReportAnime) -> str | None:
         try:
@@ -162,8 +162,8 @@ class AnimeVostSync:
                 )
             else:
                 report.updated_success += 1
-        report = self.get_report(title="Schedule", report=report)
-        return report
+        report_msg = self.get_report(title="Schedule", report=report)
+        return report_msg
 
     @staticmethod
     def get_report(title: str, report: ReportAnime):
