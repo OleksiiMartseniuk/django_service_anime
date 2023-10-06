@@ -187,9 +187,13 @@ class AnimeVostSync:
     @staticmethod
     def __set_anime_composed(anime_list: list[list[int]]):
         for anime_ids in anime_list:
-            anime_exist = AnimeVost.objects.filter(anime_id__in=anime_ids)
-            for anime in anime_exist:
-                for anime_c in anime_exist.exclude(id=anime.id):
+            anime_objs = AnimeVost.objects.filter(anime_id__in=anime_ids)
+            for anime in anime_objs:
+                anime_all = (
+                    anime.anime_composed.all().exclude(id=anime.id)
+                    .union(anime_objs.exclude(id=anime.id))
+                )
+                for anime_c in anime_all:
                     anime.anime_composed.add(anime_c)
 
     @staticmethod
@@ -303,6 +307,11 @@ class AnimeVostSync:
         url_image_preview = anime_dict.pop("url_image_preview", None)
         anime_dict.pop("genres", None)
         anime_dict.pop("id", None)
+        if (
+            anime.anons_date is not None
+            and anime_dict.get("anons_date") is None
+        ):
+            anime_dict.pop("anons_date", None)
 
         if not anime.url_image_preview and url_image_preview:
             download_image(
