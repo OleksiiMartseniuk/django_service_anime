@@ -287,7 +287,10 @@ class AnimeVostSync:
         anime: AnimeVost,
     ) -> None:
         for screen_image in screen_images:
-            obj = ScreenImages.objects.create()
+            obj = ScreenImages.objects.create(
+                project_anime=ScreenImages.ANIME_VOST,
+                anime_id=anime.id,
+            )
             download_image(obj_image=obj.images, image_url=screen_image)
             anime.screen_image.add(obj)
 
