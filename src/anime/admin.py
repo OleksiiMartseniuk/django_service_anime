@@ -11,7 +11,6 @@ logger = logging.getLogger("db")
 
 
 admin.site.register(Series)
-admin.site.register(ScreenImages)
 admin.site.register(Genre)
 
 
@@ -65,3 +64,10 @@ class AnimeVostAdmin(admin.ModelAdmin):
             f"{len(anime_ids)} in progress",
             messages.SUCCESS,
         )
+
+
+@admin.register(ScreenImages)
+class ScreenImagesAdmin(admin.ModelAdmin):
+    list_display = ("id", "project_anime", "anime_id", "images")
+    list_filter = ("project_anime",)
+    search_fields = ("anime_id",)
