@@ -5,7 +5,7 @@ from django.db import transaction
 from django.db.models import Q
 from django_db_logger.models import StatusLog
 
-from src.anime.models import AnimeVost, Genre, ScreenImages
+from src.anime.models import AnimeVost, Genre, ScreenImages, Series
 from src.anime.utils import download_image
 from src.utils.animevost.api import ApiAnimeVostClient
 from src.utils.animevost.parser import ParserClient
@@ -272,7 +272,7 @@ class AnimeVostSync:
             screen_images=screen_image,
             anime=anime,
         )
-        # TODO: Add series for anime
+        self.update_series(anime=anime)
         self.report_created.append(anime.id)
 
     @staticmethod
@@ -331,5 +331,33 @@ class AnimeVostSync:
             if hasattr(anime, field):
                 setattr(anime, field, value)
         anime.save()
-        # TODO: Add update series for anime
+        self.update_series(anime=anime)
         self.report_updated.append(anime.id)
+
+    def update_series(self, anime: AnimeVost):
+        try:
+            series_data = self.api_vost_client.get_play_list(id=anime.anime_id)
+        except Exception as ex:
+            logger.error(f"Update series for Anime[{anime.id}]", exc_info=ex)
+            return None
+        if not series_data:
+            return None
+
+        name_list_api = [series.name for series in series_data]
+        name_list_db = Series.objects.filter(
+            project_anime=Series.ANIME_VOST,
+            anime_id=anime.id,
+            name__in=name_list_api,
+        ).values_list("name", flat=True)
+        create_series = set(name_list_api) - set(name_list_db)
+        if create_series:
+            Series.objects.bulk_create(
+                [
+                    Series(
+                        project_anime=Series.ANIME_VOST,
+                        anime_id=anime.id,
+                        **series.dict()
+                    )
+                    for series in series_data
+                ]
+            )
