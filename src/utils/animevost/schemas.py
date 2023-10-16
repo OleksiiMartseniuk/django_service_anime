@@ -49,8 +49,8 @@ class Anime(BaseModel):
 
 class Series(BaseModel):
     name: str
-    serial: str
-    preview: str
+    serial_number: str
+    number: int | None
 
 
 class AnimeData(Anime):
@@ -63,10 +63,17 @@ class AnimeFull(AnimeData):
 
 def create_anime_series(data: dict) -> Series:
     serial = data.get('hd') or data.get('std', '')
+    name = data.get('name')
+    number = re.search(r'^\d*', name).group()
+    if number.strip().isnumeric():
+        number = int(number)
+    else:
+        number = None
+
     return Series(
-        name=data.get('name'),
-        serial=serial.split('/')[-1].split('.')[0],
-        preview=data.get('preview')
+        name=name,
+        serial_number=serial.split('/')[-1].split('.')[0],
+        number=number,
     )
 
 
