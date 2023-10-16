@@ -10,7 +10,6 @@ from .tasks import update_anime
 logger = logging.getLogger("db")
 
 
-admin.site.register(Series)
 admin.site.register(Genre)
 
 
@@ -71,3 +70,31 @@ class ScreenImagesAdmin(admin.ModelAdmin):
     list_display = ("id", "project_anime", "anime_id", "images")
     list_filter = ("project_anime",)
     search_fields = ("anime_id",)
+
+
+@admin.register(Series)
+class SeriesAdmin(admin.ModelAdmin):
+    list_display = ("name", "project_anime", "anime_id")
+    list_filter = ("project_anime",)
+    search_fields = ("anime_id",)
+    readonly_fields = ("anime_vost_preview", "anime_vost_quality")
+
+    def anime_vost_preview(self, obj: Series):
+        if obj.project_anime != Series.ANIME_VOST:
+            return "---"
+        return mark_safe(
+            f'<a target="_blank" href="{obj.get_anime_vost_preview}">'
+            f'AnimeVost Preview</a>'
+        )
+
+    def anime_vost_quality(self, obj: Series):
+        if obj.project_anime != Series.ANIME_VOST:
+            return "---"
+        return mark_safe(
+            f'<a target="_blank" href="{obj.get_anime_vost_quality("sd")}">'
+            f'480</a><br>'
+            f'<a target="_blank" href="{obj.get_anime_vost_quality("hd")}">'
+            f'720</a><br>'
+            f'<a target="_blank" href="{obj.get_anime_vost_quality("fhd")}">'
+            f'1080</a><br>'
+        )
