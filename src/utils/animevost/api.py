@@ -64,7 +64,7 @@ class ApiAnimeVostClient:
             )
         )
 
-    def get_play_list(self, id: int) -> list[Series]:
+    def get_play_list(self, id: int) -> list[Series | None]:
         url = f'{self.url_v1}/playlist'
         data = {'id': id}
         data_json = self._post(url, data=data)
