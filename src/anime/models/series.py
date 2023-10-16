@@ -30,13 +30,14 @@ class Series(models.Model):
             f"Anime[{self.anime_id}]"
         )
 
-    def get_anime_vost_quality(self, quality: str) -> str | None:
-        # TODO: check it
-        QUALITY = {
-            "sd": f"http://video.aniland.org/360/{self.serial_number}.mp4",
-            "hd": f"http://video.aniland.org/720/{self.serial_number}.mp4",
-        }
-        return QUALITY.get(quality)
-
-    def get_anime_vost_preview(self):
+    @property
+    def get_anime_vost_preview(self) -> str:
         return f"http://media.aniland.org/img/{self.serial_number}.jpg"
+
+    def get_anime_vost_quality(self, quality: str) -> str | None:
+        quality_dict = {
+            "sd": f"https://fhd.trn.su/{self.serial_number}.mp4",
+            "hd": f"https://fhd.trn.su/720/{self.serial_number}.mp4",
+            "fhd": f"https://fhd.trn.su/1080/{self.serial_number}.mp4"
+        }
+        return quality_dict.get(quality)
