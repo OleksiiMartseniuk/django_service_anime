@@ -25,7 +25,7 @@ class Series(models.Model):
 
     def __str__(self):
         return (
-            f"Series{self.name} - "
+            f"Series[{self.name}] - "
             f"ProjectAnime[{self.project_anime}] - "
             f"Anime[{self.anime_id}]"
         )
@@ -34,10 +34,15 @@ class Series(models.Model):
     def get_anime_vost_preview(self) -> str:
         return f"http://media.aniland.org/img/{self.serial_number}.jpg"
 
-    def get_anime_vost_quality(self, quality: str) -> str | None:
+    def get_anime_vost_quality(
+        self,
+        quality: str,
+        is_prefix: bool = False,
+    ) -> str | None:
+        url = f"https://{'f' if is_prefix else ''}hd.trn.su/"
         quality_dict = {
-            "sd": f"https://fhd.trn.su/{self.serial_number}.mp4",
-            "hd": f"https://fhd.trn.su/720/{self.serial_number}.mp4",
-            "fhd": f"https://fhd.trn.su/1080/{self.serial_number}.mp4"
+            "sd": f"{url}{self.serial_number}.mp4",
+            "hd": f"{url}720/{self.serial_number}.mp4",
+            "fhd": f"{url}1080/{self.serial_number}.mp4"
         }
         return quality_dict.get(quality)
