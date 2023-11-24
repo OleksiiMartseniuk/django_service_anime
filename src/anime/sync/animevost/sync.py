@@ -342,7 +342,6 @@ class AnimeVostSync:
             return None
         if not series_data:
             return None
-
         name_list_api = [series.name for series in series_data]
         name_list_db = Series.objects.filter(
             project_anime=Series.ANIME_VOST,
@@ -351,6 +350,11 @@ class AnimeVostSync:
         ).values_list("name", flat=True)
         create_series = set(name_list_api) - set(name_list_db)
         if create_series:
+            add_series = [
+                series
+                for series in series_data
+                if series.name in create_series
+            ]
             Series.objects.bulk_create(
                 [
                     Series(
@@ -358,6 +362,6 @@ class AnimeVostSync:
                         anime_id=anime.id,
                         **series.dict()
                     )
-                    for series in series_data
+                    for series in add_series
                 ]
             )
