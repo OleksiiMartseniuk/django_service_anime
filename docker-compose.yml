@@ -1,22 +1,6 @@
 version: "3.9"
 
 services:
-  web:
-    build: .
-    container_name: django_anime_service_web
-    command: bash ./script/entrypoint_web.sh
-    restart: always
-    volumes:
-      - .:/app
-      - static:/app/static
-      - media:/app/media
-      - log:/app/log
-    ports:
-      - "8000:8000"
-    env_file: .env
-    depends_on:
-      - redis
-
   redis:
     image: redis
     container_name: django_anime_service_redis
@@ -39,44 +23,7 @@ services:
       - "5432:5432"
     env_file: .env
 
-  worker:
-    build: .
-    container_name: django_anime_service_worker
-    command: celery -A config worker -l info
-    env_file: .env
-    volumes:
-      - media:/app/media
-      - log:/app/log
-    depends_on:
-      - nginx
-
-  beat:
-    build: .
-    container_name: django_anime_service_beat
-    command: bash ./script/entrypoint_beat.sh
-    env_file: .env
-    volumes:
-      - media:/app/media
-      - log:/app/log
-    depends_on:
-      - worker
-
-  nginx:
-    build: ./nginx
-    container_name: django_anime_service_nginx
-    restart: on-failure
-    ports:
-      - "80:80"
-    env_file: .env
-    volumes:
-      - static:/static
-      - media:/media
-    depends_on:
-      - web
 
 volumes:
   postgres_data:
-  static:
-  media:
-  log:
   redis:
