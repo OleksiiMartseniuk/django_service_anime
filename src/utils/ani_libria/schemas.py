@@ -30,7 +30,7 @@ class TypeTitle(BaseModel):
     code: int
     string: str
     series: int
-    length: int
+    length: int | None
 
 
 class Season(BaseModel):
@@ -79,7 +79,7 @@ class Serie(BaseModel):
 
 
 class Player(BaseModel):
-    alternative_player: str
+    alternative_player: str | None
     host: str
     series: Series
     playlist: dict[str, Serie]
@@ -89,7 +89,7 @@ class Title(BaseModel):
     id: int
     code: str
     names: Names
-    announce: str
+    announce: str | None
     status: Status
     posters: Posters
     updated: int

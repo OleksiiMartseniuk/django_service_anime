@@ -28,7 +28,7 @@ class ClientAniLibria:
         title = self.__get(url, **params)
         return Title(**title)
 
-    def get_schedule(self, **params):
+    def get_schedule(self, **params) -> ScheduleList:
         """
         https://github.com/anilibria/docs/blob/master/api_v2.md#-getschedule
         """
