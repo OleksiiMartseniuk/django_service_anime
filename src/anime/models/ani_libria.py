@@ -58,11 +58,11 @@ class AniLibria(models.Model):
         null=True,
     )
     status = models.IntegerField(choices=StatusChoices.choices)
-    updated_ani_libria = models.DateTimeField(
+    updated = models.DateTimeField(
         blank=True,
         null=True,
     )
-    last_change_ani_libria = models.DateTimeField(
+    last_change = models.DateTimeField(
         blank=True,
         null=True,
     )
@@ -95,6 +95,9 @@ class AniLibria(models.Model):
         default=False,
         help_text="Title blocked due to Wakanim complaints",
     )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"[{self.id}] {self.name_en}"
