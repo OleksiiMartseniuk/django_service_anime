@@ -53,7 +53,7 @@ class AnimeVostSync:
         StatusLog.objects.create(
             logger_name="db",
             level=logging.INFO,
-            msg="Report Sync",
+            msg="Report Sync AnimeVost",
             trace=msg,
         )
 
@@ -287,10 +287,7 @@ class AnimeVostSync:
         anime: AnimeVost,
     ) -> None:
         for screen_image in screen_images:
-            obj = ScreenImages.objects.create(
-                project_anime=ScreenImages.ANIME_VOST,
-                anime_id=anime.id,
-            )
+            obj = ScreenImages.objects.create(animevost=anime)
             download_image(obj_image=obj.images, image_url=screen_image)
             anime.screen_image.add(obj)
 
@@ -344,8 +341,7 @@ class AnimeVostSync:
             return None
         name_list_api = [series.name for series in series_data]
         name_list_db = Series.objects.filter(
-            project_anime=Series.ANIME_VOST,
-            anime_id=anime.id,
+            animevost=anime,
             name__in=name_list_api,
         ).values_list("name", flat=True)
         create_series = set(name_list_api) - set(name_list_db)
@@ -357,11 +353,7 @@ class AnimeVostSync:
             ]
             Series.objects.bulk_create(
                 [
-                    Series(
-                        project_anime=Series.ANIME_VOST,
-                        anime_id=anime.id,
-                        **series.dict()
-                    )
+                    Series(animevost=anime, **series.dict())
                     for series in add_series
                 ]
             )
