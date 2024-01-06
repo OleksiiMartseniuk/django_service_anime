@@ -3,7 +3,7 @@ import logging
 from django.contrib import admin, messages
 from django.utils.safestring import mark_safe
 
-from .models import AnimeVost, Series, ScreenImages, Genre
+from .models import AnimeVost, AniLibria, Series, ScreenImages, Genre
 from .tasks import update_anime
 
 
@@ -11,6 +11,9 @@ logger = logging.getLogger("db")
 
 
 admin.site.register(Genre)
+admin.site.register(ScreenImages)
+admin.site.register(Series)
+admin.site.register(AniLibria)
 
 
 class GenreInline(admin.TabularInline):
@@ -65,51 +68,44 @@ class AnimeVostAdmin(admin.ModelAdmin):
         )
 
 
-@admin.register(ScreenImages)
-class ScreenImagesAdmin(admin.ModelAdmin):
-    list_display = ("id", "project_anime", "anime_id", "images")
-    list_filter = ("project_anime",)
-    search_fields = ("anime_id",)
-
-
-@admin.register(Series)
-class SeriesAdmin(admin.ModelAdmin):
-    list_display = ("name", "project_anime", "anime_id")
-    list_filter = ("project_anime",)
-    search_fields = ("anime_id",)
-    readonly_fields = (
-        "anime_vost_preview",
-        "anime_vost_quality_new",
-        "anime_vost_quality_old",
-    )
-
-    def anime_vost_preview(self, obj: Series):
-        if obj.project_anime != Series.ANIME_VOST:
-            return "---"
-        return mark_safe(
-            f'<a target="_blank" href="{obj.get_anime_vost_preview}">'
-            f'AnimeVost Preview</a>'
-        )
-
-    @staticmethod
-    def __anime_vost_quality(obj: Series, is_prefix: bool = False):
-        if obj.project_anime != Series.ANIME_VOST:
-            return "---"
-
-        return mark_safe(
-            f'<a target="_blank" '
-            f'href="{obj.get_anime_vost_quality("sd", is_prefix)}">'
-            f'480</a><br>'
-            f'<a target="_blank" '
-            f'href="{obj.get_anime_vost_quality("hd", is_prefix)}">'
-            f'720</a><br>'
-            f'<a target="_blank" '
-            f'href="{obj.get_anime_vost_quality("fhd", is_prefix)}">'
-            f'1080</a><br>'
-        )
-
-    def anime_vost_quality_new(self, obj: Series):
-        return self.__anime_vost_quality(obj, is_prefix=True)
-
-    def anime_vost_quality_old(self, obj: Series):
-        return self.__anime_vost_quality(obj)
+# @admin.register(Series)
+# class SeriesAdmin(admin.ModelAdmin):
+#     list_display = ("name", "project_anime", "anime_id")
+#     list_filter = ("project_anime",)
+#     search_fields = ("anime_id",)
+#     readonly_fields = (
+#         "anime_vost_preview",
+#         "anime_vost_quality_new",
+#         "anime_vost_quality_old",
+#     )
+#
+#     def anime_vost_preview(self, obj: Series):
+#         if obj.project_anime != Series.ANIME_VOST:
+#             return "---"
+#         return mark_safe(
+#             f'<a target="_blank" href="{obj.get_anime_vost_preview}">'
+#             f'AnimeVost Preview</a>'
+#         )
+#
+#     @staticmethod
+#     def __anime_vost_quality(obj: Series, is_prefix: bool = False):
+#         if obj.project_anime != Series.ANIME_VOST:
+#             return "---"
+#
+#         return mark_safe(
+#             f'<a target="_blank" '
+#             f'href="{obj.get_anime_vost_quality("sd", is_prefix)}">'
+#             f'480</a><br>'
+#             f'<a target="_blank" '
+#             f'href="{obj.get_anime_vost_quality("hd", is_prefix)}">'
+#             f'720</a><br>'
+#             f'<a target="_blank" '
+#             f'href="{obj.get_anime_vost_quality("fhd", is_prefix)}">'
+#             f'1080</a><br>'
+#         )
+#
+#     def anime_vost_quality_new(self, obj: Series):
+#         return self.__anime_vost_quality(obj, is_prefix=True)
+#
+#     def anime_vost_quality_old(self, obj: Series):
+#         return self.__anime_vost_quality(obj)

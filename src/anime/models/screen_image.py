@@ -2,21 +2,27 @@ from django.db import models
 
 
 class ScreenImages(models.Model):
-    ANIME_VOST = 'anime_vost'
-    PROJECT_ANIME_CHOICES = (
-        (ANIME_VOST, "AnimeVost"),
-    )
-
     images = models.ImageField(upload_to='screen_images/')
-    project_anime = models.CharField(
-        choices=PROJECT_ANIME_CHOICES,
-        max_length=20,
+
+    animevost = models.ForeignKey(
+        "AnimeVost",
+        related_name="screen_images",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
     )
-    anime_id = models.IntegerField()
+    anilibria = models.ForeignKey(
+        "AniLibria",
+        related_name="screen_images",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self) -> str:
-        return (
-            f"ScreenImages[{self.id}] "
-            f"ProjectAnime[{self.project_anime}] "
-            f"Anime[{self.anime_id}]"
-        )
+        title = f"ScreenImages[{self.id}]"
+        if self.anilibria_id:
+            title += f"AniLibria [{self.anilibria_id}]"
+        elif self.animevost_id:
+            title += f"AnimeVost [{self.animevost_id}]"
+        return title
