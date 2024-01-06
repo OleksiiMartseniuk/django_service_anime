@@ -29,7 +29,7 @@ class TypeTitle(BaseModel):
     full_string: str
     code: int
     string: str
-    series: int
+    series: int | None
     length: int | None
 
 
