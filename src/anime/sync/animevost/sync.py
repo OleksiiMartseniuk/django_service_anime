@@ -278,7 +278,7 @@ class AnimeVostSync:
     @staticmethod
     def __create_genres(genres_title: list[str], anime: AnimeVost) -> None:
         for title in genres_title:
-            genre, _ = Genre.objects.get_or_create(title=title)
+            genre, _ = Genre.objects.get_or_create(title=title.lower())
             anime.genre.add(genre)
 
     @staticmethod
