@@ -59,10 +59,17 @@ class AniLibria(models.Model):
     )
     status = models.IntegerField(choices=StatusChoices.choices)
     updated = models.DateTimeField(
+        help_text=(
+            "Last tile update (Usually the title is updated"
+            " when new releases are released)"
+        ),
         blank=True,
         null=True,
     )
     last_change = models.DateTimeField(
+        help_text=(
+            "Last title change (For example, a description or announcement)"
+        ),
         blank=True,
         null=True,
     )

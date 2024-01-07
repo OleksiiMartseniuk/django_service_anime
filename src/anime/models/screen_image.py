@@ -1,8 +1,19 @@
 from django.db import models
 
 
+class PosterChoices(models.TextChoices):
+    SMALL = ("small", "Small")
+    MEDIUM = ("medium", "Medium")
+    ORIGINAL = ("original", "Original")
+
+
 class ScreenImages(models.Model):
     images = models.ImageField(upload_to='screen_images/')
+    poster = models.CharField(
+        max_length=8,
+        choices=PosterChoices.choices,
+        default=PosterChoices.ORIGINAL,
+    )
 
     animevost = models.ForeignKey(
         "AnimeVost",
