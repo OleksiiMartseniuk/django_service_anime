@@ -54,9 +54,9 @@ class Blocked(BaseModel):
 
 
 class Series(BaseModel):
-    first: int
-    last: int
-    string: str
+    first: int | None
+    last: int | None
+    string: str | None
 
 
 class Skips(BaseModel):
