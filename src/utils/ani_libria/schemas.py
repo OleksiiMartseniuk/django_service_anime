@@ -29,8 +29,8 @@ class TypeTitle(BaseModel):
     full_string: str
     code: int
     string: str
-    series: int
-    length: int
+    series: int | None
+    length: int | None
 
 
 class Season(BaseModel):
@@ -54,9 +54,9 @@ class Blocked(BaseModel):
 
 
 class Series(BaseModel):
-    first: int
-    last: int
-    string: str
+    first: int | None
+    last: int | None
+    string: str | None
 
 
 class Skips(BaseModel):
@@ -79,7 +79,7 @@ class Serie(BaseModel):
 
 
 class Player(BaseModel):
-    alternative_player: str
+    alternative_player: str | None
     host: str
     series: Series
     playlist: dict[str, Serie]
@@ -89,7 +89,7 @@ class Title(BaseModel):
     id: int
     code: str
     names: Names
-    announce: str
+    announce: str | None
     status: Status
     posters: Posters
     updated: int

@@ -10,7 +10,7 @@ class ClientAniLibria:
         self.base_url = f"https://api.anilibria.tv/{version}/"
 
     @staticmethod
-    def __get(url: str, **params) -> dict:
+    def __get(url: str, **params) -> dict | list:
         response = requests.get(url=url, params=params)
         if response.status_code == 200:
             return response.json()
@@ -28,10 +28,18 @@ class ClientAniLibria:
         title = self.__get(url, **params)
         return Title(**title)
 
-    def get_schedule(self, **params):
+    def get_schedule(self, **params) -> ScheduleList:
         """
         https://github.com/anilibria/docs/blob/master/api_v2.md#-getschedule
         """
         url = f"{self.base_url}getSchedule"
         schedule = self.__get(url, **params)
         return ScheduleList(schedule=schedule)
+
+    def get_genres(self, **params) -> list[str]:
+        """
+        https://github.com/anilibria/docs/blob/master/api_v2.md#-getgenres
+        """
+        url = f"{self.base_url}getGenres"
+        genres = self.__get(url, **params)
+        return genres

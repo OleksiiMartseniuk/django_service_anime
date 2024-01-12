@@ -2,11 +2,6 @@ from django.db import models
 
 
 class Series(models.Model):
-    ANIME_VOST = 'anime_vost'
-    PROJECT_ANIME_CHOICES = (
-        (ANIME_VOST, "AnimeVost"),
-    )
-
     name = models.CharField(max_length=50)
     number = models.IntegerField(
         blank=True,
@@ -17,18 +12,29 @@ class Series(models.Model):
         blank=True,
         null=True,
     )
-    project_anime = models.CharField(
-        choices=PROJECT_ANIME_CHOICES,
-        max_length=20,
+
+    animevost = models.ForeignKey(
+        "AnimeVost",
+        related_name="anime_series",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
     )
-    anime_id = models.IntegerField()
+    anilibria = models.ForeignKey(
+        "AniLibria",
+        related_name="anime_series",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
-        return (
-            f"Series[{self.name}] - "
-            f"ProjectAnime[{self.project_anime}] - "
-            f"Anime[{self.anime_id}]"
-        )
+        title = f"Series[{self.id}]"
+        if self.anilibria_id:
+            title += f"AniLibria [{self.anilibria_id}]"
+        elif self.animevost_id:
+            title += f"AnimeVost [{self.animevost_id}]"
+        return title
 
     @property
     def get_anime_vost_preview(self) -> str:
