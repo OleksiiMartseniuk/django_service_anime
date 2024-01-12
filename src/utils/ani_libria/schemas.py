@@ -114,6 +114,15 @@ class Title(BaseModel):
     team: Team
     season: Season
     description: str
-    in_favorites: int
+    in_favorites: int | None
     blocked: Blocked
     player: Player
+
+
+class ScheduleItem(BaseModel):
+    day: int
+    list: list[Title]
+
+
+class Schedule(BaseModel):
+    schedule: list[ScheduleItem]

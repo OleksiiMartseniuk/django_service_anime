@@ -2,11 +2,11 @@ import requests
 import json
 
 from .exception import RequestErrorAniLibria
-from .schemas import Title, ScheduleList
+from .schemas import Title, Schedule
 
 
 class ClientAniLibria:
-    def __init__(self, version: str = "v2"):
+    def __init__(self, version: str = "v3"):
         self.base_url = f"https://api.anilibria.tv/{version}/"
 
     @staticmethod
@@ -22,24 +22,17 @@ class ClientAniLibria:
 
     def get_title(self, **params) -> Title:
         """
-        https://github.com/anilibria/docs/blob/master/api_v2.md#-gettitle
+        https://github.com/anilibria/docs/blob/master/api_v3.md#-title
         """
-        url = f"{self.base_url}getTitle"
+        url = f"{self.base_url}title"
         title = self.__get(url, **params)
         return Title(**title)
 
-    def get_schedule(self, **params) -> ScheduleList:
+    def get_schedule(self, **params) -> Schedule:
         """
-        https://github.com/anilibria/docs/blob/master/api_v2.md#-getschedule
+        https://github.com/anilibria/docs/blob/master/api_v3.md#-titleschedule
         """
-        url = f"{self.base_url}getSchedule"
+        url = f"{self.base_url}title/schedule"
         schedule = self.__get(url, **params)
-        return ScheduleList(schedule=schedule)
+        return Schedule(schedule=schedule)
 
-    def get_genres(self, **params) -> list[str]:
-        """
-        https://github.com/anilibria/docs/blob/master/api_v2.md#-getgenres
-        """
-        url = f"{self.base_url}getGenres"
-        genres = self.__get(url, **params)
-        return genres
