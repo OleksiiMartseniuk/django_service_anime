@@ -9,6 +9,18 @@ class Names(BaseModel):
     alternative: Any | None
 
 
+class Franchise(BaseModel):
+    id: str
+    name: str
+
+
+class Releases(BaseModel):
+    id: int | None
+    code: str | None
+    ordinal: int | None
+    namas: Names | None
+
+
 class Status(BaseModel):
     string: str
     code: int
@@ -33,13 +45,6 @@ class TypeTitle(BaseModel):
     length: int | None
 
 
-class Season(BaseModel):
-    string: str
-    code: int
-    year: int
-    week_day: int
-
-
 class Team(BaseModel):
     voice: list[str | None]
     translator: list[str | None]
@@ -48,20 +53,16 @@ class Team(BaseModel):
     timing: list[str | None]
 
 
+class Season(BaseModel):
+    string: str
+    code: int
+    year: int
+    week_day: int
+
+
 class Blocked(BaseModel):
     blocked: bool
     bakanim: bool
-
-
-class Series(BaseModel):
-    first: int | None
-    last: int | None
-    string: str | None
-
-
-class Skips(BaseModel):
-    opening: list[Any | None]
-    ending: list[Any | None]
 
 
 class HLS(BaseModel):
@@ -70,10 +71,23 @@ class HLS(BaseModel):
     sd: str
 
 
-class Serie(BaseModel):
-    serie: int
-    created_timestamp: int
-    preview: Any | None
+class Skips(BaseModel):
+    opening: list[Any | None]
+    ending: list[Any | None]
+
+
+class Episodes(BaseModel):
+    first: int | None
+    last: int | None
+    string: str | None
+
+
+class Episode(BaseModel):
+    episode: int
+    name: str | None
+    uuid: str
+    created_timestamp: str
+    preview: str | None
     skips: Skips
     hls: HLS
 
@@ -81,14 +95,15 @@ class Serie(BaseModel):
 class Player(BaseModel):
     alternative_player: str | None
     host: str
-    series: Series
-    playlist: dict[str, Serie]
+    episodes: Episodes
+    list: dict[str, Episode]
 
 
 class Title(BaseModel):
     id: int
     code: str
     names: Names
+    franchises: Releases
     announce: str | None
     status: Status
     posters: Posters
@@ -102,12 +117,3 @@ class Title(BaseModel):
     in_favorites: int
     blocked: Blocked
     player: Player
-
-
-class Schedule(BaseModel):
-    day: int
-    list: list[Title]
-
-
-class ScheduleList(BaseModel):
-    schedule: list[Schedule]
