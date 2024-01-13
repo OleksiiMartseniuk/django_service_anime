@@ -21,6 +21,11 @@ class Releases(BaseModel):
     namas: Names | None
 
 
+class Franchises(BaseModel):
+    franchise: Franchise
+    releases: list[Releases]
+
+
 class Status(BaseModel):
     string: str
     code: int
@@ -41,7 +46,7 @@ class TypeTitle(BaseModel):
     full_string: str
     code: int
     string: str
-    series: int | None
+    episodes: str | None
     length: int | None
 
 
@@ -103,7 +108,7 @@ class Title(BaseModel):
     id: int
     code: str
     names: Names
-    franchises: Releases
+    franchises: list[Franchises]
     announce: str | None
     status: Status
     posters: Posters
