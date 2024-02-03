@@ -1,29 +1,11 @@
 from django.db import models
 
 
-class PosterChoices(models.TextChoices):
-    SMALL = ("small", "Small")
-    MEDIUM = ("medium", "Medium")
-    ORIGINAL = ("original", "Original")
-
-
-class ScreenImages(models.Model):
+class ScreenImagesAnimeVost(models.Model):
     images = models.ImageField(upload_to='screen_images/')
-    poster = models.CharField(
-        max_length=8,
-        choices=PosterChoices.choices,
-        default=PosterChoices.ORIGINAL,
-    )
 
-    animevost = models.ForeignKey(
+    anime = models.ForeignKey(
         "AnimeVost",
-        related_name="screen_images",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-    anilibria = models.ForeignKey(
-        "AniLibria",
         related_name="screen_images",
         on_delete=models.SET_NULL,
         blank=True,
@@ -31,9 +13,4 @@ class ScreenImages(models.Model):
     )
 
     def __str__(self) -> str:
-        title = f"ScreenImages[{self.id}]"
-        if self.anilibria_id:
-            title += f"AniLibria [{self.anilibria_id}]"
-        elif self.animevost_id:
-            title += f"AnimeVost [{self.animevost_id}]"
-        return title
+        return f"[{self.id}]ScreenImages [{self.anime_id}]AnimeVost"

@@ -1,0 +1,2 @@
+class AniLibriaSyncException(Exception):
+    pass

@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Series(models.Model):
+class SeriesAnimeVost(models.Model):
     name = models.CharField(max_length=50)
     number = models.IntegerField(
         blank=True,
@@ -12,16 +12,8 @@ class Series(models.Model):
         blank=True,
         null=True,
     )
-
-    animevost = models.ForeignKey(
+    anime = models.ForeignKey(
         "AnimeVost",
-        related_name="anime_series",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-    anilibria = models.ForeignKey(
-        "AniLibria",
         related_name="anime_series",
         on_delete=models.SET_NULL,
         blank=True,
@@ -29,12 +21,7 @@ class Series(models.Model):
     )
 
     def __str__(self):
-        title = f"Series[{self.id}]"
-        if self.anilibria_id:
-            title += f"AniLibria [{self.anilibria_id}]"
-        elif self.animevost_id:
-            title += f"AnimeVost [{self.animevost_id}]"
-        return title
+        return f"[{self.id}]Series  [{self.anime_id}]AnimeVost"
 
     @property
     def get_anime_vost_preview(self) -> str:

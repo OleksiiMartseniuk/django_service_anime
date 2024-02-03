@@ -1,37 +1,39 @@
 from django.db import models
 
-
-class StatusChoices(models.IntegerChoices):
-    IN_PROGRESS = (1, "In progress")
-    COMPLETED = (2, "Completed")
-    IS_HIDDEN = (3, "Is hidden")
-    UN_ONGOING = (4, "Un ongoing")
-
-
-class SeasonChoices(models.IntegerChoices):
-    WINTER = (1, "Winter")
-    SPRING = (2, "Spring")
-    SUMMER = (3, "Summer")
-    AUTUMN = (4, "Autumn")
+from src.anime.choices import (
+    WeekDayChoices,
+    SeasonChoices,
+    StatusChoices,
+    AnimeTypeChoices,
+)
 
 
-class WeekDayChoices(models.IntegerChoices):
-    MONDAY = (0, "Monday")
-    TUESDAY = (1, "Tuesday")
-    WEDNESDAY = (2, "Wednesday")
-    THURSDAY = (3, "Thursday")
-    FRIDAY = (4, "Friday")
-    SATURDAY = (5, "Saturday")
-    SUNDAY = (6, "Sunday")
+class Franchise(models.Model):
+    franchise_id = models.CharField(
+        max_length=255,
+        unique=True,
+    )
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"[{self.id}] {self.name}"
 
 
-class AnimeTypeChoices(models.IntegerChoices):
-    MOVIE = (0, "Movie")
-    TV = (1, "TV")
-    OVA = (2, "OVA")
-    ONA = (3, "ONA")
-    SPECIAL = (4, "Special")
-    WEB = (5, "WEB")
+class AniLibriaType(models.Model):
+    full_string = models.CharField(max_length=255)
+    type = models.IntegerField(choices=AnimeTypeChoices.choices)
+    episodes = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    length = models.IntegerField(
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return f"[{self.id}] {self.full_string}"
 
 
 class AniLibria(models.Model):
@@ -52,6 +54,16 @@ class AniLibria(models.Model):
         blank=True,
         null=True,
     )
+    franchise = models.ForeignKey(
+        Franchise,
+        on_delete=models.CASCADE,
+        related_name="ani_libria"
+    )
+    releases = models.ManyToManyField(
+        "AniLibria",
+        blank=True,
+    )
+    ordinal = models.IntegerField()
     announce = models.CharField(
         max_length=255,
         blank=True,
@@ -73,15 +85,21 @@ class AniLibria(models.Model):
         blank=True,
         null=True,
     )
-    anime_type = models.IntegerField(choices=AnimeTypeChoices.choices)
+    anime_type = models.ForeignKey(
+        AniLibriaType,
+        related_name="ani_libria",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
     genres = models.ManyToManyField(
-        'Genre',
-        related_name='anilibria',
+        "Genre",
+        related_name="anilibria",
         blank=True
     )
     team = models.ForeignKey(
-        'Team',
-        related_name='anilibria',
+        "Team",
+        related_name="anilibria",
         on_delete=models.SET_NULL,
         blank=True,
         null=True,

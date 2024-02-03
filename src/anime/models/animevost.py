@@ -1,24 +1,9 @@
 from django.db import models
 
+from src.anime.choices import WeekDayChoices
+
 
 class AnimeVost(models.Model):
-    MONDAY = 0
-    TUESDAY = 1
-    WEDNESDAY = 2
-    THURSDAY = 3
-    FRIDAY = 4
-    SATURDAY = 5
-    SUNDAY = 6
-    WEEK_CHOICES = (
-        (MONDAY, 'Monday'),
-        (TUESDAY, 'Tuesday'),
-        (WEDNESDAY, 'Wednesday'),
-        (THURSDAY, 'Thursday'),
-        (FRIDAY, 'Friday'),
-        (SATURDAY, 'Saturday'),
-        (SUNDAY, 'Sunday'),
-    )
-
     anime_id = models.IntegerField(unique=True)
     title_ru = models.CharField(
         max_length=255,
@@ -29,23 +14,23 @@ class AnimeVost(models.Model):
         blank=True,
     )
     screen_image = models.ManyToManyField(
-        'ScreenImages',
-        related_name='screen_images',
+        "ScreenImagesAnimeVost",
+        related_name="animevost",
         blank=True,
     )
     genre = models.ManyToManyField(
-        'Genre',
-        related_name='genres',
+        "Genre",
+        related_name="animevost",
         blank=True
     )
     anime_composed = models.ManyToManyField(
-        'AnimeVost',
+        "AnimeVost",
         blank=True,
     )
     series = models.ManyToManyField(
-        'Series',
+        "SeriesAnimeVost",
         blank=True,
-        related_name='anime'
+        related_name="animevost"
     )
     rating = models.IntegerField(default=0)
     votes = models.IntegerField(default=0)
@@ -56,7 +41,7 @@ class AnimeVost(models.Model):
         null=True
     )
     url_image_preview = models.ImageField(
-        upload_to='preview/',
+        upload_to="preview/",
         blank=True,
         null=True
     )
@@ -70,7 +55,7 @@ class AnimeVost(models.Model):
         blank=True,
     )
     day_week = models.IntegerField(
-        choices=WEEK_CHOICES,
+        choices=WeekDayChoices.choices,
         default=None,
         blank=True,
         null=True,
@@ -85,4 +70,4 @@ class AnimeVost(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title_en if self.title_en else self.title_ru
+        return f"[{self.id}] {self.title_en}"

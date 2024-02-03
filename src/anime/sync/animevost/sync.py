@@ -5,7 +5,12 @@ from django.db import transaction
 from django.db.models import Q
 from django_db_logger.models import StatusLog
 
-from src.anime.models import AnimeVost, Genre, ScreenImages, Series
+from src.anime.models import (
+    AnimeVost,
+    Genre,
+    ScreenImagesAnimeVost,
+    SeriesAnimeVost,
+)
 from src.anime.utils import download_image
 from src.utils.animevost.api import ApiAnimeVostClient
 from src.utils.animevost.parser import ParserClient
@@ -287,7 +292,7 @@ class AnimeVostSync:
         anime: AnimeVost,
     ) -> None:
         for screen_image in screen_images:
-            obj = ScreenImages.objects.create(animevost=anime)
+            obj = ScreenImagesAnimeVost.objects.create(anime=anime)
             download_image(obj_image=obj.images, image_url=screen_image)
             anime.screen_image.add(obj)
 
@@ -340,8 +345,8 @@ class AnimeVostSync:
         if not series_data:
             return None
         name_list_api = [series.name for series in series_data]
-        name_list_db = Series.objects.filter(
-            animevost=anime,
+        name_list_db = SeriesAnimeVost.objects.filter(
+            anime=anime,
             name__in=name_list_api,
         ).values_list("name", flat=True)
         create_series = set(name_list_api) - set(name_list_db)
@@ -351,9 +356,9 @@ class AnimeVostSync:
                 for series in series_data
                 if series.name in create_series
             ]
-            Series.objects.bulk_create(
+            SeriesAnimeVost.objects.bulk_create(
                 [
-                    Series(animevost=anime, **series.dict())
+                    SeriesAnimeVost(anime=anime, **series.dict())
                     for series in add_series
                 ]
             )
